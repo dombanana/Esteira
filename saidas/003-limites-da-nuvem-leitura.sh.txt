@@ -1,0 +1,8 @@
+[nuvem] inicio 2026-11-17 05:00:05 003-limites-da-nuvem-leitura.sh
+virar root: nao (certo)
+escrever no sistema: SIM (ERRADO)
+ler a pasta do root: nao (certo)
+porteiro roda como: pms
+segredos no ambiente da leitura: 0 (tem que ser 0)
+saida do 002 existe: nao (certo)
+[nuvem] fim 2026-11-17 05:00:06 codigo=0 duracao=1s

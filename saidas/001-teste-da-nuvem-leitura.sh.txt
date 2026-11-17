@@ -1,0 +1,8 @@
+[nuvem] inicio 2026-11-17 04:58:57 001-teste-da-nuvem-leitura.sh
+usuario: esteira · maquina: srv1886750 · 2026-11-17T04:58:57Z
+/health: 200
+servicos: API active · worker active · nuvem active
+versao 1.0.252 · estadias valendo agora: 6
+--- diario do worker (30 min): espelho, sentinela, conferencia, erros
+fim do teste
+[nuvem] fim 2026-11-17 04:58:59 codigo=0 duracao=2s

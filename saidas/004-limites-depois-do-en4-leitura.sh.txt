@@ -1,0 +1,9 @@
+[nuvem] inicio 2026-11-17 05:02:15 004-limites-depois-do-en4-leitura.sh
+virar root: nao (certo)
+escrever no sistema: nao (certo)
+ler a pasta do root: nao (certo)
+porteiro roda como: pms
+segredos no ambiente da leitura: 0 (tem que ser 0)
+escrever como pms: nao (certo)
+abre o sistema: sim 1.0.252
+[nuvem] fim 2026-11-17 05:02:16 codigo=0 duracao=1s

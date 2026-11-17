@@ -1,0 +1,53 @@
+[nuvem] inicio 2026-11-17 05:06:45 005-copia-diaria-como-e-leitura.sh
+Failed to cat /etc/systemd/system/pms-banana-ai-copia-diaria.service: Permission denied
+== script: /usr/local/sbin/pms-banana-ai-copia-diaria.sh
+--- /usr/local/sbin/pms-banana-ai-copia-diaria.sh (33 linhas)
+#!/bin/bash
+# Copia diaria da V1.0 (P12 de 17/10/2026; w3 de 01/11/2026: sem as fotos no dia a dia; aviso de
+# "arquivo mudou" nao e falha; nada novo e apagado). Nao imprime chaves.
+set -uo pipefail
+D=/var/backups/pms-banana-ai; DIA=$(date +%Y%m%d-%H%M%S); OK=1; AVISO=""
+mkdir -p "$D"; chmod 700 "$D"
+tarok() { local rc=$?; [ $rc -eq 0 ] && return 0; [ $rc -eq 1 ] && { AVISO="arquivo mudou durante a copia"; return 0; }; return 1; }
+out=$(bash /opt/PMS-Banana-AI/SISTEMA/ops/backup.sh pms_banana_ai 2>&1) || OK=0
+banco=$(ls -t "$D"/pms_banana_ai-*.sql.gz 2>/dev/null | head -n 1)
+vivo=$(mysql -N -e "select count(*) from information_schema.tables where table_schema='pms_banana_ai' and table_type='BASE TABLE'" 2>/dev/null)
+nc=$( [ -n "$banco" ] && zcat "$banco" | grep -c '^CREATE TABLE' || echo 0)
+[ "$nc" -ge "$vivo" ] 2>/dev/null || OK=0
+tar czf "$D/diaria-config-$DIA.tar.gz" -C / etc/pms-banana-ai 2>/dev/null; tarok || OK=0
+tar czf "$D/diaria-dados-$DIA.tar.gz" -C / --warning=no-file-changed --exclude=var/lib/pms-banana-ai/whisper \
+    --exclude=var/lib/pms-banana-ai/midia var/lib/pms-banana-ai 2>/dev/null; tarok || OK=0
+for t in "$D/diaria-config-$DIA.tar.gz" "$D/diaria-dados-$DIA.tar.gz"; do gzip -t "$t" 2>/dev/null && tar tzf "$t" >/dev/null 2>&1 || OK=0; chmod 600 "$t" 2>/dev/null; do
+find "$D" -maxdepth 1 -name 'diaria-*.tar.gz' -mtime +7 -delete
+# regra dos 7 dias das copias de fotos (v1.0.55, PMS_MIDIA_BACKUP_DIAS): todo dia, nao so na reinstalacao (w7 01/11)
+find "$D" -maxdepth 1 -name 'midia-[0-9]*.tar.gz' -mtime +7 -delete
+# regra do w41 (Dom 02/11/2026): copias do banco -- todas dos ultimos 2 dias, 1 por dia ate 7, 1 por semana ate 30,
+# nada depois de 30 (a mais nova nunca sai); copias de fotos -- so a mais nova; V3.4 -- so a mais nova de cada pasta.
+find "$D" -maxdepth 1 -name 'pms_banana_ai-*.sql.gz' -printf '%T@ %TY%Tm%Td %TY%TW %p\n' | sort -nr | awk -v now="$(date +%s)" '
+  NF { t=$1; f=$4; d=(now-t)/86400; if (NR==1 || d < 2) next
+       if (d < 7)  { if (dia[$2]++) print f; next }
+       if (d < 30) { if (sem[$3]++) print f; next }
+       print f }' | while read -r f; do rm -f -- "$f"; done
+ls -1t "$D"/midia-*.tar.gz 2>/dev/null | tail -n +2 | while read -r f; do rm -f -- "$f"; done
+for P in /var/backups/dom-banana-next /opt/dom-banana-next/backups /var/backups/dom-banana-manual; do
+  [ -d "$P" ] && find "$P" -type f -printf '%T@ %p\n' | sort -nr | tail -n +2 | cut -d' ' -f2- | while read -r f; do rm -f -- "$f"; done
+done
+st=$([ $OK = 1 ] && echo OK || echo FALHOU)
+echo "$(date '+%d/%m/%Y %H:%M') $st${AVISO:+ ($AVISO)} banco=$(basename "${banco:-nenhum}") tabelas=$nc/$vivo dados=$(du -h "$D/diaria-dados-$DIA.tar.gz" 2>/dev/null | cu
+[ $OK = 1 ]
+== ultima rodada:
+Mon 2026-11-16 06:42:23 UTC 0
+2026-11-14T06:41:20+00:00 srv1886750 systemd[1]: Finished pms-banana-ai-copia-diaria.service - V1.0 - copia diaria (banco, configuracao e dados).
+2026-11-14T06:41:20+00:00 srv1886750 systemd[1]: pms-banana-ai-copia-diaria.service: Consumed 39.810s CPU time.
+2026-11-15T06:48:23+00:00 srv1886750 systemd[1]: Starting pms-banana-ai-copia-diaria.service - V1.0 - copia diaria (banco, configuracao e dados)...
+2026-11-15T06:49:02+00:00 srv1886750 pms-banana-ai-copia-diaria.sh[2057926]: 15/11/2026 06:49 OK banco=pms_banana_ai-20261115-064823.sql.gz tabelas=137/137 dados=188K livre=54G
+2026-11-15T06:49:02+00:00 srv1886750 systemd[1]: pms-banana-ai-copia-diaria.service: Deactivated successfully.
+2026-11-15T06:49:02+00:00 srv1886750 systemd[1]: Finished pms-banana-ai-copia-diaria.service - V1.0 - copia diaria (banco, configuracao e dados).
+2026-11-15T06:49:02+00:00 srv1886750 systemd[1]: pms-banana-ai-copia-diaria.service: Consumed 38.239s CPU time.
+2026-11-16T06:42:23+00:00 srv1886750 systemd[1]: Starting pms-banana-ai-copia-diaria.service - V1.0 - copia diaria (banco, configuracao e dados)...
+2026-11-16T06:43:00+00:00 srv1886750 pms-banana-ai-copia-diaria.sh[2149098]: 16/11/2026 06:43 OK banco=pms_banana_ai-20261116-064223.sql.gz tabelas=137/137 dados=188K livre=51G
+2026-11-16T06:43:00+00:00 srv1886750 systemd[1]: pms-banana-ai-copia-diaria.service: Deactivated successfully.
+2026-11-16T06:43:00+00:00 srv1886750 systemd[1]: Finished pms-banana-ai-copia-diaria.service - V1.0 - copia diaria (banco, configuracao e dados).
+2026-11-16T06:43:00+00:00 srv1886750 systemd[1]: pms-banana-ai-copia-diaria.service: Consumed 37.341s CPU time.
+== arquivos em /var/backups/pms-banana-ai (fora wifi):
+[nuvem] fim 2026-11-17 05:06:45 codigo=0 duracao=0s

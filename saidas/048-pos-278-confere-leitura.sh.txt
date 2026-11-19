@@ -1,0 +1,4 @@
+[nuvem] inicio 2026-11-19 14:01:55 048-pos-278-confere-leitura.sh
+versao: 1.0.278 · calendario: on · caixas lidas: 1 (2 = a nova tambem)
+calendario: {'modo': 'on', 'lidos': 59, 'falhas': 0, 'reservas_no_airbnb': 34} achados: 0
+[nuvem] fim 2026-11-19 14:01:58 codigo=0 duracao=3s

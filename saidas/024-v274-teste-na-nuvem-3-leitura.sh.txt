@@ -1,0 +1,21 @@
+[nuvem] inicio 2026-11-19 09:37:15 024-v274-teste-na-nuvem-3-leitura.sh
+copia: 1.0.273 · 50M
+patching file SISTEMA/api/app/channel/adapters.py
+patching file SISTEMA/api/app/channel/intents.py
+patching file SISTEMA/api/app/entrada/airbnb_reservas.py
+patching file SISTEMA/api/app/entrada/anuncios_airbnb.py
+patching file SISTEMA/api/app/entrada/imap_reservas.py
+patching file SISTEMA/api/app/entrada/intents.py
+patching file SISTEMA/api/app/entrada/tests/test_v1274_airbnb_reservas_pelo_email.py
+patching file SISTEMA/api/app/reservation/intents.py
+patching file SISTEMA/api/app/versao.py
+== testes novos
+...........                                                              [100%]
+11 passed in 1.31s
+== entrada + channel
+FAILED api/app/entrada/tests/test_v1243_imap_reservas.py::test_email_do_airbnb_entra_pela_porta_casado_e_uma_vez_so
+1 failed, 127 passed, 1 warning in 2.98s
+== suite inteira
+FAILED api/app/entrada/tests/test_v1243_imap_reservas.py::test_email_do_airbnb_entra_pela_porta_casado_e_uma_vez_so
+1 failed, 2767 passed, 8 warnings in 95.67s (0:01:35)
+[nuvem] fim 2026-11-19 09:38:58 codigo=0 duracao=103s

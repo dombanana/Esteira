@@ -1,0 +1,4 @@
+[nuvem] inicio 2026-11-19 11:53:05 036-tempo-do-email-da-reserva-leitura.sh
+envio do Airbnb -> chegada na caixa: 185 e-mails · min 1s · mediana 3s · 95% 7s · max 40s
+chegada na caixa -> sistema registrou: 17 e-mails · min 42s · mediana 117036s · 95% 216571s · max 243552s
+[nuvem] fim 2026-11-19 11:55:50 codigo=0 duracao=165s

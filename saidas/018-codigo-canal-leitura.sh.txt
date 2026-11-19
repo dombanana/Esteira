@@ -1,0 +1,141 @@
+[nuvem] inicio 2026-11-19 09:18:55 018-codigo-canal-leitura.sh
+== channel == / channel in
+./motor/intents.py:51:    external_effects=("nobeds", "ttlock", "whatsapp"))
+./motor/intents.py:62:    external_effects=("nobeds", "whatsapp", "motor", "ttlock"))
+./motor/intents.py:183:    if str(p.get("nasce") or "nobeds") == "v1":
+./motor/intents.py:309:    if str(p.get("nasce") or "nobeds") == "v1":
+./motor/intents.py:315:    ctx.emit("nobeds", "motor_criar",
+./motor/intents.py:429:        ctx.emit("nobeds", "motor_cancelar",
+./motor/intents.py:593:    module=MODULE, required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE, external_effects=("nobeds",))
+./motor/intents.py:608:        ctx.emit("nobeds", "update_availability",
+./motor/service.py:86:    """De onde sai o que esta livre e o preco: "v1" (padrao, 28/09) ou "nobeds" (a pagina OnePage, legado)."""
+./motor/service.py:87:    return "nobeds" if str(env.get("PMS_MOTOR_FONTE", "")).strip().lower() == "nobeds" else "v1"
+./motor/service.py:92:    "nobeds" (legado: `create_booking` no Nobeds)."""
+./motor/service.py:93:    return "nobeds" if str(env.get("PMS_MOTOR_NASCE", "")).strip().lower() == "nobeds" else "v1"
+./motor/service.py:476:    origem = origem or ("nobeds" if get is not None else fonte())
+./motor/service.py:477:    if origem == "nobeds":
+./messaging/ota.py:257:    external_effects=("whatsapp", "nobeds"))        # v1.0.59: aviso 🧲; v1.0.204: link pelo WhatsApp informado no chat
+./messaging/ota.py:291:        if c.adapter != "nobeds" or c.command_type != "send_message":
+./messaging/ota.py:375:    external_effects=("whatsapp", "nobeds"))
+./messaging/ota.py:421:            ctx.emit("nobeds", "send_message", {"referral_order_id": codigo, "referral": canal_ref,
+./messaging/entrega_ota.py:32:MODOS = ("navegador", "rest", "nobeds")
+./messaging/entrega_ota.py:180:    return c.adapter == "nobeds" and c.command_type == "send_message"
+./messaging/entrega_ota.py:239:    return e_chat_ota(c) and modo(env) != "nobeds"
+./messaging/entrega_ota.py:274:    return marcar(t, "nobeds")       # o mesmo texto que o adaptador mandaria (link com a marca do chat)
+./messaging/link_pelo_whatsapp.py:131:        ctx.emit("nobeds", "send_message", {"referral_order_id": codigo, "referral": reserva.referral, "text_ref": ref2,
+./messaging/intents.py:30:    external_effects=("email", "nobeds", "whatsapp"))
+./messaging/intents.py:54:    if channel == "ota" and not (reserva and reserva.ota_code):
+./messaging/intents.py:65:    if channel == "ota":
+./messaging/intents.py:68:        ctx.emit("nobeds", "send_message", {"referral_order_id": reserva.ota_code, "referral": reserva.referral,
+./messaging/intents.py:71:    if channel == "whatsapp":
+./messaging/intents.py:153:    external_effects=("whatsapp", "nobeds", "email"))     # nobeds/email: @lojinha do lojista (26/09)
+./messaging/perguntas.py:205:        ctx.emit("nobeds", "send_message", {"referral_order_id": row.get("ota_code"), "referral": row.get("referral"),
+./messaging/perguntas.py:327:    module="concierge", required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE, external_effects=("whatsapp", "nobeds", "email"))
+./messaging/nao_contatar.py:24:MENSAGEM = {"whatsapp": None, "email": None, "nobeds": {"send_message"}}
+./reservation/canceladas.py:31:MENSAGEM = ("email", "whatsapp", "nobeds", "sms")
+./reservation/distribuicao.py:302:    external_effects=("asaas", "whatsapp", "email", "nobeds"))
+./reservation/distribuicao.py:332:        if canal == "nobeds":
+./reservation/distribuicao.py:333:            ctx.emit("nobeds", "send_message", {**comum, "referral_order_id": getattr(reserva, "ota_code", ""),
+./reservation/distribuicao.py:484:        if any(outbox.get(f"{chave}:{canal}") is not None for canal in ("whatsapp", "email", "nobeds")):
+./reservation/distribuicao.py:494:    external_effects=("whatsapp", "email", "nobeds", "asaas"))
+./reservation/continuacao.py:283:    external_effects=("nobeds", "whatsapp", "email"))
+./reservation/continuacao.py:291:    return any(outbox.get(chave_aviso(rid, c)) is not None for c in ("nobeds", "whatsapp", "email"))
+./reservation/continuacao.py:365:        ctx.emit("nobeds", "send_message", {"referral_order_id": reserva.ota_code, "referral": reserva.referral,
+./reservation/continuacao.py:367:                 idempotency_key=chave_aviso(rid, "nobeds"))
+./reservation/cancelar.py:33:    external_effects=("nobeds", "asaas", "ttlock"))
+./reservation/cancelar.py:48:    if reserva.channel != "direct" and not reserva.external_id:
+./reservation/cancelar.py:76:    if reserva.channel == "direct":
+./reservation/cancelar.py:80:    ctx.emit("nobeds", "cancel_booking",
+./reservation/lembretes.py:85:CANAL_PT = {"nobeds": "chat da plataforma", "whatsapp": "WhatsApp", "email": "e-mail", "sms_phone": "SMS"}
+./reservation/lembretes.py:92:GUEST_COMMANDS = {("email", "send_template"), ("whatsapp", "send_template"), ("nobeds", "send_message"),
+./reservation/lembretes.py:181:    return t or ("mensagem_livre" if c.adapter == "nobeds" else c.command_type)
+./reservation/lembretes.py:191:    if c.adapter == "nobeds" and c.idempotency_key.startswith("precheck:"):
+./reservation/lembretes.py:407:        out = ["nobeds"]
+./reservation/lembretes.py:414:        return ["nobeds"]
+./reservation/lembretes.py:421:        out.append("nobeds")
+./reservation/lembretes.py:435:    external_effects=("nobeds", "whatsapp", "email"))
+./reservation/lembretes.py:465:    pelos = [c for c in ctx.params.get("canais") or () if c in ("nobeds", "whatsapp", "email")][:2]
+./reservation/lembretes.py:493:    if chat_booking(reserva) and "nobeds" in pelos and "whatsapp" in pelos and _so_pt():
+./reservation/lembretes.py:506:        if canal == "nobeds":
+./reservation/lembretes.py:507:            ctx.emit("nobeds", "send_message", {**comum, "referral_order_id": reserva.ota_code,
+./reservation/lembretes.py:561:        for canal in ("nobeds", "whatsapp", "email"):
+./reservation/lembretes.py:819:                        chat_c = "nobeds" in pelos_c
+./reservation/lembretes.py:853:                                "chat_ota": "nobeds" in pelos_a and chat_da_ota(reserva)})
+./reservation/lembretes.py:862:        chat_foi = "nobeds" in pelos or any(c.adapter == "nobeds" and c.status is CommandStatus.SENT for c in comandos)
+./reservation/intents.py:79:    external_effects=("ttlock", "nobeds"),   # a senha do quarto antigo cai (23/09); v1.0.206: o Nobeds acompanha
+./reservation/intents.py:123:            ctx.emit("nobeds", "mover_reserva", payload,
+./reservation/intents.py:504:    if existing.state is EventState.CANCELLED and reserva.channel != "direct":
+./reservation/intents.py:720:    external_effects=("email", "whatsapp", "nobeds", "sms_phone"),
+./reservation/intents.py:888:        ctx.emit("nobeds", "send_message", {"referral_order_id": reserva.ota_code, "referral": reserva.referral,
+./reservation/intents.py:1017:_CANAIS_SEM_OTA = frozenset({"", "direct", "nobeds", "nobeds.app", "one page", "onepage", "motor de reservas",
+./reservation/editar_estadia.py:528:    external_effects=("ttlock", "whatsapp", "fnrh", "nobeds"), grants_physical_access=True)   # v1.0.226: nobeds
+./reservation/editar_estadia.py:633:    if payload is None or "nobeds" not in ctx.contract.external_effects:
+./reservation/editar_estadia.py:635:    ctx.emit("nobeds", "espelhar_datas", payload,
+./reservation/senha_chat.py:52:    return any(c in ref for c in canais(env)) and modo(env) in ("rest", "nobeds")
+./reservation/senha_copias.py:115:    external_effects=("nobeds", "email"))
+./reservation/senha_copias.py:133:            ctx.emit("nobeds", "send_message",
+./reservation/avisos_conduta.py:50:    external_effects=("nobeds", "whatsapp"))
+./reservation/avisos_conduta.py:75:        ctx.emit("nobeds", "send_message", {"person_ref": event.who.person, "reservation_id": rid, "text_ref": ref,
+./reservation/morador_nobeds.py:30:    external_effects=("nobeds",))
+./reservation/morador_nobeds.py:104:        ctx.emit("nobeds", "morador_encerrar",
+./reservation/denuncia_barulho.py:114:    external_effects=("nobeds", "whatsapp", "tuya"))
+./reservation/denuncia_barulho.py:146:            ctx.emit("nobeds", "send_message", {"person_ref": e.who.person, "reservation_id": titular, "text_ref": ref,
+cut: write error: Broken pipe
+== link por codigo (rota raiz)
+./motor/intents.py:93:    ota_code: str = ""
+./messaging/ota.py:395:        codigo = str(getattr(reserva, "ota_code", "") or "") or str(row.get("numero") or "")
+./messaging/ota.py:413:                                        reservation_id=rid, referral=canal_ref, ota_code=codigo,
+./messaging/entrega_ota.py:261:    return next((r for r in store.reservations.values() if r.ota_code == codigo or r.external_id == codigo), None)
+./messaging/link_pelo_whatsapp.py:125:    codigo = str(numero or reserva.ota_code or "")
+./messaging/intents.py:54:    if channel == "ota" and not (reserva and reserva.ota_code):
+./messaging/intents.py:68:        ctx.emit("nobeds", "send_message", {"referral_order_id": reserva.ota_code, "referral": reserva.referral,
+./messaging/perguntas.py:127:          reservation_id: str = "", referral: str = "", ota_code: str = "", contato_ref: str = "",
+./messaging/perguntas.py:155:           "reservation_id": reservation_id, "referral": referral, "ota_code": ota_code, "contato_ref": contato_ref,
+./messaging/perguntas.py:205:        ctx.emit("nobeds", "send_message", {"referral_order_id": row.get("ota_code"), "referral": row.get("referral"),
+./messaging/nao_contatar.py:76:        r = next((r for r in reservas if r.ota_code and r.ota_code == str(p["referral_order_id"])), None)
+./reservation/distribuicao.py:333:            ctx.emit("nobeds", "send_message", {**comum, "referral_order_id": getattr(reserva, "ota_code", ""),
+./reservation/continuacao.py:365:        ctx.emit("nobeds", "send_message", {"referral_order_id": reserva.ota_code, "referral": reserva.referral,
+./reservation/cancelar.py:38:    return bool(getattr(reserva, "ota_code", "")) or any(o in ref for o in OTAS)
+./reservation/lembretes.py:446:    return bool(getattr(reserva, "ota_code", "")) and "booking" in str(getattr(reserva, "referral", "") or "").casefold()
+./reservation/lembretes.py:455:    return bool(getattr(reserva, "ota_code", "")) and "airbnb" in str(getattr(reserva, "referral", "") or "").casefold()
+./reservation/lembretes.py:507:            ctx.emit("nobeds", "send_message", {**comum, "referral_order_id": reserva.ota_code,
+./reservation/intents.py:410:            ota_code=booking.ota_code,
+./reservation/intents.py:437:            ota_code=booking.ota_code,
+./reservation/intents.py:731:    return bool(reserva.ota_code) and any(c in ref for c in CHAT_CHANNELS)
+./reservation/intents.py:791:    for value in (reserva.ota_code, reserva.external_id, reserva.reservation_id):
+./reservation/intents.py:801:    return {c for c in (normalize_reservation_alias(v) for v in (reserva.ota_code, reserva.external_id,
+./reservation/intents.py:888:        ctx.emit("nobeds", "send_message", {"referral_order_id": reserva.ota_code, "referral": reserva.referral,
+./reservation/intents.py:1002:            "ota_reservation_code": reserva.ota_code or None,   # order_id nunca vai aqui
+./reservation/editar_estadia.py:549:              "ota_reservation_code": reserva.ota_code or None, "guest_count": int(reserva.paid_occupancy or 1),
+./reservation/avisos_conduta.py:76:                                            "referral_order_id": str(getattr(reserva, "ota_code", "") or ""),
+./reservation/hospede_extra.py:118:    return any("airbnb" in str(getattr(reserva, k, "") or "").casefold() for k in ("referral", "channel", "ota_code"))
+./reservation/denuncia_barulho.py:147:                                                "referral_order_id": str(getattr(reserva, "ota_code", "") or ""),
+./reservation/vender_noites.py:86:    return any("airbnb" in str(getattr(reserva, k, "") or "").casefold() for k in ("referral", "channel", "ota_code"))
+./reservation/ocorrencias.py:306:                                                    "referral_order_id": str(getattr(reserva, "ota_code", "") or ""),
+./channel/adapters.py:186:    ota_code: str
+./channel/adapters.py:244:        ota_code=ota_reservation_code(booking),
+./shop/lojista.py:67:            "pago_cents": 0, "canal": "ota" if (reserva is not None and reserva.ota_code) else "email"})
+./shop/lojista.py:176:    canal = "ota" if (reserva is not None and reserva.ota_code) else "email"
+./shop/lojista.py:190:        ctx.emit("nobeds", "send_message", {"referral_order_id": reserva.ota_code, "referral": reserva.referral,
+./nucleo/pacotes.py:316:                    "codigo_no_canal": res.ota_code or res.external_id, "hospedes": res.paid_occupancy})
+./marketing/reviews.py:73:        if c in {str(r.external_id).upper(), str(r.ota_code).upper(), str(r.reservation_id).upper()}:
+./core/reservation.py:12:mandou: de onde veio (`channel`, `external_id`, `ota_code`), as datas
+./core/reservation.py:52:    ota_code: str = ""           # codigo de confirmacao da OTA, se o canal expos
+./core/reservation.py:92:                    "ota_code": self.ota_code,
+== allocate_beds / has_beds
+./inventory/intents.py:168:    def instance(self, instance_id: str) -> "Instance | None":
+./inventory/intents.py:172:    def has_beds(self, space_id: str) -> bool:
+./inventory/intents.py:265:def allocate_beds(store: Any, room: str, checkin: date, checkout: date, guests: int) -> list[str]:
+./inventory/tests/test_inventory.py:43:    def instance(self, instance_id, **fields):
+== PMS_RESERVAS_IMAP
+./entrada/imap_reservas.py:9:O que faz (a cada volta do worker, no maximo a cada `PMS_RESERVAS_IMAP_SEGUNDOS`, padrao 60): abre a caixa SO PARA
+./entrada/imap_reservas.py:10:LEITURA (nada e marcado como lido, movido ou apagado), olha as pastas `PMS_RESERVAS_IMAP_PASTAS` (padrao
+./entrada/imap_reservas.py:17:Credenciais so no secrets.env (`PMS_RESERVAS_IMAP_USUARIO`, `PMS_RESERVAS_IMAP_SENHA`; servidor
+./entrada/imap_reservas.py:18:`PMS_RESERVAS_IMAP_SERVIDOR`, padrao imap.hostinger.com), gravadas pelo Dom com GRAVAR-IMAP-RESERVAS.bat. Sem elas, nada
+./entrada/imap_reservas.py:19:roda. `PMS_RESERVAS_IMAP=off` desliga. Remetente, assunto e texto vao para o cofre, como no webhook.
+./entrada/imap_reservas.py:40:    if str(env.get("PMS_RESERVAS_IMAP", "on") or "on").strip().lower() == "off":
+./entrada/imap_reservas.py:42:    usuario, senha = str(env.get("PMS_RESERVAS_IMAP_USUARIO") or "").strip(), str(env.get("PMS_RESERVAS_IMAP_SENHA") or "")
+./entrada/imap_reservas.py:45:    pastas = [p.strip() for p in str(env.get("PMS_RESERVAS_IMAP_PASTAS") or PASTAS).split(",") if p.strip()]
+./entrada/imap_reservas.py:47:        seg = max(20, int(str(env.get("PMS_RESERVAS_IMAP_SEGUNDOS") or 60)))
+./entrada/imap_reservas.py:50:    return {"servidor": str(env.get("PMS_RESERVAS_IMAP_SERVIDOR") or SERVIDOR).strip(), "usuario": usuario,
+[nuvem] fim 2026-11-19 09:18:55 codigo=0 duracao=0s

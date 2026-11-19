@@ -1,0 +1,16 @@
+[nuvem] inicio 2026-11-19 05:49:15 007-caixa-airbnb-150-dias-e-mapa-leitura.sh
+caixa configurada: sim
+chaves de uma linha de entrada: ['assinatura', 'autoria', 'caixa', 'codigo', 'conteudo_hash', 'dominio', 'entrada_id', 'estado', 'fonte', 'id_na_fonte', 'modo', 'ota', 'processado', 'propriedade', 'quando_no_aviso', 'recebido_em', 'reservation_id', 'status_na_chegada', 'tamanho', 'tipo']
+linhas de entrada nas ultimas 24 h: 35
+pasta 03_Reservas: 0 e-mail(s) nos ultimos 3 dias, por origem: {}
+pasta INBOX: 0 e-mail(s) nos ultimos 3 dias, por origem: {}
+03_Reservas, 150 dias: e-mails do Airbnb por classe: {}
+reservas novas lidas: {}
+casadas com o sistema: {}
+anuncios do Airbnb vistos: 0 · um espaco so: 0 · mais de um espaco: 0
+   (espacos por anuncio ambiguo, so quantidades): []
+reservas futuras/em curso no sistema: 38 por canal: {'nobeds': 38}
+   com codigo HM (Airbnb): 31 · com e-mail de reserva achado: 0
+   campos de referencia na reserva: ['ota_code']
+fim
+[nuvem] fim 2026-11-19 05:49:17 codigo=0 duracao=2s

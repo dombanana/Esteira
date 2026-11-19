@@ -1,0 +1,13 @@
+[nuvem] inicio 2026-11-19 13:36:25 043-fila-e-versao-no-ar-leitura.sh
+no ar: 1.0.277
+fatal: detected dubious ownership in repository at '/opt/pms-banana-ai-fila.git'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /opt/pms-banana-ai-fila.git
+fatal: detected dubious ownership in repository at '/opt/pms-banana-ai-fila.git'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /opt/pms-banana-ai-fila.git
+test_v1243_imap_reservas.py
+test_v1275_airbnb_reservas_pelo_email.py
+[nuvem] fim 2026-11-19 13:36:25 codigo=0 duracao=0s

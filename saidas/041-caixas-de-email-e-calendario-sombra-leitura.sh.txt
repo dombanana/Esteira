@@ -1,0 +1,38 @@
+[nuvem] inicio 2026-11-19 13:32:59 041-caixas-de-email-e-calendario-sombra-leitura.sh
+== 1. chaves de e-mail no secrets (sem valores de senha)
+   MAIL = (14 car.)
+   PMS_AIRBNB_EMAIL_RESERVAS = on
+   PMS_ALERT_EMAIL = systems@dombanana.tech
+   PMS_EMAIL_IA = (2 car.)
+   PMS_EMAIL_WEBHOOK_TOKEN = (tem valor, 64 car.)
+   PMS_RESERVAS_IMAP_PASTAS = INBOX.03_Reservas,INBOX
+   PMS_RESERVAS_IMAP_SENHA = (tem valor, 10 car.)
+   PMS_RESERVAS_IMAP_USUARIO = contato@dombanana.tech
+   SMTP_FROM = contato@dombanana.tech
+   SMTP_HOST = smtp.hostinger.com
+   SMTP_PASSWORD = (tem valor, 10 car.)
+   SMTP_PORT = (3 car.)
+   SMTP_USER = contato@dombanana.tech
+== 2. caixa lida: contato@dombanana.tech · pastas: ['INBOX.03_Reservas', 'INBOX']
+   INBOX.03_Reservas  17/11 22h: 3
+   INBOX.03_Reservas  18/11 04h: 1
+   INBOX.03_Reservas  18/11 08h: 3
+   INBOX.03_Reservas  18/11 10h: 3
+   INBOX.03_Reservas  18/11 12h: 1
+   INBOX.03_Reservas  18/11 13h: 1
+   INBOX.03_Reservas  18/11 14h: 2
+   INBOX.03_Reservas  18/11 15h: 6
+   INBOX.03_Reservas  18/11 16h: 1
+   INBOX.03_Reservas  18/11 19h: 1
+   INBOX.03_Reservas  18/11 22h: 1
+   INBOX.03_Reservas  19/11 08h: 3
+   destinatarios (To): {'reservations@dombanana.tech': 26}
+   ultimo e-mail do Airbnb: 19/11 08:41
+== 3. calendario (sombra) e saude das fontes
+   airbnb_ical (sem registro em store.saude)
+   imap_reservas (sem registro em store.saude)
+   nobeds (sem registro em store.saude)
+   alertas do calendario: 0
+   switch PMS_AIRBNB_ICAL = None · PMS_AIRBNB_EMAIL_RESERVAS = on
+== 4. log do worker: calendario de hoje
+[nuvem] fim 2026-11-19 13:33:07 codigo=0 duracao=8s

@@ -1,0 +1,14 @@
+[nuvem] inicio 2026-11-19 05:42:35 006-saida-nobeds-onde-estamos-leitura.sh
+versao no ar: 1.0.273
+--- diario (24 h): imap / entrada.email / RES-09
+   imap: 0
+   entrada.email: 16
+   RES-09: 0
+   nobeds: 159
+caixa IMAP configurada: NAO | pastas: None
+entradas gravadas: 3076 | por fonte: {'email': 254, 'ota': 884, 'voz': 84, 'whatsapp': 1854}
+entradas dos ultimos 3 dias: 0 {}
+prontidao: {'reservas': 0, 'lidas_completas': 0, 'conferem': 0, 'divergem': 0, 'criaria_igual': 0, 'faltas': {}, 'anuncios_aprendidos': 0, 'anuncios_ambiguos': 0, 'anuncios_mapeados_nobeds': 84, 'pronto': False, 'resumo': 'Ainda não chegou e-mail de reserva do Airbnb pela caixa (ligue a leitura com GRAVAR-IMAP-RESERVAS.bat).'}
+reservas no sistema: 280 | por canal: {'direct': 24, 'nobeds': 253, 'teste-interno': 3}
+fim
+[nuvem] fim 2026-11-19 05:42:42 codigo=0 duracao=7s

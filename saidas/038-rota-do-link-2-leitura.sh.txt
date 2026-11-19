@@ -1,0 +1,49 @@
+[nuvem] inicio 2026-11-19 12:20:46 038-rota-do-link-2-leitura.sh
+./motor/intents.py:330:        raise ValueError("Pedido do motor nao encontrado.")
+./messaging/ota.py:229:    from app.reservation.intents import link_aliases
+./messaging/ota.py:234:        if alvo in link_aliases(r):
+./messaging/ota.py:384:        raise ValueError("mensagem da OTA nao encontrada")
+./messaging/whatsapp.py:592:            raise AdapterError("whatsapp: foto nao encontrada no cofre de arquivos") from None
+./messaging/email_ia.py:114:        raise ValueError("e-mail nao encontrado")
+./messaging/intents.py:45:        raise ValueError(f"reserva {reservation_id} nao encontrada")
+./messaging/intents.py:222:            raise ValueError("Reserva nao encontrada.")
+./messaging/intents.py:349:        raise ValueError("Alerta nao encontrado.")
+./messaging/intents.py:909:        raise ValueError("conversa nao encontrada")
+./messaging/intents.py:1031:        raise ValueError("conversa nao encontrada")
+./messaging/adapters.py:799:        raise AdapterError("impressora: arquivo nao encontrado na midia") from None
+./laundry/intents.py:392:        raise ValueError("Reserva não encontrada.")
+./laundry/intents.py:605:        raise ValueError("Reserva não encontrada.")
+./laundry/intents.py:657:        raise ValueError("Reserva não encontrada.")
+./reservation/companions.py:102:        raise ValueError("Reserva nao encontrada.")
+./reservation/nao_veio.py:50:        raise ValueError("Reserva nao encontrada.")
+./reservation/cancelar.py:63:        raise ValueError("Reserva não encontrada.")
+./reservation/convite_acompanhante.py:152:        raise ValueError("Reserva nao encontrada.")
+./reservation/recorrente.py:157:        return "Sem mudanca (pessoa nao encontrada)."
+./reservation/intents.py:800:def link_aliases(reserva: Reserva) -> set[str]:
+./reservation/intents.py:939:    reserva; o convite da V1.0 so sai 7 dias antes. Sem isto o hospede via "Link nao encontrado". So grava o link
+./reservation/intents.py:946:        raise ValueError("Reserva nao encontrada.")
+./reservation/intents.py:1609:        raise ValueError(f"Pessoa {event.who.person} nao encontrada.")
+./reservation/editar_estadia.py:688:        raise ValueError("Reserva não encontrada.")
+./reservation/avisos_conduta.py:61:        raise ValueError("Reserva não encontrada.")
+./reservation/cadastro.py:157:        raise ValueError("Reserva nao encontrada.")
+./reservation/cadastro.py:213:        raise ValueError("Estadia nao encontrada.")
+./reservation/cadastro.py:217:        raise ValueError("Pessoa da estadia nao encontrada.")
+./reservation/adapters.py:2077:            raise AdapterError("ttlock: senha da estadia nao encontrada") from None
+==
+./community/routes.py:36:    @router.get("/{code}/casa-viva", response_class=HTMLResponse)
+./panel/routes.py:443:    @router.get("/{code:guestcode}/como-chegar", response_class=HTMLResponse)
+./panel/routes.py:448:    @router.get("/{code:guestcode}/silencio", response_class=HTMLResponse)
+./panel/routes.py:453:    @router.get("/{code:guestcode}/armario", response_class=HTMLResponse)
+./panel/routes.py:459:    @router.get("/{code:guestcode}", response_class=HTMLResponse)
+./panel/routes.py:979:    @router.get("/{code:guestcode}/lojinha", response_class=HTMLResponse)
+./panel/routes.py:1168:    @router.get("/{code:guestcode}/imprimir", response_class=HTMLResponse)
+./panel/routes.py:1172:    @router.get("/{code:guestcode}/lavanderia", response_class=HTMLResponse)
+./panel/routes.py:1176:    @router.get("/{code:guestcode}/cafe", response_class=HTMLResponse)
+./panel/routes.py:1195:    @router.get("/{code:guestcode}/bicicletas", response_class=HTMLResponse)
+==
+/etc/nginx/sites-enabled/degustacao.dombanana.tech.conf:29:        if ($dbt_casa_up = "") { return 302 https://www.dombanana.tech/solucaohoteleira#teste; }
+/etc/nginx/sites-enabled/degustacao.dombanana.tech.conf:35:        if ($dbt_up = "") { return 302 https://www.dombanana.tech/solucaohoteleira#teste; }
+/etc/nginx/sites-enabled/dom-banana-v10-www.conf:2:    server_name www.dombanana.tech;
+/etc/nginx/sites-enabled/dom-banana-v10-www.conf:45:    # dom-banana:206 (26/09) -- Wi-Fi da V1.0 com ponte para a V3.4; link do hospede www.dombanana.tech/<codigo>
+/etc/nginx/sites-enabled/dom-banana-v10-www.conf:54:    ssl_certificate /etc/letsencrypt/live/www.dombanana.tech/fullchain.pem; # managed by Certbot
+[nuvem] fim 2026-11-19 12:20:46 codigo=0 duracao=0s

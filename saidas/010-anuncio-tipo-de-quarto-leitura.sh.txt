@@ -1,0 +1,10 @@
+[nuvem] inicio 2026-11-19 05:57:05 010-anuncio-tipo-de-quarto-leitura.sh
+caixa configurada: sim
+chaves de uma linha de entrada: ['assinatura', 'autoria', 'caixa', 'codigo', 'conteudo_hash', 'dominio', 'entrada_id', 'estado', 'fonte', 'id_na_fonte', 'modo', 'ota', 'processado', 'propriedade', 'quando_no_aviso', 'recebido_em', 'reservation_id', 'status_na_chegada', 'tamanho', 'tipo']
+linhas de entrada nas ultimas 24 h: 35
+pasta INBOX.03_Reservas: 74 e-mail(s) nos ultimos 3 dias, por origem: {'Airbnb': 65, 'outro': 6, 'Agoda': 1, 'Hostelworld': 2}
+Traceback (most recent call last):
+  File "<stdin>", line 31, in <module>
+TypeError: vars() argument must have __dict__ attribute
+fim
+[nuvem] fim 2026-11-19 05:57:17 codigo=0 duracao=12s

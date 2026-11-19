@@ -1,0 +1,18 @@
+[nuvem] inicio 2026-11-19 12:19:45 037-rota-do-link-leitura.sh
+./reservation/intents.py:800:def link_aliases(reserva: Reserva) -> set[str]:
+./channel/adapters.py:60:def normalize_reservation_alias(value: object) -> str:
+./entrada/intents.py:246:    # v1.0.56 (Dom 05/10: "o contato@ e o e-mail que ele deixa eu fazer a configuracao ... o reservations@ e um alias"):
+==
+==
+./channel/routes.py:42:    def refresh(self) -> None:
+./worker.py:1395:def refresh_listings(state: AppState, list_rentals: Callable[[], list], *, at: datetime | None = None) -> str:
+==
+# Degustacao (Dom 26/09): https://degustacao.dombanana.tech/<casa>/entrar/<papel>/<chave> guarda a casa num cookie e
+# o resto vai para a porta dela. O mapa casa -> porta e escrito pelo gerente (ops/degustacao.py nginx).
+map $casa $dbt_casa_up { default ""; include /etc/nginx/degustacao-casas.map; }
+/etc/nginx/sites-enabled/degustacao.dombanana.tech.conf:1:# Degustacao (Dom 26/09): https://degustacao.dombanana.tech/<casa>/entrar/<papel>/<chave> guarda a casa num cookie e
+/etc/nginx/sites-enabled/degustacao.dombanana.tech.conf:8:    server_name degustacao.dombanana.tech;
+/etc/nginx/sites-enabled/degustacao.dombanana.tech.conf:18:    server_name degustacao.dombanana.tech;
+/etc/nginx/sites-enabled/degustacao.dombanana.tech.conf:23:    ssl_certificate /etc/letsencrypt/live/degustacao.dombanana.tech/fullchain.pem;
+/etc/nginx/sites-enabled/degustacao.dombanana.tech.conf:24:    ssl_certificate_key /etc/letsencrypt/live/degustacao.dombanana.tech/privkey.pem;
+[nuvem] fim 2026-11-19 12:19:45 codigo=0 duracao=0s

@@ -1,0 +1,120 @@
+[nuvem] inicio 2026-11-19 13:37:35 044-codigo-imap-leitura.sh
+f7404ce854959c8cd1f9294b00dc19d0a88636876d17238cfd793c835408bc00  /opt/PMS-Banana-AI/SISTEMA/api/app/entrada/imap_reservas.py
+95f07adc5cde6c386164f8b424301d85579980dbb3068f30e0fc2539b36aa6da  /opt/PMS-Banana-AI/SISTEMA/api/app/versao.py
+--- test_v1243
+"""v1.0.243 (Dom 14/11, "Alta": a entrada das reservas sem a Nobeds): a caixa das reservas lida direto por IMAP, so leitura;
+os e-mails de OTA entram pela mesma porta do webhook (modo sombra), uma vez so; sem credencial, nada roda."""
+from __future__ import annotations
+
+from email.message import EmailMessage
+
+from app.entrada import imap_reservas as IM
+from app.entrada.tests.test_porta_e_motor import _airbnb
+from app.finance.tests.test_direct_booking import AGORA, _casa
+
+ENV = {"PMS_RESERVAS_IMAP_USUARIO": "contato@exemplo.com", "PMS_RESERVAS_IMAP_SENHA": "x" * 12}
+
+
+def _msg(mid, remetente, assunto, texto):
+    m = EmailMessage()
+    m["From"], m["To"], m["Subject"], m["Message-ID"], m["Date"] = remetente, "contato@exemplo.com", assunto, mid, \
+        "Sat, 14 Nov 2026 13:30:16 +0000"
+    m.set_content(texto)
+    return m.as_bytes()
+
+
+class Caixa:
+    """IMAP falso: guarda o que foi pedido para conferir que tudo e so leitura."""
+
+    def __init__(self, msgs):
+        self.msgs, self.pedidos, self.select_ro = msgs, [], []
+
+    def login(self, u, s):
+        self.pedidos.append("login")
+
+    def select(self, pasta, readonly=False):
+        self.select_ro.append(readonly)
+        return ("OK", [b"1"]) if "03_Reservas" in pasta else ("NO", [b""])
+
+    def search(self, charset, crit):
+        return "OK", [b" ".join(str(i + 1).encode() for i in range(len(self.msgs)))]
+
+    def fetch(self, num, partes):
+        self.pedidos.append(partes)
+        assert "PEEK" in partes                                       # nunca marca como lido
+        return "OK", [(b"x", self.msgs[int(num) - 1])]
+
+    def logout(self):
+        pass
+
+
+def test_sem_credencial_nada_roda():
+    state = _casa()
+    assert IM.config({}) is None and IM.rodar(state, env={}) == ""
+
+
+def test_email_do_airbnb_entra_pela_porta_casado_e_uma_vez_so():
+    state = _casa()
+    _airbnb(state, code="HMABC12345")
+    caixa = Caixa([_msg("<a1@airbnb.com>", "Airbnb <automated@airbnb.com>",
+                        "Reserva confirmada - Ana chega em 20 de nov.", "Codigo de confirmacao HMABC12345"),
+                   _msg("<n1@x.com>", "Loja <ofertas@loja.com>", "Promocao", "nada")])
+    IM._ULTIMA.clear(); IM._VISTOS.clear()
+    out = IM.rodar(state, env=ENV, conectar=lambda host: caixa, at=AGORA)
+    assert "1 novo" in out
+    rows = [x for x in state.store.entradas.values() if x.get("ota") == "Airbnb"]
+    assert len(rows) == 1 and rows[0]["codigo"] == "HMABC12345" and rows[0]["reservation_id"]
+    assert rows[0]["tipo"] == "reserva_nova" and rows[0]["autoria"] == "canal:imap" and rows[0]["modo"] == "sombra"
+    assert all(caixa.select_ro)                                       # a caixa so e aberta para leitura
+    assert not [x for x in state.store.entradas.values() if x.get("dominio") == "loja.com"]   # so OTA
+    IM._ULTIMA.clear()
+    assert IM.rodar(state, env=ENV, conectar=lambda host: caixa, at=AGORA) == ""            # uma vez so
+
+
+def test_caixa_fora_do_ar_nao_derruba():
+    state = _casa()
+
+    def falha(host):
+        raise OSError("sem rede")
+    IM._ULTIMA.clear()
+    assert "erro" in IM.rodar(state, env=ENV, conectar=falha, at=AGORA)
+
+
+def test_para_porta_le_o_texto_e_o_remetente():
+    em = IM.para_porta(_msg("<b@airbnb.com>", "Airbnb <express@airbnb.com>", "Reserva cancelada", "HMXYZ98765"))
+    assert em["dominio"] == "airbnb.com" and "HMXYZ98765" in em["texto"] and em["message_id"] == "<b@airbnb.com>"
+--- worker: chamada
+3984:            from app.entrada import imap_reservas
+3985:            if feito := imap_reservas.rodar(state):
+--- versao.py
+"""A versao do sistema e o historico de melhorias (Dom 04/10: "a partir de agora, vamos considerar que essa e a v1.0.x
+-- x e a versao, ja comeca em 1" / "a partir de agora a gente vai gravar um historico das melhorias. Esse historico vai
+ficar disponivel no site de vendas").
+
+Regra de cada subida para producao: sobe o ultimo numero de VERSAO e poe a entrada nova NO TOPO de HISTORICO, no
+mesmo commit (o teste confere). O texto e para quem compra: linguagem simples, o que mudou para a casa e o hospede,
+nunca nome de hospede, numero de quarto ou detalhe tecnico. O painel mostra a versao no cabecalho; o site de vendas
+(/solucaohoteleira, secao "Melhorias") mostra a versao e o historico. A etiqueta de instalacao no git continua `v1.0`.
+"""
+from __future__ import annotations
+
+#: Dom 19/10: o que esta ligado na casa e a V1.0 e conta 1.0.x. As entregas de 16 a 19/10 tinham saido como 1.1.0 a
+#: 1.1.4 por engano (a V1.1 e a copia separada, por modulos, sem a casa) e voltaram a ser 1.0.114 a 1.0.118.
+VERSAO = "1.0.277"
+
+#: da mais nova para a mais antiga
+HISTORICO: list[dict] = [
+    {"versao": "1.0.277", "data": "2026-11-19", "itens": [
+        "Link do hospede do Airbnb que chega antes da reserva: em vez de link nao encontrado, a pagina mostra que a ficha esta sendo preparada e tenta de novo sozinha por ate 10 minutos (Dom 19/11)",
+        "Nobeds sai sem estrago no fim do contrato (26/11): o sistema para de conversar com ela sozinho, nenhuma reserva e mexida e o painel nao fica chamando por um servico que saiu de proposito",
+    ]},
+    {"versao": "1.0.276", "data": "2026-11-19", "itens": [
+        "Reservas do Airbnb sem a Nobeds, conferencia pelo calendario: de 30 em 30 minutos o sistema le o calendario de cada anuncio do Airbnb; o hospede mudou as datas e a unidade cabe, a reserva da casa acompanha (a senha junto); reserva que o Airbnb tem e a casa nao, ou que sumiu do Airbnb, chama o anfitriao -- nada e cancelado sozinho. Nasce em modo sombra (Dom 19/11: Pode fazer a versao em alta)",
+    ]},
+    {"versao": "1.0.275", "data": "2026-11-19", "itens": [
+        "Reservas do Airbnb sem a Nobeds: o e-mail de reserva confirmada cria a reserva na casa (unidade do anuncio ou a primeira livre da mesma categoria; sem vaga, nao cria e chama o anfitriao) e o e-mail de cancelamento cancela e tira a senha; alteracao chama o anfitriao (o e-mail nao traz as datas novas). Nasce em modo sombra: so registra o que faria ate o Dom ligar (Dom 19/11: Estamos dando o primeiro passo agora. Pode tocar)",
+        "Reserva lancada a mao na Nobeds com [AIRBNB-MANUAL] passa a ter o codigo do Airbnb (o e-mail casa com ela, nunca uma segunda reserva); a caixa das reservas le a pasta certa da Hostinger",
+    ]},
+    {"versao": "1.0.274", "data": "2026-11-19", "itens": [
+        "Painel do hospede, aba Automacao: cada aparelho virou um cartao com icone proprio da casa, que abre no toque para configurar; quando o quarto esta quente com o aparelho desligado, o cartao inteiro pisca em amarelo e a aba ganha uma bolinha piscando (tambem na Estadia e na Loja quando falta ficha, foto ou pagamento)",
+[nuvem] fim 2026-11-19 13:37:35 codigo=0 duracao=0s

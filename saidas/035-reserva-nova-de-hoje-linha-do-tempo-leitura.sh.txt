@@ -1,0 +1,15 @@
+[nuvem] inicio 2026-11-19 11:50:55 035-reserva-nova-de-hoje-linha-do-tempo-leitura.sh
+no ar: 1.0.276
+diario (desde 6h SP):
+2026-11-19T10:39:52+00:00 srv1886750 python[2522890]: INFO pms.worker calendário do Airbnb (sombra): 59/59 lidos, 0 achado(s)
+2026-11-19T11:10:35+00:00 srv1886750 python[2522890]: INFO pms.worker caixa das reservas: 1 novo(s)
+2026-11-19T11:10:52+00:00 srv1886750 python[2522890]: INFO pms.worker calendário do Airbnb (sombra): 59/59 lidos, 0 achado(s)
+2026-11-19T11:16:19+00:00 srv1886750 python[2522890]: INFO pms.worker caixa das reservas: 1 novo(s)
+2026-11-19T11:41:01+00:00 srv1886750 python[2522890]: INFO pms.worker calendário do Airbnb (sombra): 59/59 lidos, 0 achado(s)
+2026-11-19T11:42:44+00:00 srv1886750 python[2522890]: INFO pms.worker caixa das reservas: 1 novo(s) · airbnb: Airbnb (sombra): criar -- reserva nova do Airbnb
+e-mails do Airbnb desde 06h SP: 3
+   2026-11-19T11:10:35 outro - | plano: (sem plano)  
+   2026-11-19T11:16:19 avaliacao - | plano: (sem plano)  
+   2026-11-19T11:42:43 reserva_nova HMF9****** | plano: criar Q12B reserva nova do Airbnb
+reservas com esse nome: 0
+[nuvem] fim 2026-11-19 11:50:59 codigo=0 duracao=4s

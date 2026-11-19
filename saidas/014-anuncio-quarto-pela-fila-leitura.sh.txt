@@ -1,0 +1,12 @@
+[nuvem] inicio 2026-11-19 08:52:49 014-anuncio-quarto-pela-fila-leitura.sh
+saude nobeds_mcp: {'estado': 'erro', 'codigo': 'nobeds_http_401', 'desde': '2026-11-18T16:52:58.211567+00:00', 'ultimo_ok': ''}
+saude nobeds: {'estado': 'ok', 'codigo': 'HTTP 522', 'desde': '2026-11-19T04:31:08.541412+00:00', 'ultimo_ok': '2026-11-19T04:31:55.340359+00:00'}
+saude nobeds_conta: {'estado': 'ok', 'ultimo_ok': '2026-10-26T05:22:07.925228+00:00'}
+eventos na fila de entrada: 4684 · reservas da Nobeds com quarto: 0 · trocaram de quarto depois: 0
+mapeamentos no sistema: 84
+reservas novas do Airbnb com codigo e anuncio: 184
+falhas: {'sem reserva no sistema': 4, 'sem room_id': 180}
+anuncios: 0 · caem em UM quarto da Nobeds: 0 · em mais de um: 0
+mapeamentos ativos (nao aposentados) sem anuncio visto: 68 de 68
+fim
+[nuvem] fim 2026-11-19 08:57:06 codigo=0 duracao=257s

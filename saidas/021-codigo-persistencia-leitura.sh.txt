@@ -1,0 +1,94 @@
+[nuvem] inicio 2026-11-19 09:30:25 021-codigo-persistencia-leitura.sh
+./motor/routes.py:141:        body.update({"entrada": ci.isoformat(), "saida": co.isoformat(), "pessoas": g, "hoje": hoje.isoformat(),
+./motor/routes.py:254:            ci, co, g = S.pedido_de_busca(state.store, at, form.get("entrada"), form.get("saida"), form.get("pessoas"))
+./motor/entrar.py:308:    return {"entrada": e.when.end.astimezone(tz).date().isoformat(), "quarto": quarto, "espaco": space}
+./motor/entrar.py:335:    if sug.get("entrada"):
+./motor/entrar.py:337:        ci = _date.fromisoformat(sug["entrada"])
+./motor/entrar.py:339:        q = {"entrada": ci.isoformat(), "saida": (ci + timedelta(days=1)).isoformat(),
+./motor/service.py:619:    out = {"fase": f, "entrada": pedido["checkin"], "saida": pedido["checkout"], "pessoas": pedido["guests"],
+./motor/service.py:770:                       "entrada": m.get("entrance") or "", "floors": pisos,
+./messaging/entrega_ota.py:332:            "entrada": r.checkin.isoformat() if r is not None and r.checkin else "",
+./messaging/menu.py:64:    (r"(entrou|entraram|entrada( de)?|chegou|chegaram|comprei|compramos)", "entrada"),
+./messaging/inteligencia.py:191:            out["entrada"], out["saida"] = ent.strftime("%d/%m/%Y"), sai.strftime("%d/%m/%Y")
+./messaging/inteligencia.py:385:             "entrada": {"type": "string", "description": "data de entrada, AAAA-MM-DD"},
+./messaging/inteligencia.py:388:             "required": ["entrada", "saida", "pessoas"]}},
+./messaging/inteligencia.py:416:            ci, co = date.fromisoformat(str(args.get("entrada"))), date.fromisoformat(str(args.get("saida")))
+./messaging/email_ia.py:102:    module="entrada", required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE,
+./messaging/email_ia.py:143:    ctx.change("entrada", eid, dict(antes), row)
+./messaging/email_ia.py:183:    ctx.change("entrada", eid, dict(antes), row)
+./messaging/concierge.py:62:                 "entrada", "saida", "chegar", "chegada", "time", "hora", "llegada")),
+./messaging/nao_contatar.py:187:                    "estadia": ({"event_id": prox[1].event_id, "entrada": prox[1].when.start.astimezone(tz).strftime("%d/%m"),
+./messaging/ingresso.py:8:  * a mensagem fala em ingresso / ticket / reservar passeio / vai de roteiro (ou "entrada" PARA um passeio, museu ou
+==
+./messaging/intents.py
+./alerts.py
+./occurrences.py
+./reservation/confere_documento.py
+./record/persistence.py
+./memoria_partes.py
+==
+__pycache__
+ai.py
+alerts.py
+aparelho
+arquivo.py
+assistant
+breakfast
+cache_headers.py
+cameras
+casa_viva_convite.py
+channel
+clinica
+community
+core
+degustacao
+demo.py
+entrada
+escopo_teste.py
+espacos
+figurinhas.py
+finance
+governance
+ia_custos.py
+indicacao.py
+inventory
+laundry
+link_reserva.py
+luz
+main.py
+manual_aparelhos
+marketing
+memoria_partes.py
+messaging
+metricas.py
+motor
+network
+nucleo
+occurrences.py
+onboarding
+painel_casa
+painel_hospede.py
+panel
+passeios
+person
+pricing
+printing
+push.py
+qr.py
+record
+reservation
+rotinas_figurinhas.py
+shop
+sinalizacao
+tests
+tuya_casa
+venda
+vendas_link.py
+versao.py
+visual
+vitrine
+voice.py
+voz
+voz_processo.py
+worker.py
+[nuvem] fim 2026-11-19 09:30:25 codigo=0 duracao=0s

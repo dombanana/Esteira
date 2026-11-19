@@ -6,20 +6,20 @@ formas de assunto:
   cancelamento x 10  Cancelado: reserva <HM> de 9 – 9 de novembro
   alteracao    x  8  A alteração em sua reserva foi aceita
   cancelamento x  3  Cancelado: reserva <HM> de 9 – 9 de outubro
-  alteracao    x  2  Alessandra quer alterar a sua reserva
-  alteracao    x  1  Hellen quer alterar a sua reserva
+  alteracao    x  2  <nome> quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
   cancelamento x  1  Cancelado: reserva <HM> de 9 de out. – 9 de nov.
-  alteracao    x  1  Ana Carolina quer alterar a sua reserva
-  alteracao    x  1  Juliano quer alterar a sua reserva
-  alteracao    x  1  Marcos quer alterar a sua reserva
-  alteracao    x  1  Maurício quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
   alteracao    x  1  Atividade de conta: nome alterado
   alteracao    x  1  Recusado: Pedido de alteração de reserva <HM>
-  alteracao    x  1  Bruno Felipe quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
   cancelamento x  1  Cancelado: reserva <HM> de 9 – 9 de fevereiro
-  alteracao    x  1  Rafa quer alterar a sua reserva
-  alteracao    x  1  Aline quer alterar a sua reserva
-  alteracao    x  1  Artur quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
+  alteracao    x  1  <nome> quer alterar a sua reserva
   cancelamento x  1  Cancelado: reserva <HM> de 9 de nov. – 9 de dez.
 fim
 [nuvem] fim 2026-11-19 09:26:04 codigo=0 duracao=289s

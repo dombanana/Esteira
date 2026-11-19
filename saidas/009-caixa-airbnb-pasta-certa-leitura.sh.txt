@@ -1,0 +1,15 @@
+[nuvem] inicio 2026-11-19 05:51:35 009-caixa-airbnb-pasta-certa-leitura.sh
+caixa configurada: sim
+chaves de uma linha de entrada: ['assinatura', 'autoria', 'caixa', 'codigo', 'conteudo_hash', 'dominio', 'entrada_id', 'estado', 'fonte', 'id_na_fonte', 'modo', 'ota', 'processado', 'propriedade', 'quando_no_aviso', 'recebido_em', 'reservation_id', 'status_na_chegada', 'tamanho', 'tipo']
+linhas de entrada nas ultimas 24 h: 35
+pasta INBOX.03_Reservas: 74 e-mail(s) nos ultimos 3 dias, por origem: {'Airbnb': 65, 'outro': 6, 'Agoda': 1, 'Hostelworld': 2}
+INBOX.03_Reservas, 150 dias: e-mails do Airbnb por classe: {'outro': 202, 'avaliacao': 114, 'reserva_nova': 184, 'mensagem': 92, 'pagamento': 79, 'alteracao': 31, 'cancelamento': 16}
+reservas novas lidas: {'completa': 182, 'sem noites': 1, 'incompleta': 2, 'sem checkin': 1, 'sem checkout': 1}
+casadas com o sistema: {'sem reserva no sistema': 4, 'confere': 168, 'diverge': 11, 'diverge checkout': 9, 'diverge check-in': 4, 'incompleta': 1}
+anuncios do Airbnb vistos: 26 · um espaco so: 7 · mais de um espaco: 19
+   (espacos por anuncio ambiguo, so quantidades): [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5]
+reservas futuras/em curso no sistema: 38 por canal: {'nobeds': 38}
+   com codigo HM (Airbnb): 31 · com e-mail de reserva achado: 30
+   campos de referencia na reserva: ['ota_code']
+fim
+[nuvem] fim 2026-11-19 05:55:54 codigo=0 duracao=259s

@@ -1,0 +1,10 @@
+[nuvem] inicio 2026-11-19 10:24:25 033-perm-pasta-segredos-leitura.sh
+/etc/pms-banana-ai root:root 750
+EnvironmentFiles=/etc/pms-banana-ai/secrets(...) (ignore_errors=no)
+User=pms
+Group=pms
+ReadOnlyPaths=
+ProtectSystem=no
+uid=999(pms) gid=987(pms) groups=987(pms)
+pms le o arquivo: NAO
+[nuvem] fim 2026-11-19 10:24:25 codigo=0 duracao=0s

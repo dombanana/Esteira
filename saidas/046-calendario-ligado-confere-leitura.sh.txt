@@ -1,0 +1,5 @@
+[nuvem] inicio 2026-11-19 13:43:15 046-calendario-ligado-confere-leitura.sh
+PMS_AIRBNB_ICAL (secrets) = on
+airbnb_ical {} {'modo': 'on', 'anuncios': 59, 'lidos': 59, 'falhas': 0, 'reservas_no_airbnb': 34} achados: 0
+alarmes do calendario: 0
+[nuvem] fim 2026-11-19 13:45:17 codigo=0 duracao=122s

@@ -1,0 +1,5 @@
+[nuvem] inicio 2026-11-19 10:22:17 032-v275-sombra-hoje-leitura.sh
+no ar: 1.0.275
+e-mails do Airbnb com plano: 0 {}
+reservas da Nobeds com HM e referral ainda 'nobeds' (as manuais ganham Airbnb so na proxima reimportacao): 2
+[nuvem] fim 2026-11-19 10:22:19 codigo=0 duracao=2s

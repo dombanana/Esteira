@@ -1,0 +1,7 @@
+[nuvem] inicio 2026-11-19 23:29:45 055-pos-280-confere-leitura.sh
+no ar: 1.0.280 · worker: active · API: active
+trava 14h no codigo: 4 chamadas (esperado 4: definicao + luz + ar + ventilador)
+teste da 280 instalado: 1
+API responde: 404 (esperado 404)
+.......                                                                  [100%]
+[nuvem] fim 2026-11-19 23:29:46 codigo=0 duracao=1s

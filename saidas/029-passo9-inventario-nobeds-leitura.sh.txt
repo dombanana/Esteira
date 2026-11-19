@@ -1,0 +1,43 @@
+[nuvem] inicio 2026-11-19 09:58:05 029-passo9-inventario-nobeds-leitura.sh
+registro: /opt/PMS-Banana-AI/subida-v1-20261119-095030.log
+104:tar: PMS-Banana-AI/SISTEMA/api/app/channel/nobeds_leitura.py: time stamp 2026-11-19 13:00:00 is 11369.310176261 s in the future
+112:tar: PMS-Banana-AI/SISTEMA/api/app/channel/tests/test_v1165_nobeds_leituras.py: time stamp 2026-11-19 13:00:00 is 11369.309636433 s in the future
+113:tar: PMS-Banana-AI/SISTEMA/api/app/channel/tests/test_v1206_nobeds_espelha_troca.py: time stamp 2026-11-19 13:00:00 is 11369.309472229 s in the future
+171:tar: PMS-Banana-AI/SISTEMA/api/app/core/event.py: time stamp 2026-11-19 13:00:00 is 11369.30401713 s in the future
+208:tar: PMS-Banana-AI/SISTEMA/api/app/entrada/tests/__init__.py: time stamp 2026-11-19 13:00:00 is 11369.300144012 s in the future
+295:tar: PMS-Banana-AI/SISTEMA/api/app/inventory/nobeds_catalog.py: time stamp 2026-11-19 13:00:00 is 11369.292499526 s in the future
+306:tar: PMS-Banana-AI/SISTEMA/api/app/inventory/tests/test_nobeds_catalog.py: time stamp 2026-11-19 13:00:00 is 11369.291257208 s in the future
+416:tar: PMS-Banana-AI/SISTEMA/api/app/messaging/tests/test_roteador_catalogo.py: time stamp 2026-11-19 13:00:00 is 11369.281404374 s in the future
+425:tar: PMS-Banana-AI/SISTEMA/api/app/messaging/tests/test_v1163_copiar_e_colar_e_nobeds.py: time stamp 2026-11-19 13:00:00 is 11369.280802435 s in the future
+516:tar: PMS-Banana-AI/SISTEMA/api/app/painel_casa/tests: time stamp 2026-11-19 13:00:00 is 11369.272440427 s in the future
+653:tar: PMS-Banana-AI/SISTEMA/api/app/reservation/morador_nobeds.py: time stamp 2026-11-19 13:00:00 is 11369.256841496 s in the future
+728:tar: PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1202_varredura_portas.py: time stamp 2026-11-19 13:00:00 is 11369.249550402 s in the future
+798:tar: PMS-Banana-AI/SISTEMA/api/app/shop: time stamp 2026-11-19 13:00:00 is 11369.242274028 s in the future
+813:tar: PMS-Banana-AI/SISTEMA/api/app/tests/test_painel_enxuto.py: time stamp 2026-11-19 13:00:00 is 11369.240475262 s in the future
+814:tar: PMS-Banana-AI/SISTEMA/api/app/tests/test_painel_pessoas.py: time stamp 2026-11-19 13:00:00 is 11369.24042036 s in the future
+815:tar: PMS-Banana-AI/SISTEMA/api/app/tests/test_push_e_pergunta.py: time stamp 2026-11-19 13:00:00 is 11369.240155822 s in the future
+816:tar: PMS-Banana-AI/SISTEMA/api/app/tests: time stamp 2026-11-19 13:00:00 is 11369.240115411 s in the future
+857:tar: PMS-Banana-AI/SISTEMA/api/app/visual/avatares/fruta.webp: time stamp 2026-11-19 13:00:00 is 11369.234324012 s in the future
+878:tar: PMS-Banana-AI/SISTEMA/api/app/visual/comunicacao/geladeira-boas-praticas.jpg: time stamp 2026-11-19 13:00:00 is 11369.226244014 s in the future
+907:tar: PMS-Banana-AI/SISTEMA/api/app/visual/espacos/360/f01_quintal-1-v1-p.webp: time stamp 2026-11-19 13:00:00 is 11369.204042989 s in the future
+937:tar: PMS-Banana-AI/SISTEMA/api/app/visual/espacos/f01_banheiro-2.webp: time stamp 2026-11-19 13:00:00 is 11369.199040455 s in the future
+945:tar: PMS-Banana-AI/SISTEMA/api/app/visual/espacos/f01_quintal-1.webp: time stamp 2026-11-19 13:00:00 is 11369.197599401 s in the future
+978:tar: PMS-Banana-AI/SISTEMA/api/app/visual/espacos/f03_fumo-1.webp: time stamp 2026-11-19 13:00:00 is 11369.191170402 s in the future
+1032:tar: PMS-Banana-AI/SISTEMA/api/app/visual/fundos/02-estadia-dourada-v2.webp: time stamp 2026-11-19 13:00:00 is 11369.181524014 s in the future
+1075:tar: PMS-Banana-AI/SISTEMA/api/app/visual/marca/dom-banana-hostel.webp: time stamp 2026-11-19 13:00:00 is 11369.172402364 s in the future
+1204:tar: PMS-Banana-AI/SISTEMA/infra/degustacao/pms-degustacao-fila.service: time stamp 2026-11-19 13:00:00 is 11369.154010757 s in the future
+1244:tar: PMS-Banana-AI/SISTEMA/ops/instalar_degustacao.sh: time stamp 2026-11-19 13:00:00 is 11369.150401075 s in the future
+1268:tar: PMS-Banana-AI/SISTEMA/ops/virada.py: time stamp 2026-11-19 13:00:00 is 11369.148308401 s in the future
+1358:{"verificacao": "reserva do Nobeds virou estadia no Q06", "ok": true, "detalhe": ""}
+1418:Traceback (most recent call last):
+1423:    rentals = NobedsReadOnlyClient.from_environment().list_rentals()
+1438:    response = self.parent.error(
+1440:  File "/usr/lib/python3.12/urllib/request.py", line 559, in error
+1446:  File "/usr/lib/python3.12/urllib/request.py", line 639, in http_error_default
+1447:    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+1448:urllib.error.HTTPError: HTTP Error 500: Internal Server Error
+1449:FAIL 9 inventario do Nobeds a gravacao falhou -- ver /opt/PMS-Banana-AI/subida-v1-20261119-095030.log
+1450:OK   10 prova HTTP painel abre; link falso 404; acao sem cabecalho 403; leitura sem sessao 401
+1478:| 9 inventario do Nobeds | FALHOU | a gravacao falhou -- ver /opt/PMS-Banana-AI/subida-v1-20261119-095030.log |
+1479:| 10 prova HTTP | ok | painel abre; link falso 404; acao sem cabecalho 403; leitura sem sessao 401 |
+[nuvem] fim 2026-11-19 09:58:05 codigo=0 duracao=0s

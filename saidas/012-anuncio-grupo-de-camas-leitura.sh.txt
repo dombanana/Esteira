@@ -1,0 +1,20 @@
+[nuvem] inicio 2026-11-19 06:04:15 012-anuncio-grupo-de-camas-leitura.sh
+caixa configurada: sim
+chaves de uma linha de entrada: ['assinatura', 'autoria', 'caixa', 'codigo', 'conteudo_hash', 'dominio', 'entrada_id', 'estado', 'fonte', 'id_na_fonte', 'modo', 'ota', 'processado', 'propriedade', 'quando_no_aviso', 'recebido_em', 'reservation_id', 'status_na_chegada', 'tamanho', 'tipo']
+linhas de entrada nas ultimas 24 h: 103
+pasta INBOX.03_Reservas: 74 e-mail(s) nos ultimos 3 dias, por origem: {'Airbnb': 65, 'outro': 6, 'Agoda': 1, 'Hostelworld': 2}
+atributos da reserva: ['reservation_id', 'paid_occupancy', 'price_amount', 'price_currency', 'channel', 'external_id', 'ota_code', 'checkin', 'checkout', 'status', 'version_hash', 'main_guest', 'referral', 'balance_amount', 'listing_space']
+INBOX.03_Reservas, 150 dias: e-mails do Airbnb por classe: {'outro': 202, 'avaliacao': 114, 'reserva_nova': 184, 'mensagem': 92, 'pagamento': 79, 'alteracao': 31, 'cancelamento': 16}
+reservas novas lidas: {'completa': 182, 'sem noites': 1, 'incompleta': 2, 'sem checkin': 1, 'sem checkout': 1}
+casadas com o sistema: {'sem reserva no sistema': 4, 'confere': 168, 'diverge': 11, 'diverge checkout': 9, 'diverge check-in': 4, 'incompleta': 1}
+anuncios do Airbnb vistos: 26 · um espaco so: 7 · mais de um espaco: 19
+anuncios com UM grupo+versao so: 10 de 26
+   grupos+versoes por anuncio: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4]
+   anuncios com mais de um: grupos distintos/versoes distintas: [(2, 1), (1, 2), (1, 2), (2, 1), (4, 1), (3, 1), (1, 2), (1, 2), (1, 2), (2, 2), (1, 2), (1, 2), (1, 2), (1, 2), (1, 2), (2, 1)]
+   grupo None (cama sem grupo, ex. quarto inteiro/privativo): 5
+   (espacos por anuncio ambiguo, so quantidades): [2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5]
+reservas futuras/em curso no sistema: 38 por canal: {'nobeds': 38}
+   com codigo HM (Airbnb): 31 · com e-mail de reserva achado: 30
+   campos de referencia na reserva: ['ota_code']
+fim
+[nuvem] fim 2026-11-19 06:08:46 codigo=0 duracao=271s

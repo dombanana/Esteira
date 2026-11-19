@@ -1,0 +1,15 @@
+[nuvem] inicio 2026-11-19 09:46:35 026-v274-reconstrucao-detalhe-leitura.sh
+copia 1.0.273 + pacote 274: ok
+== reconstrucao com o estado real (so memoria)
+codigo carregado: 1.0.274 · de p/v274.kXW6/repo/SISTEMA/api/app/entrada
+pastas (padrao novo, sem a chave do servidor): INBOX.03_Reservas,INBOX
+   diferente: plano Q14B capsula-14 smart (anuncio: Q14B) | estadia Q13C capsula-13 hostel | hospedes 1
+   datas: noites lidas 3 | aviso - | tem e-mail de alteracao? ?
+   diferente: plano Q13B capsula-13 smart (anuncio: Q13C) | estadia Q14A capsula-14 smart | hospedes 1
+   diferente: plano Q14B capsula-14 smart (anuncio: Q14B) | estadia Q13C capsula-13 smart | hospedes 1
+   diferente: plano Q12D capsula-12 smart (anuncio: Q12D) | estadia Q13E capsula-13 smart | hospedes 1
+reservas futuras/em curso do Airbnb no sistema: 31
+resultado: {'sem e-mail de reserva nova': 1, 'criaria igual': 28, 'criaria com check-in/checkout diferente(s)': 1, 'NAO criaria': 1}
+por que nao: {'reserva nova do Airbnb lida pela metade (falta checkin, chec': 1}
+unidade: {'mesma unidade': 20, 'categoria diferente da estadia atual': 4, 'mesma categoria, outra unidade (a distribuicao das 6h decide)': 4}
+[nuvem] fim 2026-11-19 09:51:37 codigo=0 duracao=302s

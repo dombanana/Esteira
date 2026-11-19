@@ -1,0 +1,6 @@
+[nuvem] inicio 2026-11-19 09:36:05 023-v274-teste-na-nuvem-2-leitura.sh
+Please make sure you have the correct access rights
+and the repository exists.
+clone falhou (permissao?)
+drwxrwxrwt 2 esteira esteira 4096 Nov 19 09:36 /tmp/v274.tzyz
+[nuvem] fim 2026-11-19 09:36:05 codigo=1 duracao=0s

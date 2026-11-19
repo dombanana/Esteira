@@ -1,0 +1,12 @@
+[nuvem] inicio 2026-11-19 12:39:48 040-homologacao-277-leitura.sh
+no ar: 1.0.277 · worker: active · API: active
+codigo do Airbnb que nao existe (HMZZZZ9999): 202 · {"ok":false,"preparando":true,"answer":"Sua ficha está sendo preparada: a reserva acabou de chegar. Esta página tenta de novo sozinha."}
+numero que nao existe (1234567): 404
+pagina do hospede com a espera: 1
+INFO pms.worker reconciliacao: {'seen': 173, 'duplicate': 173, 'processed': 0, 'unmapped': 0, 'ignored': 0}
+INFO pms.worker reconciliacao: {'seen': 173, 'duplicate': 173, 'processed': 0, 'unmapped': 0, 'ignored': 0}
+INFO pms.worker calendário do Airbnb (sombra): 59/59 lidos, 0 achado(s)
+INFO pms.worker reconciliacao: {'seen': 173, 'duplicate': 173, 'processed': 0, 'unmapped': 0, 'ignored': 0}
+Nobeds ligada agora: True · desliga em 2026-11-27T00:00:00-03:00 · e-mail: on · calendario: sombra
+reserva HMF9 continua na casa: True · status: confirmed
+[nuvem] fim 2026-11-19 12:39:50 codigo=0 duracao=2s

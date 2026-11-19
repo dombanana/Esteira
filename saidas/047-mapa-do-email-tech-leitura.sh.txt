@@ -1,0 +1,95 @@
+[nuvem] inicio 2026-11-19 13:48:35 047-mapa-do-email-tech-leitura.sh
+== 1. chaves do secrets que citam dombanana.tech
+   PMS_ALERT_EMAIL = systems@dombanana.tech
+   PMS_GUEST_BASE = (, d, o, m, i, n, i, o, ,,  , s, e, m,  , e, n, d, e, r, e, c, o, )
+   PMS_RESERVAS_IMAP_USUARIO = contato@dombanana.tech
+   PMS_WIFI_LOGIN_URL = (, d, o, m, i, n, i, o, ,,  , s, e, m,  , e, n, d, e, r, e, c, o, )
+   SMTP_FROM = contato@dombanana.tech
+   SMTP_USER = contato@dombanana.tech
+   TTLOCK_USERNAME = security@dombanana.tech
+== 3. segunda caixa gravada: ainda nao
+== 2. caixa contato@dombanana.tech · 120 dias
+   enderecos .tech que recebem: {'contato@dombanana.tech': 2055, 'systems@dombanana.tech': 1026, 'reservations@dombanana.tech': 999, 'pay@dombanana.tech': 28, 'security@dombanana.tech': 2}
+   remetentes por dominio (top 40):
+       904  dombanana.tech
+       677  airbnb.com
+        70  transactional.agoda.global
+        68  hostelworld.com
+        39  supportmessaging.airbnb.com
+        37  guest.booking.com
+        36  mail.anthropic.com
+        26  tm.openai.com
+        18  paypal.com.br
+        16  expedia.com
+        16  mktg.agoda.global
+        14  email.claude.com
+        13  trip.com
+        12  em1.cloudflare.com
+        12  agoda.com
+        11  email.openai.com
+        10  meuvono.com.br
+         7  vivo.com.br
+         6  openai.com
+         6  despegar.com
+         6  express.medallia.com
+         6  booking.com
+         4  notify.cloudflare.com
+         4  expediagroup.com
+         4  newsletter.trip.com
+         3  marketing.agoda.global
+         3  research.airbnb.com
+         3  surveymonkeyuser.com
+         2  snservice.co
+         2  partners.expediagroup.com
+         2  properties.booking.com
+         2  notifications.agoda-messaging.com
+         2  email-support.airbnb.com
+         2  asaas.com.br
+         1  tenda.cn
+         1  tm1.openai.com
+         1  research.anthropic.com
+         1  eg.expedia.com
+         1  certifiedproud.com
+         1  account.agoda.com
+   endereco x remetente (top 40):
+       904  contato@dombanana.tech           <- dombanana.tech
+       904  systems@dombanana.tech           <- dombanana.tech
+       677  contato@dombanana.tech           <- airbnb.com
+       677  reservations@dombanana.tech      <- airbnb.com
+        70  contato@dombanana.tech           <- transactional.agoda.global
+        70  reservations@dombanana.tech      <- transactional.agoda.global
+        68  contato@dombanana.tech           <- hostelworld.com
+        68  reservations@dombanana.tech      <- hostelworld.com
+        39  contato@dombanana.tech           <- supportmessaging.airbnb.com
+        39  reservations@dombanana.tech      <- supportmessaging.airbnb.com
+        37  contato@dombanana.tech           <- guest.booking.com
+        37  reservations@dombanana.tech      <- guest.booking.com
+        36  contato@dombanana.tech           <- mail.anthropic.com
+        36  systems@dombanana.tech           <- mail.anthropic.com
+        26  contato@dombanana.tech           <- tm.openai.com
+        26  systems@dombanana.tech           <- tm.openai.com
+        18  pay@dombanana.tech               <- paypal.com.br
+        18  contato@dombanana.tech           <- paypal.com.br
+        16  contato@dombanana.tech           <- expedia.com
+        16  reservations@dombanana.tech      <- expedia.com
+        16  contato@dombanana.tech           <- mktg.agoda.global
+        16  reservations@dombanana.tech      <- mktg.agoda.global
+        14  contato@dombanana.tech           <- email.claude.com
+        14  systems@dombanana.tech           <- email.claude.com
+        13  contato@dombanana.tech           <- trip.com
+        13  reservations@dombanana.tech      <- trip.com
+        12  contato@dombanana.tech           <- em1.cloudflare.com
+        12  systems@dombanana.tech           <- em1.cloudflare.com
+        12  contato@dombanana.tech           <- agoda.com
+        12  reservations@dombanana.tech      <- agoda.com
+        11  contato@dombanana.tech           <- email.openai.com
+        11  systems@dombanana.tech           <- email.openai.com
+        10  contato@dombanana.tech           <- meuvono.com.br
+        10  systems@dombanana.tech           <- meuvono.com.br
+         7  pay@dombanana.tech               <- vivo.com.br
+         7  contato@dombanana.tech           <- vivo.com.br
+         6  contato@dombanana.tech           <- openai.com
+         6  systems@dombanana.tech           <- openai.com
+         6  contato@dombanana.tech           <- despegar.com
+         6  reservations@dombanana.tech      <- despegar.com
+[nuvem] fim 2026-11-19 13:48:41 codigo=0 duracao=6s

@@ -1,0 +1,14 @@
+[nuvem] inicio 2026-11-19 23:03:25 053-v280-teste-na-nuvem-leitura.sh
+copia: 1.0.279
+pacote 280 aplicado
+== testes novos + luz
+..........................................................               [100%]
+=============================== warnings summary ===============================
+api/app/luz/tests/test_luz.py::test_the_callback_route
+  /opt/PMS-Banana-AI/SISTEMA/.venv/lib/python3.12/site-packages/starlette/testclient.py:51: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+58 passed, 1 warning in 3.35s
+== suite inteira
+2804 passed, 8 warnings in 147.24s (0:02:27)
+[nuvem] fim 2026-11-19 23:06:00 codigo=0 duracao=155s

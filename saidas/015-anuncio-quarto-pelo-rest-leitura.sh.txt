@@ -1,0 +1,39 @@
+[nuvem] inicio 2026-11-19 08:58:15 015-anuncio-quarto-pelo-rest-leitura.sh
+saude nobeds_mcp: {'estado': 'erro', 'codigo': 'nobeds_http_401', 'desde': '2026-11-18T16:52:58.211567+00:00', 'ultimo_ok': ''}
+saude nobeds: {'estado': 'ok', 'codigo': 'HTTP 522', 'desde': '2026-11-19T04:31:08.541412+00:00', 'ultimo_ok': '2026-11-19T04:31:55.340359+00:00'}
+saude nobeds_conta: {'estado': 'ok', 'ultimo_ok': '2026-10-26T05:22:07.925228+00:00'}
+REST: reservas lidas 290 · com quarto: 290 · erros: {}
+mapeamentos no sistema: 84
+reservas novas do Airbnb com codigo e anuncio: 184
+falhas: {'sem reserva no sistema': 4}
+anuncios: 27 · caem em UM quarto da Nobeds: 6 · em mais de um: 21
+anuncio 1191387058353080776 (16 res.): 2553283 -> Q07/smart x15 ; 2551286 -> Q07/hostel x1
+anuncio 1286114870614284252 (15 res.): 2550325 -> Q12A/smart x14 ; 2550331 -> Q12C/smart x1
+anuncio 1315363289333501533 (14 res.): 2550327 -> Q12D/smart x13 ; 2550444 -> Q13B/smart x1
+anuncio 1191420076091466593 (13 res.): 2551280 -> Q03/smart x11 ; 2551290 -> Q09/smart x2
+anuncio 1316223888674607218 (12 res.): 2550333 -> Q12E/smart x11 ; 2550439 -> Q13A/smart x1
+anuncio 1315383966952132452 (9 res.): 2550329 -> Q12F/smart x7 ; 2551275 -> Q02/smart x1 ; 2550442 -> Q13E/smart x1
+anuncio 1293619007830537700 (8 res.): 2550438 -> Q12B/smart x6 ; 2550329 -> Q12F/smart x1 ; 2550334 -> Q14D/smart x1
+anuncio 1760811888988416744 (7 res.): 2550444 -> Q13B/smart x5 ; 2550442 -> Q13E/smart x1 ; 2550438 -> Q12B/smart x1
+anuncio 1191409124983613428 (7 res.): 2553282 -> Q06/smart x5 ; 2553288 -> Q10/smart x1 ; 2550440 -> Q11/smart x1
+anuncio 1315433374850323180 (7 res.): 2550331 -> Q12C/smart x5 ; 2550442 -> Q13E/smart x1 ; 2550330 -> Q14A/smart x1
+anuncio 1729947829804659845 (6 res.): 2550324 -> Q05/smart x5 ; 2550346 -> Q05/hostel x1
+anuncio 1530081421867561385 (6 res.): 2550439 -> Q13A/smart x5 ; 2550330 -> Q14A/smart x1
+anuncio 1191424144125442356 (6 res.): 2551275 -> Q02/smart x5 ; 2551280 -> Q03/smart x1
+anuncio 1191425342089965148 (6 res.): 2553284 -> Q08/smart x5 ; 2551290 -> Q09/smart x1
+anuncio 1315381850899469107 (6 res.): 2550328 -> Q14C/smart x5 ; 2550325 -> Q12A/smart x1
+anuncio 1420547017789783111 (6 res.): 2550334 -> Q14D/smart x5 ; 2550439 -> Q13A/smart x1
+anuncio 1191422286541554736 (6 res.): 2550321 -> Q14B/smart x5 ; 2550441 -> Q13C/smart x1
+anuncio 1257965019634476004 (5 res.): 2550324 -> Q05/smart x2 ; 2553287 -> Q04/smart x2 ; 2553284 -> Q08/smart x1
+anuncio 1760803608654355239 (5 res.): 2550440 -> Q11/smart x5
+anuncio 1191384954764858073 (5 res.): 2551290 -> Q09/smart x4 ; 2551280 -> Q03/smart x1
+anuncio 1191417366307448325 (3 res.): 2553288 -> Q10/smart x2 ; 2553285 -> Q09/hostel x1
+anuncio 1315391512868389565 (3 res.): 2550330 -> Q14A/smart x3
+anuncio 1760807118970538552 (3 res.): 2550441 -> Q13C/smart x2 ; 2550443 -> Q13D/smart x1
+anuncio 1760813167385257837 (3 res.): 2550445 -> Q13F/smart x3
+anuncio 1291385761301747738 (1 res.): 2551301 -> Q12/hostel x1
+anuncio 1760809517983818700 (1 res.): 2550441 -> Q13C/smart x1
+anuncio 1760810545860047175 (1 res.): 2550321 -> Q14B/smart x1
+mapeamentos ativos (nao aposentados) sem anuncio visto: 38 de 68
+fim
+[nuvem] fim 2026-11-19 09:03:09 codigo=0 duracao=294s

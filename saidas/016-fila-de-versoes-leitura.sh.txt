@@ -1,0 +1,14 @@
+[nuvem] inicio 2026-11-19 09:16:45 016-fila-de-versoes-leitura.sh
+no ar: 1.0.273
+fatal: detected dubious ownership in repository at '/opt/pms-banana-ai-fila.git'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /opt/pms-banana-ai-fila.git
+--- main:
+fatal: detected dubious ownership in repository at '/opt/pms-banana-ai-fila.git'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /opt/pms-banana-ai-fila.git
+--- instalado (repositorio do sistema):
+fatal: not a git repository (or any of the parent directories): .git
+[nuvem] fim 2026-11-19 09:16:45 codigo=0 duracao=0s

@@ -1,0 +1,10 @@
+[nuvem] inicio 2026-11-19 23:07:05 054-fila-main-leitura.sh
+fatal: detected dubious ownership in repository at '/opt/pms-banana-ai-fila.git'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /opt/pms-banana-ai-fila.git
+fatal: detected dubious ownership in repository at '/opt/pms-banana-ai-fila.git'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /opt/pms-banana-ai-fila.git
+[nuvem] fim 2026-11-19 23:07:05 codigo=0 duracao=0s

@@ -1,0 +1,114 @@
+[nuvem] inicio 2026-11-19 23:00:06 050-rotas-aparelhos-codigo-leitura.sh
+12:from __future__ import annotations
+14:from pathlib import Path
+-----
+        try:
+            out = await run_in_threadpool(guest_service.remote_open, _pms(request), code)
+        except PanelError as e:
+            return _error(e)
+        return out.as_json()
+
+    @router.post("/api/h/{code:guestcode}/abrir/{porta}")
+    async def hospede_abrir_porta(code: str, porta: str, request: Request):
+        if (bad := _csrf(request)) is not None:
+            return bad
+        try:
+            out = await run_in_threadpool(guest_service.abrir_porta, _pms(request), code, porta)
+        except PanelError as e:
+            return _error(e)
+        return out.as_json()
+
+    @router.post("/api/h/{code:guestcode}/luz")
+    async def hospede_luz(code: str, request: Request):
+        if (bad := _csrf(request)) is not None:
+            return bad
+        body = await request.json()
+        try:
+            out = await run_in_threadpool(guest_service.my_light, _pms(request), code, str(body.get("acao") or ""))
+        except PanelError as e:
+            return _error(e)
+        return out.as_json()
+
+    @router.post("/api/h/{code:guestcode}/ventilador")
+    async def hospede_ventilador(code: str, request: Request):
+        if (bad := _csrf(request)) is not None:
+            return bad
+        body = await request.json()
+        try:
+            out = await run_in_threadpool(guest_service.ventilador_quarto, _pms(request), code, body)
+        except PanelError as e:
+            return _error(e)
+        return out.as_json()
+
+    @router.post("/api/h/{code:guestcode}/ar")
+    async def hospede_ar(code: str, request: Request):
+        if (bad := _csrf(request)) is not None:
+            return bad
+        body = await request.json()
+        try:
+            out = await run_in_threadpool(guest_service.ar_quarto, _pms(request), code, str(body.get("acao") or ""),
+                                          body.get("valor"))
+        except PanelError as e:
+            return _error(e)
+        return out.as_json()
+
+    @router.post("/api/h/{code:guestcode}/luz/despertador")
+    async def hospede_luz_despertador(code: str, request: Request):
+        if (bad := _csrf(request)) is not None:
+            return bad
+        body = await request.json()
+        try:
+            out = await run_in_threadpool(guest_service.light_alarm, _pms(request), code, str(body.get("acao") or ""),
+                                          str(body.get("hora") or ""))
+        except PanelError as e:
+            return _error(e)
+        return out.as_json()
+
+    @router.post("/api/h/{code:guestcode}/tuya/abrir")
+    async def hospede_tuya_abrir(code: str, request: Request):
+        if (bad := _csrf(request)) is not None:
+            return bad
+        body = await request.json()
+        try:
+            out = await run_in_threadpool(guest_service.abrir_tuya, _pms(request), code, str(body.get("aparelho") or ""))
+        except PanelError as e:
+            return _error(e)
+        return out.as_json()
+
+    @router.post("/api/h/{code:guestcode}/aberturas/comprar")
+    async def hospede_comprar_aberturas(code: str, request: Request):
+        if (bad := _csrf(request)) is not None:
+            return bad
+        try:
+            out = await run_in_threadpool(guest_service.buy_remote_opens, _pms(request), code)
+        except PanelError as e:
+            return _error(e)
+== testes que chamam essas rotas
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py:728:def ar_quarto(state: Any, code: str, acao: str, valor: Any = None, *, at: datetime | None = None) -> Outcome:
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py:753:def ventilador_quarto(state: Any, code: str, mudancas: Any, *, at: datetime | None = None) -> Outcome:
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:872:    async def hospede_luz(code: str, request: Request):
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:883:    async def hospede_ventilador(code: str, request: Request):
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:894:    async def hospede_ar(code: str, request: Request):
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:906:    async def hospede_luz_despertador(code: str, request: Request):
+== hospede.html: chamadas
+452:    const r=await api("/api/h/"+CODE+"/barulho",{onde,tipo:tp});
+463:    const r=await api("/api/h/"+CODE+"/checkout",{itens:marcados()});
+980:      r=await api("/api/h/"+CODE+"/barulho",{onde,tipo:RP.como})}
+1031:    const r=await api("/api/h/"+CODE+"/ajuda/perguntar",{texto:q});
+1104:async function pedirCodigo(ev){ev.preventDefault();const r=await api("/api/h/"+CODE+"/cadastro/codigo",{email:ev.target.email.value});
+1106:async function confirmarCodigo(ev){ev.preventDefault();const r=await api("/api/h/"+CODE+"/cadastro/confirmar",{code:ev.target.code.value});
+1108:async function pagar(){$("#pagar").disabled=true;const r=await api("/api/h/"+CODE+"/pagar",{});
+1213:    const r=await api("/api/h/"+CODE+"/trocar-senha",{digitos:v});
+1242:  const enviar=async(retirar,b)=>{b.disabled=true;const r=await api("/api/h/"+CODE+"/uso-medicinal",{retirar});msg("ummsg",r);if(r.ok)await load();else b.disabled=false};
+1245:  if($("#rfgo"))$("#rfgo").onclick=async()=>{$("#rfgo").disabled=true;const r=await api("/api/h/"+CODE+"/rfid",{acao:"cadastrar"});
+1248:    const r=await api("/api/h/"+CODE+"/rfid",{acao:"cancelar"});msg("rfmsg",r);if(r.ok)setTimeout(load,1500);else $("#rfcan").disabled=false};
+1435:    const r=await api("/api/h/"+CODE+"/acompanhante/"+f.dataset.convite+"/convidar",{contato:f.elements.contato.value});msg("nvmsg",r);if(r.ok)await load();else b.disabled=false});
+1449:    const r=await api("/api/h/"+CODE+"/estadia/pagar",{itens});msg("vmsg",r);if(r.ok){setTimeout(load,2500)}else b.disabled=false};
+1460:  if($("#walpay"))$("#walpay").onclick=async()=>{const r=await api("/api/h/"+CODE+"/carteira/pagar",{});msg("walmsg",r);if(r.ok)load()};
+1461:  if($("#walreg"))$("#walreg").onclick=async()=>{const r=await api("/api/h/"+CODE+"/carteira/desistir",{});msg("walmsg",r);if(r.ok)load()};
+1462:  if($("#extpay"))$("#extpay").onclick=async()=>{$("#extpay").disabled=true;const r=await api("/api/h/"+CODE+"/adicionais/pagar",{});
+1467:  if($("#renovar"))$("#renovar").onclick=async()=>{$("#renovar").disabled=true;const r=await api("/api/h/"+CODE+"/renovar",{});
+1473:  const luz=async a=>{otimista("luz",{acesa:a==="acender"});   /* v1.0.268: a tela muda na hora */const r=await api("/api/h/"+CODE+"/luz",{acao:a});
+1477:    if(c)otimista("ar",c);const r=await api("/api/h/"+CODE+"/ar",{acao:a,valor});if(!r.ok)delete OTIM.ar;msg("armsg",r);setTimeout(load,r.ok?6000:300)};
+1478:  const vt=async(corpo,c)=>{if(c)otimista("vent",c);const r=await api("/api/h/"+CODE+"/ventilador",corpo);
+[nuvem] fim 2026-11-19 23:00:06 codigo=0 duracao=0s

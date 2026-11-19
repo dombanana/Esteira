@@ -1,0 +1,30 @@
+[nuvem] inicio 2026-11-19 09:27:15 020-alteracao-aceita-forma-leitura.sh
+===== atualizada #1 (5 linhas)
+    %opentrack% <X> <X> <X> <X> <X> <X> <X> <X> <X> <X> Brasil Dom Banana® Smart, Quarto Privativo <X> <X> atualizamos o itinerário da reserva.
+    <X> tiver dúvidas, envie uma mensagem para <X>
+    <X> itinerário <X> <X> mensagem ao hóspede [<link:https://www.airbnb.com.br/messaging/thread/<id>?thread_type=> <X> o app.
+    O jeito mais rápido e fácil de usar o Airbnb.
+    <X> <X> Airbnb <X> <X> 8 <X> <X> <X> 2, <X> <X> <X> <X> <X>
+===== atualizada #2 (6 linhas)
+    %opentrack% <X> <X> <X> <X> <X> <X> <X> <X> <X> Brasil Dom Banana® Smart, Cápsula em Quarto <X>
+    <X> <X> atualizamos o itinerário da reserva.
+    <X> tiver dúvidas, envie uma mensagem para <X>
+    <X> itinerário <X> <X> mensagem ao hóspede [<link:https://www.airbnb.com.br/messaging/thread/<id>?thread_type=> <X> o app.
+    O jeito mais rápido e fácil de usar o Airbnb.
+    <X> <X> Airbnb <X> <X> 8 <X> <X> <X> 2, <X> <X> <X> <X> <X>
+===== aceita #1 (6 linhas)
+    %opentrack% <X> <X> <X> <X> <X> <X> <X> <X> <X> Brasil Dom Banana® Smart, Cápsula em Quarto <X>
+    <X> <X> atualizamos o itinerário da reserva.
+    <X> tiver dúvidas, envie uma mensagem para <X>
+    <X> itinerário <X> <X> mensagem ao hóspede [<link:https://www.airbnb.com.br/messaging/thread/<id>?thread_type=> <X> o app.
+    O jeito mais rápido e fácil de usar o Airbnb.
+    <X> <X> Airbnb <X> <X> 8 <X> <X> <X> 2, <X> <X> <X> <X> <X>
+===== aceita #2 (6 linhas)
+    %opentrack% <X> <X> <X> <X> <X> <X> <X> <X> <X> Brasil Dom Banana® Smart, Cápsula de <X> em Quarto <X>
+    <X> <X> atualizamos o itinerário da reserva.
+    <X> tiver dúvidas, envie uma mensagem para <X>
+    <X> itinerário <X> <X> mensagem ao hóspede [<link:https://www.airbnb.com.br/messaging/thread/<id>?thread_type=> <X> o app.
+    O jeito mais rápido e fácil de usar o Airbnb.
+    <X> <X> Airbnb <X> <X> 8 <X> <X> <X> 2, <X> <X> <X> <X> <X>
+fim
+[nuvem] fim 2026-11-19 09:27:58 codigo=0 duracao=43s

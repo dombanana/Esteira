@@ -1,0 +1,9 @@
+[nuvem] inicio 2026-11-19 10:18:25 031-v276-teste-na-nuvem-leitura.sh
+copia: 1.0.275
+pacote 276 aplicado
+== testes novos
+........                                                                 [100%]
+8 passed in 1.31s
+== suite inteira
+2783 passed, 8 warnings in 92.35s (0:01:32)
+[nuvem] fim 2026-11-19 10:20:02 codigo=0 duracao=97s

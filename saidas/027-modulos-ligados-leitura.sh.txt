@@ -1,0 +1,5 @@
+[nuvem] inicio 2026-11-19 09:53:48 027-modulos-ligados-leitura.sh
+PMS_LIVE_MODULES=reservation,messaging,concierge,assistant,finance,person,inventory,governance,community,shop,cafe,equipamentos,marketing,nucleo,network,channel,entrada,luz
+PMS_AIRBNB_EMAIL_RESERVAS=(nao definido = sombra)
+PMS_RESERVAS_IMAP_PASTAS=INBOX.03_Reservas,INBOX
+[nuvem] fim 2026-11-19 09:53:48 codigo=0 duracao=0s

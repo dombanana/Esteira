@@ -1,0 +1,23 @@
+[nuvem] inicio 2026-11-19 05:50:25 008-caixa-pastas-leitura.sh
+pastas: ['INBOX', 'INBOX.05_Sistemas_e_Logs', 'INBOX.04_Seguranca', 'INBOX.03_Reservas', 'INBOX.02_Pagamentos', 'INBOX.01_Fiscal', 'INBOX.Trash', 'INBOX.Sent', 'INBOX.Junk', 'INBOX.Drafts'] | configuradas: ['03_Reservas', 'INBOX']
+  INBOX · 3 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX · 150 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.05_Sistemas_e_Logs · 3 dias: 53 e-mail(s), do Airbnb: 0
+  INBOX.05_Sistemas_e_Logs · 150 dias: 1014 e-mail(s), do Airbnb: 0
+  INBOX.04_Seguranca · 3 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.04_Seguranca · 150 dias: 2 e-mail(s), do Airbnb: 0
+  INBOX.03_Reservas · 3 dias: 74 e-mail(s), do Airbnb: 66
+  INBOX.03_Reservas · 150 dias: 995 e-mail(s), do Airbnb: 724
+  INBOX.02_Pagamentos · 3 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.02_Pagamentos · 150 dias: 28 e-mail(s), do Airbnb: 0
+  INBOX.01_Fiscal · 3 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.01_Fiscal · 150 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.Trash · 3 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.Trash · 150 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.Sent · 3 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.Sent · 150 dias: 21 e-mail(s), do Airbnb: 0
+  INBOX.Junk · 3 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.Junk · 150 dias: 10 e-mail(s), do Airbnb: 0
+  INBOX.Drafts · 3 dias: 0 e-mail(s), do Airbnb: 0
+  INBOX.Drafts · 150 dias: 0 e-mail(s), do Airbnb: 0
+[nuvem] fim 2026-11-19 05:50:33 codigo=0 duracao=8s

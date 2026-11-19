@@ -1,0 +1,175 @@
+[nuvem] inicio 2026-11-19 23:01:15 051-guest-service-aparelhos-codigo-leitura.sh
+1446 /opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py
+bf574d72bff60ef7a1264a72f84a50e6e0a0297bfbf011e044fa5a30ad7e7be5  /opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py
+8:from __future__ import annotations
+10:import hmac
+11:import re
+12:import threading
+13:import time as _time
+14:from datetime import datetime, timedelta, timezone
+15:from typing import Any, Mapping
+17:from app.core.event import Role
+18:from app.core.intent import Caller, NotAuthorized, Surface
+19:from app.core.record import Actor, ActorKind
+20:from app.panel.service import Outcome, PanelError, _call, _now
+701:def my_light(state: Any, code: str, acao: str, *, at: datetime | None = None) -> Outcome:
+714:def light_alarm(state: Any, code: str, acao: str, hora: str = "", *, at: datetime | None = None) -> Outcome:
+728:def ar_quarto(state: Any, code: str, acao: str, valor: Any = None, *, at: datetime | None = None) -> Outcome:
+753:def ventilador_quarto(state: Any, code: str, mudancas: Any, *, at: datetime | None = None) -> Outcome:
+-----
+
+LIGHT_MAX, LIGHT_WINDOW_S = 12, 10 * 60          # toques na luz por link em 10 min (liga/desliga sem fim, nao)
+_light_taps: dict[str, list[float]] = {}
+
+
+def my_light(state: Any, code: str, acao: str, *, at: datetime | None = None) -> Outcome:
+    """Botao "Acender minha luz" / "Apagar" (plano B do aviso da fechadura do quarto)."""
+    key = (code or "").strip().upper()
+    now_s = _time.monotonic()
+    with _lock:
+        recent = [t for t in _light_taps.get(key, []) if now_s - t < LIGHT_WINDOW_S]
+        if len(recent) >= LIGHT_MAX:
+            _light_taps[key] = recent
+            raise PanelError(429, "Muitos toques na luz. Espere alguns minutos ou use o interruptor.")
+        _light_taps[key] = recent + [now_s]
+    return _guest_act(state, code, "luz.minha", at, {"acao": "apagar" if acao == "apagar" else "acender"})
+
+
+def light_alarm(state: Any, code: str, acao: str, hora: str = "", *, at: datetime | None = None) -> Outcome:
+    """v1.0.254 (Dom 17/11): despertador da luz da cama -- marcar (hora "07:30") ou desligar. Mesmo freio de toques."""
+    key = "alarme:" + (code or "").strip().upper()
+    now_s = _time.monotonic()
+    with _lock:
+        recent = [t for t in _light_taps.get(key, []) if now_s - t < LIGHT_WINDOW_S]
+        if len(recent) >= LIGHT_MAX:
+            _light_taps[key] = recent
+            raise PanelError(429, "Muitos toques. Espere alguns minutos.")
+        _light_taps[key] = recent + [now_s]
+    return _guest_act(state, code, "luz.despertador", at,
+                      {"acao": "cancelar" if acao == "cancelar" else "marcar", "hora": str(hora or "")[:5]})
+
+
+def ar_quarto(state: Any, code: str, acao: str, valor: Any = None, *, at: datetime | None = None) -> Outcome:
+    """v1.0.255 (Dom 17/11): o ar-condicionado do quarto pela Automacao -- ligar (acima de 24 C, janela fechada, sem
+    trava) ou desligar (trava de 30 min para todos do quarto). Mesmo freio de toques da luz."""
+    key = "ar:" + (code or "").strip().upper()
+    now_s = _time.monotonic()
+    with _lock:
+        recent = [t for t in _light_taps.get(key, []) if now_s - t < LIGHT_WINDOW_S]
+        if len(recent) >= LIGHT_MAX:
+            _light_taps[key] = recent
+            raise PanelError(429, "Muitos toques. Espere alguns minutos.")
+        _light_taps[key] = recent + [now_s]
+    at = _now(at)
+    rid, event, caller = resolve(state, code, at)
+    from app.tuya_casa import service as tuya
+    from app.tuya_casa.config import casa as tuya_casa_cfg
+    c = tuya_casa_cfg()
+    regra = tuya.regra_do_espaco(state.store, c, event.where[0] if event.where else "")
+    if regra is None:
+        raise PanelError(404, "O seu quarto não tem ar-condicionado pelo app.")
+-----
+
+def my_light(state: Any, code: str, acao: str, *, at: datetime | None = None) -> Outcome:
+    """Botao "Acender minha luz" / "Apagar" (plano B do aviso da fechadura do quarto)."""
+    key = (code or "").strip().upper()
+    now_s = _time.monotonic()
+    with _lock:
+        recent = [t for t in _light_taps.get(key, []) if now_s - t < LIGHT_WINDOW_S]
+        if len(recent) >= LIGHT_MAX:
+            _light_taps[key] = recent
+            raise PanelError(429, "Muitos toques na luz. Espere alguns minutos ou use o interruptor.")
+        _light_taps[key] = recent + [now_s]
+    return _guest_act(state, code, "luz.minha", at, {"acao": "apagar" if acao == "apagar" else "acender"})
+
+
+def light_alarm(state: Any, code: str, acao: str, hora: str = "", *, at: datetime | None = None) -> Outcome:
+    """v1.0.254 (Dom 17/11): despertador da luz da cama -- marcar (hora "07:30") ou desligar. Mesmo freio de toques."""
+    key = "alarme:" + (code or "").strip().upper()
+    now_s = _time.monotonic()
+    with _lock:
+        recent = [t for t in _light_taps.get(key, []) if now_s - t < LIGHT_WINDOW_S]
+        if len(recent) >= LIGHT_MAX:
+            _light_taps[key] = recent
+            raise PanelError(429, "Muitos toques. Espere alguns minutos.")
+        _light_taps[key] = recent + [now_s]
+    return _guest_act(state, code, "luz.despertador", at,
+                      {"acao": "cancelar" if acao == "cancelar" else "marcar", "hora": str(hora or "")[:5]})
+
+
+def ar_quarto(state: Any, code: str, acao: str, valor: Any = None, *, at: datetime | None = None) -> Outcome:
+    """v1.0.255 (Dom 17/11): o ar-condicionado do quarto pela Automacao -- ligar (acima de 24 C, janela fechada, sem
+    trava) ou desligar (trava de 30 min para todos do quarto). Mesmo freio de toques da luz."""
+    key = "ar:" + (code or "").strip().upper()
+    now_s = _time.monotonic()
+    with _lock:
+        recent = [t for t in _light_taps.get(key, []) if now_s - t < LIGHT_WINDOW_S]
+        if len(recent) >= LIGHT_MAX:
+            _light_taps[key] = recent
+            raise PanelError(429, "Muitos toques. Espere alguns minutos.")
+        _light_taps[key] = recent + [now_s]
+    at = _now(at)
+    rid, event, caller = resolve(state, code, at)
+    from app.tuya_casa import service as tuya
+    from app.tuya_casa.config import casa as tuya_casa_cfg
+    c = tuya_casa_cfg()
+    regra = tuya.regra_do_espaco(state.store, c, event.where[0] if event.where else "")
+    if regra is None:
+        raise PanelError(404, "O seu quarto não tem ar-condicionado pelo app.")
+    tuya.semear(state)
+    acao = acao if acao in ("desligar", "temperatura", "velocidade") else "ligar"
+    return _guest_act(state, code, "luz.tuya_ar", at, {"acao": acao, "valor": valor, "casa": c,
+                                                        "leitura": tuya.leitura(state, regra, at)})
+
+
+def ventilador_quarto(state: Any, code: str, mudancas: Any, *, at: datetime | None = None) -> Outcome:
+    """v1.0.257 (Dom 17/11): o ventilador do quarto privativo pela Automacao -- chave, quando ligar (manual,
+    temperatura, horario) e velocidade. Mesmo freio de toques da luz."""
+    key = "vent:" + (code or "").strip().upper()
+    now_s = _time.monotonic()
+    with _lock:
+        recent = [t for t in _light_taps.get(key, []) if now_s - t < LIGHT_WINDOW_S]
+        if len(recent) >= LIGHT_MAX * 2:
+            _light_taps[key] = recent
+            raise PanelError(429, "Muitos toques. Espere alguns minutos.")
+        _light_taps[key] = recent + [now_s]
+    at = _now(at)
+    rid, event, caller = resolve(state, code, at)
+    from app.tuya_casa import ventilador as V
+    ap = V.aparelhos().get(V._quarto(event.where[0] if event.where else ""))
+    if ap is None:
+        raise PanelError(404, "Este quarto não tem ventilador ligado ao sistema.")
+    from app.tuya_casa.service import semear
+    semear(state)
+    m = {k: v for k, v in dict(mudancas or {}).items() if k in ("ligar", "modo", "alvo", "liga", "desliga", "velocidade")}
+    real = V.estado_real(state, ap)
+    row = (getattr(state.store, "tuya_vent", {}) or {}).get(V._quarto(event.where[0])) or {}
+    leitura = {"temp": V.temperatura(state, ap), "ligado": real if real is not None else row.get("estado") == "ligado",
+               "vel_real": V.vel_real(state, ap)}                       # v1.0.265: a velocidade ligada de verdade
+    return _guest_act(state, code, "luz.tuya_vent", at, {"mudancas": m, "aparelho": ap, "leitura": leitura})
+
+
+def abrir_tuya(state: Any, code: str, aparelho: str, *, at: datetime | None = None) -> Outcome:
+    """v1.0.250: porta/portao Tuya marcado para o hospede -- so a estadia dele, so na janela (mesmo freio de toques)."""
+    key = "tuya:" + (code or "").strip().upper()
+    now_s = _time.monotonic()
+    with _lock:
+        recent = [t for t in _light_taps.get(key, []) if now_s - t < LIGHT_WINDOW_S]
+        if len(recent) >= LIGHT_MAX:
+            _light_taps[key] = recent
+            raise PanelError(429, "Muitos toques. Espere alguns minutos.")
+        _light_taps[key] = recent + [now_s]
+    return _guest_act(state, code, "luz.tuya_abrir", at, {"aparelho": str(aparelho or "")})
+
+
+def _guest_act(state: Any, code: str, name: str, at: datetime | None, extra: dict | None = None) -> Outcome:
+    at = _now(at)
+    rid, event, caller = resolve(state, code, at)
+    params = {"event": event, **(extra or {})}
+    # o toque no botao ja e a confirmacao do hospede (abrir a porta e irreversivel)
+    token = state.router.card_for(name, {**params, "store": state.store}, state.house).token \
+        if state.router.contract(name).is_irreversible else None
+    try:
+== testes de luz/ar/ventilador do hospede
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/tests/test_luz.py
+[nuvem] fim 2026-11-19 23:01:15 codigo=0 duracao=0s

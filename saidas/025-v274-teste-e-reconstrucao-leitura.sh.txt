@@ -1,0 +1,12 @@
+[nuvem] inicio 2026-11-19 09:40:05 025-v274-teste-e-reconstrucao-leitura.sh
+copia 1.0.273 + pacote 274: ok
+== testes novos + entrada + channel + reservation
+851 passed, 1 warning in 14.96s
+== reconstrucao com o estado real (so memoria)
+codigo carregado: 1.0.274 · de p/v274.MMRg/repo/SISTEMA/api/app/entrada
+pastas (padrao novo, sem a chave do servidor): INBOX.03_Reservas,INBOX
+reservas futuras/em curso do Airbnb no sistema: 31
+resultado: {'sem e-mail de reserva nova': 1, 'criaria igual': 28, 'criaria com check-in/checkout diferente(s)': 1, 'NAO criaria': 1}
+por que nao: {'reserva nova do Airbnb lida pela metade (falta checkin, chec': 1}
+unidade: {'mesma unidade': 20, 'categoria diferente da estadia atual': 4, 'mesma categoria, outra unidade (a distribuicao das 6h decide)': 4}
+[nuvem] fim 2026-11-19 09:45:22 codigo=0 duracao=317s

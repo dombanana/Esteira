@@ -1,0 +1,95 @@
+[nuvem] inicio 2026-11-19 22:59:05 049-painel-aparelhos-horario-leitura.sh
+versao: 1.0.279
+== arquivos que falam de luz/ventilador/ar no painel do hospede
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/avaliacao.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/base_casa.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/config.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/__init__.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/ventilador.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/temp_rua.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/service.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/ponte.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/versao.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/ocorrencias.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/channel/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/main.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/manual_aparelhos/dados.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/governance/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/inventory/tuya.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/config.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/__init__.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/auto.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/tuya_local.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/service.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/tuya_luz.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/service.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py
+== rotas do hospede ligadas a aparelhos
+/opt/PMS-Banana-AI/SISTEMA/api/app/governance/routes.py:51:    @router.get("/api/h/{code}/quarto-pronto/{n}")
+/opt/PMS-Banana-AI/SISTEMA/api/app/community/routes.py:44:    @router.post("/api/h/{code}/casa-viva/entrar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/community/routes.py:50:    @router.post("/api/h/{code}/casa-viva/evento")
+/opt/PMS-Banana-AI/SISTEMA/api/app/community/routes.py:64:    @router.post("/api/h/{code}/casa-viva/mensagens/comprar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:521:    @router.post("/api/h/{code:guestcode}/pagar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:543:    @router.post("/api/h/{code:guestcode}/cadastro/confirmar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:577:    @router.post("/api/h/{code:guestcode}/estadia/pagar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:589:    @router.post("/api/h/{code:guestcode}/adicionais/pagar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:599:    @router.post("/api/h/{code:guestcode}/carteira/{acao}")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:623:    @router.post("/api/h/{code:guestcode}/wifi/derrubar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:669:    @router.post("/api/h/{code:guestcode}/barulho")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:706:    @router.post("/api/h/{code:guestcode}/ajuda/perguntar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:775:    @router.post("/api/h/{code:guestcode}/acompanhante/{n}/convidar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:803:    @router.post("/api/h/{code:guestcode}/trocar-senha")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:841:    @router.post("/api/h/{code:guestcode}/renovar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:871:    @router.post("/api/h/{code:guestcode}/luz")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:882:    @router.post("/api/h/{code:guestcode}/ventilador")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:893:    @router.post("/api/h/{code:guestcode}/ar")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:905:    @router.post("/api/h/{code:guestcode}/luz/despertador")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:917:    @router.post("/api/h/{code:guestcode}/tuya/abrir")
+== regras de horario existentes (10:30, 14, checkin_hora, dia da saida)
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/adapters.py:465:    # RASCUNHO (24/09) -- "como foi?" no dia da saida; aguarda o ok do Dom.
+/opt/PMS-Banana-AI/SISTEMA/api/app/versao.py:66:        "Luz da cama no dia da saida conta do horario real da estadia (estadia por periodo, manha ou noite): acende 30 min antes da saida, travada ate 1h30 depois, apaga e avisa 3 h depois, sem passar da meia-noite; entre 22h e 7h acende fixa, sem piscar; quem sai depois das 13h30 entra no bloqueio da limpeza da manha; a saida das 11h nao muda (Dom 17/11)",
+/opt/PMS-Banana-AI/SISTEMA/api/app/versao.py:69:        "Dia da saida, luz da cama: as 10h30 a cama de quem sai faz o despertador (pisca 3 vezes e fica acesa) e fica travada ate 12h30; a equipe apagar a luz (botao Cama limpa, chave do aparelho ou limpeza concluida) = cama limpa e livre, a qualquer hora; das 11h as 13h30 as outras camas nao acendem; late checkout acende na hora combinada; as 14h apaga sozinha e avisa o anfitriao; despertador comum agora pisca 3 vezes (Dom 17/11)",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/checkout_hospede.py:7:  * so o hospede principal da reserva, so no dia da saida (a partir das 6h) e com a estadia valendo;
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/checkout_hospede.py:39:def dia_da_saida(store: Any, event: Any, at: datetime) -> bool:
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/checkout_hospede.py:40:    """Hoje (em Sao Paulo) e o dia da saida e ja passou das 6h."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/checkout_hospede.py:47:    return event.state in (EventState.CONFIRMED, EventState.IN_PROGRESS) and dia_da_saida(store, event, at)
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/confere_documento.py:17:e apagada na hora (fica so a marca "lido"); se nunca der `ok`, sai no dia da saida (`fotos_ficha.a_limpar`).
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/continuacao.py:148:    """O dia da saida que vale para a senha: o da ultima estadia da sequencia (de um acompanhante: a do titular)."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_porta.py:78:                "sozinha: fora do dia da saida, ou no modo aviso)",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_porta.py:139:        dia_da_saida = e.when.end.astimezone(tz).date() == a["quando"].astimezone(tz).date()
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_porta.py:144:                if m == "on" and dia_da_saida:
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_porta.py:154:                              if not dia_da_saida else "modo aviso: a saída não foi registrada sozinha")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/lembretes.py:694:            # revisao 03/10: no dia da saida, nada de "falta o cadastro" (o texto da ficha ja cita o saldo)
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/lembretes.py:705:        # do link; vale tambem no dia da saida (pagar antes de sair). Dois por estadia, no maximo.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/mais_noites.py:17:  * `reservation.alerta_ficou` (worker, pela saida automatica): hospede que abriu porta DEPOIS das 11h do dia da saida
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:276:CHECKIN_TIME = time(14, 0)    # quarto: 14h do check-in (arquivo estetico, secao 13)
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1232:    15 min depois (`worker.revoke_on_schedule`, com a saida ja confirmada). So no proprio dia da saida. O anfitriao
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1352:# seguinte. A limpeza vai das 11h as 14h do dia da saida: nao ocupa noite
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1376:    window = When(start, start + timedelta(hours=3))          # 11h -> 14h do dia da saida
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/editar_estadia.py:477:#: v1.0.189 (Dom 02/11, Priscila Q13B): late checkout pago = a senha do QUARTO vale ate 13h30 no dia da saida
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/editar_estadia.py:482:    """Late checkout pago: a porta do QUARTO ganha a janela ate 13h30 do dia da saida (a mesma janela do "horario da
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/avisos_conduta.py:58:        raise ValueError("Diga até que horas a pessoa deixa a casa (ex.: 10h ou 10h30).")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fotos_ficha.py:14:    a marca "lido", sem imagem) e, se nunca conferir, no dia da saida (`PMS_FICHA_DOC_DIAS`, padrao 0). O prazo final
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fotos_ficha.py:54:    """v1.0.181: o documento sai no dia da saida (0) se a leitura nunca conferiu; o resto sai ao conferir."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fotos_ficha.py:219:    """(id, tipo) a apagar. Selfie: `PMS_FICHA_FOTOS_DIAS` depois da saida (30). Documento (v1.0.181): no dia da saida
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:7:estendido pelo anfitriao ainda valendo, nunca antes do dia da saida, nunca se a ronda achou gente no quarto):
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:9:     a saida e registrada na hora (das 11h em diante; antes disso so se a estadia ja tiver passado do dia da saida).
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:10:  R2 "horario": passou das 14h do dia da saida (fim da janela da limpeza) -- a saida e registrada.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:12:abriu depois das 11h no dia da saida (ele ficou mais), ou a hora da ronda se o quarto ja estava vazio antes das 11h.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:25:HORA_LIMITE = 14               # R2: o fim da janela da limpeza do dia da saida (11h-14h)
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:27:#: porta a partir desta hora do dia da saida "ficou" -- a saida dele nao e registrada sozinha nesse dia e o anfitriao e
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:72:    """A ultima porta que alguem desta estadia abriu no dia da saida (entrada pela senha ou botao confirmado)."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:91:    """A porta que alguem desta estadia abriu a partir das 12h do dia da saida (ele ficou), ou None."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:99:    """v1.0.114: quem abriu porta depois das 12h do dia da saida, com a estadia ainda valendo e sem continuacao nem
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_automatica.py:152:            continue                                   # ainda nao e o dia da saida
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/encerrar_historico.py:15:emendada, nunca com acesso estendido valendo, nunca com a ronda tendo achado gente no quarto) com o dia da saida ANTES
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/encerrar_historico.py:40:    """As estadias antigas abertas: as propostas da saida automatica com o dia da saida antes do `desde`."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py:1659:        chegada = datetime.combine(date.fromisoformat(str(info["checkin"])), _hora(14, 0), tzinfo=SAO_PAULO)
+/opt/PMS-Banana-AI/SISTEMA/api/app/breakfast/intents.py:7:  * o hospede escolhe o dia (as manhas da estadia, do dia seguinte a entrada ate o dia da saida), marca os itens
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+[nuvem] fim 2026-11-19 22:59:06 codigo=0 duracao=1s

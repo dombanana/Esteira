@@ -1,0 +1,25 @@
+[nuvem] inicio 2026-11-19 09:21:15 019-alteracao-cancelamento-prova-leitura.sh
+alteracao {'e-mails': 31, 'SEM codigo': 12, 'com codigo': 19, 'sem datas lidas': 18, 'sem reserva no sistema': 1}
+cancelamento {'e-mails': 16, 'com codigo': 16, 'sem reserva no sistema': 2, 'sistema: cancelled': 14}
+formas de assunto:
+  alteracao    x 10  Reserva atualizada
+  cancelamento x 10  Cancelado: reserva <HM> de 9 – 9 de novembro
+  alteracao    x  8  A alteração em sua reserva foi aceita
+  cancelamento x  3  Cancelado: reserva <HM> de 9 – 9 de outubro
+  alteracao    x  2  Alessandra quer alterar a sua reserva
+  alteracao    x  1  Hellen quer alterar a sua reserva
+  cancelamento x  1  Cancelado: reserva <HM> de 9 de out. – 9 de nov.
+  alteracao    x  1  Ana Carolina quer alterar a sua reserva
+  alteracao    x  1  Juliano quer alterar a sua reserva
+  alteracao    x  1  Marcos quer alterar a sua reserva
+  alteracao    x  1  Maurício quer alterar a sua reserva
+  alteracao    x  1  Atividade de conta: nome alterado
+  alteracao    x  1  Recusado: Pedido de alteração de reserva <HM>
+  alteracao    x  1  Bruno Felipe quer alterar a sua reserva
+  cancelamento x  1  Cancelado: reserva <HM> de 9 – 9 de fevereiro
+  alteracao    x  1  Rafa quer alterar a sua reserva
+  alteracao    x  1  Aline quer alterar a sua reserva
+  alteracao    x  1  Artur quer alterar a sua reserva
+  cancelamento x  1  Cancelado: reserva <HM> de 9 de nov. – 9 de dez.
+fim
+[nuvem] fim 2026-11-19 09:26:04 codigo=0 duracao=289s

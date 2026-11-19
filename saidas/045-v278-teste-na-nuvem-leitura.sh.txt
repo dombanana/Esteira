@@ -1,0 +1,9 @@
+[nuvem] inicio 2026-11-19 13:38:45 045-v278-teste-na-nuvem-leitura.sh
+copia: 1.0.277
+pacote 278 aplicado
+== testes novos + 243 + 275
+..................                                                       [100%]
+18 passed in 1.84s
+== suite inteira
+2790 passed, 8 warnings in 134.20s (0:02:14)
+[nuvem] fim 2026-11-19 13:41:06 codigo=0 duracao=141s

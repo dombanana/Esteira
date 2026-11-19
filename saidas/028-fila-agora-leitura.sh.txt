@@ -1,0 +1,29 @@
+[nuvem] inicio 2026-11-19 09:54:55 028-fila-agora-leitura.sh
+no ar: 1.0.274
+2026-11-19 10:00:00 -0300 axcards d40e380
+2026-11-19 10:00:00 -0300 main d40e380
+2026-11-18 15:45:00 -0300 ventsaida bf3d3ef
+2026-11-18 18:37:41 +0000 ajuda5 4a685e9
+2026-11-18 15:25:00 -0300 v271otm 0af804a
+2026-11-18 14:45:00 -0300 v270ar fd26fb4
+2026-11-18 14:30:00 -0300 v269ar e0d94a7
+2026-11-18 14:00:00 -0300 v268otm d7c8566
+2026-11-18 13:40:00 -0300 v267inv 6aaa832
+2026-11-18 12:45:00 -0300 v266vent 74f9acc
+2026-11-18 11:00:00 -0300 v265vent 4400305
+2026-11-18 09:40:00 -0300 v264sil 61767ed
+2026-11-17 23:30:00 -0300 v262luz 0bf656a
+2026-11-17 23:25:00 -0300 v263aj f2facaa
+2026-11-17 23:20:00 -0300 ajuda-aparelhos eb68933
+--- main:
+d40e380 v1.0.274 (em teste): Automacao em cartoes, icones proprios e pendencia piscando
+bf3d3ef v1.0.273 (em teste): ventilador desliga na hora da saida, como o ar
+4a685e9 v1.0.272 (em teste): manual dos aparelhos na internet (/ajuda)
+0af804a v1.0.271 (em teste): painel do hospede responde na hora (ventilador, ar, luz)
+fd26fb4 v1.0.270 (em teste): o ar desliga na hora da saida
+e0d94a7 v1.0.269 (em teste): o ar so liga quando a pessoa liga
+6aaa832 v1.0.267 (em teste): ventilador invertido no 8 e no 9 (chave 1 = forte)
+74f9acc v1.0.266 (em teste): ventilador fora do ar -- o worker nao insiste
+--- instalado (repositorio do sistema):
+fatal: not a git repository (or any of the parent directories): .git
+[nuvem] fim 2026-11-19 09:54:55 codigo=0 duracao=0s

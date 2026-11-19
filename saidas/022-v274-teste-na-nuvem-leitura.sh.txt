@@ -1,0 +1,5 @@
+[nuvem] inicio 2026-11-19 09:34:55 022-v274-teste-na-nuvem-leitura.sh
+fatal: could not create work tree dir '/tmp/v274.3SoV/repo': Permission denied
+clone falhou (permissao?)
+drwxr-xr-x 2 esteira esteira 4096 Nov 19 09:34 /tmp/v274.3SoV
+[nuvem] fim 2026-11-19 09:34:55 codigo=1 duracao=0s

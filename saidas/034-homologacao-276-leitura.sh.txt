@@ -1,0 +1,8 @@
+[nuvem] inicio 2026-11-19 10:39:55 034-homologacao-276-leitura.sh
+no ar: 1.0.276 · worker: active · API: active
+diario do worker (ultima hora):
+INFO pms.worker calendário do Airbnb (sombra): 59/59 lidos, 0 achado(s)
+modos: e-mail = sombra · calendario = sombra · links validos: 59
+saude airbnb_ical: ok · lido em 2026-11-19T10:39 · anuncios 59 lidos 59 falhas 0 · reservas no Airbnb 33 · achados {}
+e-mails do Airbnb com plano (sombra): 0 {}
+[nuvem] fim 2026-11-19 10:39:56 codigo=0 duracao=1s

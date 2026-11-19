@@ -1,0 +1,5 @@
+[nuvem] inicio 2026-11-19 13:35:15 042-calendario-agora-e-imap-na-fila-leitura.sh
+modo=sombra · links=59 · lidos=59 · falhas=0 · reservas futuras no Airbnb=34
+achados: {}
+atributos do store com 'saud': ['fontes_saude']
+[nuvem] fim 2026-11-19 13:35:34 codigo=0 duracao=19s

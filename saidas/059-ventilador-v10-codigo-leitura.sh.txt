@@ -1,0 +1,170 @@
+[nuvem] inicio 2026-11-20 21:06:05 059-ventilador-v10-codigo-leitura.sh
+versao: 1.0.282
+366 /opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/ventilador.py
+32:MODOS = ("manual", "temperatura", "horario")
+33:VELOCIDADES = ("1", "2", "3", "auto")
+34:VEL_INICIAL = "2"
+35:FAIXA = (22.0, 24.0)                     # v1.0.265: a regua do ar dos compartilhados (meio grau)
+36:PASSO_S = 1.0                            # v1.0.265: entre desligar os outros reles e ligar o escolhido
+37:ECO_S = 180
+38:DOIS_S = 600                             # v1.0.266: "dois botoes" corrige no maximo a cada 10 min
+39:TTL_S = 300
+43:def vel_auto(temp: float | None, alvo: float | None, atual: Any = None) -> int:
+58:def _hora(txt: Any) -> time | None:
+66:def no_intervalo(agora: time, ini: time, fim: time) -> bool:
+70:def decidir(modo: str, *, alvo: float | None, liga: str | None, desliga: str | None, velocidade: str,
+97:def aparelhos(env: Mapping[str, str] = os.environ) -> dict[str, dict]:
+118:def invertidos(env: Mapping[str, str] = os.environ) -> set[str]:
+132:def _quarto(espaco: str) -> str:
+141:def tem_vel(ap: Mapping[str, Any]) -> bool:
+145:def _vel_n(vel: Any) -> int:
+152:def pedido(ap: Mapping[str, Any], ligar: bool, vel: Any) -> dict:
+165:def comandos(ap: Mapping[str, Any], ligar: bool, vel: int | None) -> list[dict]:
+178:def _ligado(v: Any) -> bool:
+182:def reles_ligados(state: Any, ap: Mapping[str, Any]) -> list[int] | None:
+192:def fora_do_ar(state: Any, ap: Mapping[str, Any]) -> bool:
+198:def vel_real(state: Any, ap: Mapping[str, Any]) -> int | None:
+204:def estado_real(state: Any, ap: Mapping[str, Any]) -> bool | None:
+215:def temperatura_e_origem(state: Any, ap: Mapping[str, Any],
+232:def temperatura(state: Any, ap: Mapping[str, Any], env: Mapping[str, str] = os.environ) -> float | None:
+237:def hospede_do_quarto(store: Any, quarto: str, at: datetime) -> Any:
+259:def linha(store: Any, quarto: str, event_id: str) -> dict:
+268:def _desde(row: Mapping[str, Any], at: datetime) -> float:
+276:def view(state: Any, event: Any, at: datetime, env: Mapping[str, str] = os.environ) -> dict | None:
+299:def vigiar(state: Any, *, at: datetime | None = None, env: Mapping[str, str] = os.environ) -> list[str]:
+361:def _chamar(state: Any, q: str, ap: dict, ligar: bool, vel: int | None, motivo: str, at: datetime,
+== primeiras 120 linhas
+"""v1.0.257 -- ventilador do quarto privativo na Automacao do hospede (Dom 17/11: "Coloca dentro da versao em alta
+tambem a parte visual de automacao dos quartos privativos"; "amanha a gente vai fazer a ligacao correta de todo o
+equipamento ... ja deixa pronto, faltando apenas a conexao dos equipamentos").
+
+O MESMO desenho e a MESMA regra do modulo de Automacao planejado na V1.1 (simulacao aprovada pelo Dom em 27/10):
+  "E um ventilador, nao um ar-condicionado: ele mexe o ar do quarto, nao esfria."
+  Quando ligar:
+    manual       o hospede liga e desliga pela chave;
+    temperatura  liga sozinho quando o quarto passa 1 grau do alvo e desliga quando volta ao alvo (zona morta: fica);
+    horario      liga e desliga em horas marcadas (pode atravessar a meia-noite).
+  Velocidade: 1, 2, 3 ou auto (auto escolhe pela distancia ate o alvo).
+  Tocar a chave no automatico passa para o manual.
+
+Os aparelhos entram pelo NOME na Tuya (app/luz/auto.py): "Ventilador 02", "Termometro 02". Sem aparelho no quarto, o
+bloco nao aparece. O quarto vazio (fim da estadia) desliga e a escolha volta ao comeco para o proximo hospede.
+
+v1.0.265 (Dom 18/11, ventilador do quarto 8 -- tudo aprovado: "Pode montar essa versao em alta, ta tudo aprovado ai"):
+  * modulo de 3 reles, um por velocidade (fraco, medio, forte): "nunca 2 botoes acionados ao mesmo tempo. Quando aciona
+    o botao forte, o fraco e o medio tem que estar desligado" -- toda troca DESLIGA os outros, espera 1 s e so entao liga
+    o escolhido (se o desligar falhar, o ligar nao sai); dois ligados por fora (botao do aparelho) o worker corrige;
+  * a regua igual a do ar dos quartos compartilhados (22 a 24 graus) e "auto" sobe uma velocidade a cada grau acima
+    dela: regua em 22 -> fraco 23, medio 24, forte 25; em 24 -> 25, 26, 27 ("mais para o 22, o forte e acionado bem mais
+    cedo"); so desce quando cai meio grau abaixo do degrau (sem troca-troca);
+  * sem termometro no quarto, vale a temperatura da rua (app/tuya_casa/temp_rua.py), e o painel diz que e da rua.
+"""
+from __future__ import annotations
+
+import os
+from datetime import datetime, time, timedelta, timezone
+from typing import Any, Mapping
+
+MODOS = ("manual", "temperatura", "horario")
+VELOCIDADES = ("1", "2", "3", "auto")
+VEL_INICIAL = "2"
+FAIXA = (22.0, 24.0)                     # v1.0.265: a regua do ar dos compartilhados (meio grau)
+PASSO_S = 1.0                            # v1.0.265: entre desligar os outros reles e ligar o escolhido
+ECO_S = 180
+DOIS_S = 600                             # v1.0.266: "dois botoes" corrige no maximo a cada 10 min
+TTL_S = 300
+
+
+# -- decisao (funcao pura, a mesma da V1.1) -------------------------------------------------------------------
+def vel_auto(temp: float | None, alvo: float | None, atual: Any = None) -> int:
+    """v1.0.265: uma velocidade a cada grau acima da regua (alvo+1 fraco, +2 medio, +3 forte); desce meio grau abaixo."""
+    if temp is None or alvo is None:
+        return 2
+    d = temp - alvo
+    base = 1 if d < 2 else 2 if d < 3 else 3
+    try:
+        a = int(atual or 0)
+    except (TypeError, ValueError):
+        a = 0
+    if 3 >= a > base and d >= a - 0.5:
+        return a
+    return base
+
+
+def _hora(txt: Any) -> time | None:
+    try:
+        h, m = str(txt or "").strip().replace("h", ":").split(":")[:2]
+        return time(int(h), int(m or 0))
+    except (ValueError, TypeError):
+        return None
+
+
+def no_intervalo(agora: time, ini: time, fim: time) -> bool:
+    return ini <= agora < fim if ini < fim else (agora >= ini or agora < fim)
+
+
+def decidir(modo: str, *, alvo: float | None, liga: str | None, desliga: str | None, velocidade: str,
+            manual_ligado: bool, temp: float | None, agora_t: time, ligado_atual: bool,
+            vel_atual: Any = None) -> tuple[bool, int | None]:
+    if modo == "manual":
+        ligado = bool(manual_ligado)
+    elif modo == "temperatura":
+        if temp is None or alvo is None:
+            ligado = ligado_atual                 # sem leitura: nao mexe
+        elif temp >= alvo + 1:
+            ligado = True
+        elif temp <= alvo:
+            ligado = False
+        else:
+            ligado = ligado_atual                 # zona morta: evita liga-desliga
+    elif modo == "horario":
+        a, b = _hora(liga), _hora(desliga)
+        ligado = bool(a and b) and no_intervalo(agora_t, a, b)
+    else:
+        raise ValueError("modo desconhecido")
+    if not ligado:
+        return False, None
+    base = alvo if alvo is not None else (FAIXA[0] + FAIXA[1]) / 2        # v1.0.265: manual + auto = meio da regua
+    vel = vel_auto(temp, base, vel_atual) if velocidade == "auto" else int(velocidade)
+    return True, vel
+
+
+# -- aparelhos ------------------------------------------------------------------------------------------------
+def aparelhos(env: Mapping[str, str] = os.environ) -> dict[str, dict]:
+    """Quarto ("Q02") -> {device, switch, vel_code?, vel_vals?, termometro?}. Pelo nome na Tuya (mapa do worker) e,
+    se o anfitriao cadastrou a mao, pelo PMS_TUYA_CASA (papel "ventilador", espaco "Q02")."""
+    from app.luz import auto
+    from app.tuya_casa.config import casa
+    tudo = auto.ler_tudo(env)
+    out = {k: dict(v) for k, v in (tudo.get("ventiladores") or {}).items() if isinstance(v, dict)}
+    for ap in casa(env).de_papel("ventilador"):
+        q = _quarto(ap.espaco)
+        if q and q not in out:
+            out[q] = {"device": ap.id, "switch": ap.code, "nome": ap.nome}
+    for q, t in (tudo.get("termometros") or {}).items():
+        if q in out and isinstance(t, dict) and t.get("device"):
+            out[q]["termometro"] = t["device"]
+    inv = invertidos(env)
+    for q, ap in out.items():                 # v1.0.267: a chave 1 e o forte e a 3 e o fraco (ligacao do quarto)
+        if ap.get("reles") and (q in inv or "TODOS" in inv):
+            ap["reles"] = list(reversed(ap["reles"]))
+    return out
+
+
+def invertidos(env: Mapping[str, str] = os.environ) -> set[str]:
+    """v1.0.267 (Dom 18/11: "Ta invertido ... Voce ligou o fraco no lugar do forte e o forte no lugar do fraco. Inverte
+    so, por favor. Em ambos os quartos, no 8 e no 9"): PMS_VENT_INVERTIDO="Q08,Q09" -> nesses quartos a chave 1 e o
+== quem chama (fora de testes)
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:389:    from app.tuya_casa import ventilador as V
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:401:    from app.tuya_casa import ventilador as V
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:467:    from app.tuya_casa import ventilador as V
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/anfitriao.py:53:    from app.tuya_casa import ventilador as V
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/anfitriao.py:75:    from app.tuya_casa import ventilador as V
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/anfitriao.py:89:    from app.tuya_casa import ventilador as V
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/anfitriao.py:323:    from app.tuya_casa import ventilador as V
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py:4020:            from app.tuya_casa.ventilador import vigiar as vent_vigiar
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py:310:            from app.tuya_casa.ventilador import view as vent_view
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py:798:    from app.tuya_casa import ventilador as V
+== onde o estado do ventilador fica no store
+fim
+[nuvem] fim 2026-11-20 21:06:05 codigo=0 duracao=0s

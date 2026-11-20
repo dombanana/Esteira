@@ -1,0 +1,94 @@
+[nuvem] inicio 2026-11-20 23:34:15 062-ventilador-q07-q10-estado-agora-leitura.sh
+versao: 1.0.282
+== ultimo (linha 34)
+def ultimo(state: Any) -> dict[str, dict]:
+    """id do aparelho -> {nome, categoria, online, status, em} (memoria do processo)."""
+    if state is None:
+        return _global
+    cache = getattr(state, "_tuya_ultimo", None)
+    if cache is None:
+        cache = {}
+        try:
+            setattr(state, "_tuya_ultimo", cache)
+        except AttributeError:
+            return _global
+    return cache
+
+
+def temperatura(status: Mapping[str, Any], codigo: str = "", escala: float = 0.0) -> float | None:
+    """Graus Celsius do status Tuya (a maioria manda x10: 253 = 25,3). `codigo`/`escala`: o termometro que a Tuya nao
+    descreve (controle infravermelho: "dp_101", escala 10)."""
+    for code in ((codigo,) if codigo else TEMP_CODES):
+        if code in status:
+            try:
+                v = float(status[code])
+            except (TypeError, ValueError):
+                return None
+            if escala:
+                return v / escala
+            return v / 10 if abs(v) > 60 else v
+    return None
+
+
+def janela_aberta(state: Any, regra: ClimaRegra) -> bool | None:
+    """True/False pelo ultimo aviso do sensor; None quando ainda nao se sabe."""
+    if not regra.janela:
+        return False
+    st = (ultimo(state).get(regra.janela) or {}).get("status") or {}
+    if "doorcontact_state" not in st:
+        return None
+    return st["doorcontact_state"] in (True, "1", "true", "open")
+
+
+_semeado: dict[int, bool] = {}
+
+== _refrescar (linha 327)
+def _refrescar(state: Any, env: Mapping[str, str], at: datetime) -> None:
+    """Worker: o tempo real chega so na API -- aqui o estado vem da ponte (a memoria dela anda com a Tuya), no maximo
+    uma vez por minuto."""
+    if at.timestamp() - _refrescado.get(id(state), 0) < REFRESCAR_S:
+        return
+    _refrescado[id(state)] = at.timestamp()
+    from app.tuya_casa.ponte import from_env
+    p = from_env(env)
+    if p is None:
+        return
+    try:
+        lista = p.aparelhos()
+    except Exception as erro:  # noqa: BLE001
+        log.warning("tuya: nao consegui ler a ponte (%s)", type(erro).__name__)
+        return
+    with _lock:
+        cache = ultimo(state)
+        for a in lista:
+            u = cache.setdefault(str(a.get("id") or ""), {"status": {}})
+            u["status"].update(dict(a.get("status") or {}))
+            u["online"] = bool(a.get("online"))
+
+
+def vigiar(state: Any, *, at: datetime | None = None, env: Mapping[str, str] = os.environ) -> list[str]:
+    """Worker (v1.0.250, Dom 15/11: "ligar automaticamente tendo hospede. Se nao tiver hospede, nao faz sentido ligar";
+    v1.0.255, 17/11: "abrir a janela ... deveria desligar o ar-condicionado sempre"): a cada volta, a mesma regra do
+    tempo real com o estado de verdade -- janela aberta desliga (ligado por quem for), quarto vazio ou fora do horario
+    desliga, e a trava de 30 min que venceu deixa a regra ligar de novo se ainda estiver quente."""
+    from zoneinfo import ZoneInfo
+    at = at or datetime.now(timezone.utc)
+    c = casa(env)
+    if not c.clima:
+        return []
+    _refrescar(state, env, at)
+    feitos = []
+    hora = at.astimezone(ZoneInfo(state.store.timezone)).hour
+    from app.tuya_casa.anfitriao import manda
+    for regra in c.clima:
+        k = regra.espaco or regra.aparelho
+        if manda(state.store, f"ar:{k}", at):
+            continue                      # v1.0.283: o anfitriao esta mandando neste ar
+aparelhos: ['Q02', 'Q03', 'Q04', 'Q05', 'Q06', 'Q07', 'Q08', 'Q09', 'Q10', 'Q11']
+cache ultimo: 0 aparelhos
+Q07 ocupado=True ligado=None vel=None fora_do_ar=False reles=True chaves_cache=[] idade_s=None
+Q08 ocupado=True ligado=None vel=None fora_do_ar=False reles=True chaves_cache=[] idade_s=None
+Q09 ocupado=True ligado=None vel=None fora_do_ar=False reles=True chaves_cache=[] idade_s=None
+Q10 ocupado=True ligado=None vel=None fora_do_ar=False reles=True chaves_cache=[] idade_s=None
+fim
+[nuvem] fim 2026-11-20 23:34:16 codigo=0 duracao=1s

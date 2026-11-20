@@ -1,0 +1,64 @@
+[nuvem] inicio 2026-11-20 05:22:44 057-ar-regras-e-ajuda-leitura.sh
+versao: 1.0.281
+== /ajuda/ar ==
+https://www.dombanana.tech/ajuda/ar -> 200 <title>Ar-condicionado das cápsulas · TCL · Dom Banana
+https://painel.dombanana.tech/ajuda/ar -> 200 <title>Ar-condicionado das cápsulas · TCL · Dom Banana
+<h1>Ar-condicionado das cápsulas · TCL
+<h2>Ar-condicionado das cápsulas · TCL
+<h3>Antes de usar · Before you use
+== frases do ar no painel (pt) ==
+99:    from app.reservation.access import _sem_prefixo, janela_dias, plano_do_evento
+122:    if _local(e.when.start, cx.tz) > cx.today + timedelta(days=janela_dias()):
+490:    from app.reservation.acesso_hospede import janela_da_porta, portas_do_evento
+507:        starts, ends = janela_da_porta(store, e, role)
+524:    from app.reservation.editar_estadia import datas_do_anfitriao, janelas, portas_atuais, trocas_feitas
+538:            "janelas": {r: [a.astimezone(tz).isoformat(), b.astimezone(tz).isoformat()]
+539:                        for r, (a, b) in janelas(store, e.event_id).items()},
+166:# e sequencial. (1) quem erra muitos codigos por endereco espera; (2) cada reserva aceita poucas fotos por janela --
+174:def _janela(tabela: dict, chave: str, maximo: int, janela_s: int, *, gastar: bool) -> bool:
+178:        for k in [k for k, v in tabela.items() if not v or agora - v[-1] > janela_s]:
+180:        hits = [t for t in tabela.get(chave, []) if agora - t < janela_s]
+191:    return not _janela(_falhas_ip, ip, FALHAS_MAX, FALHAS_JANELA_S, gastar=False)
+759:    """v1.0.255 (Dom 17/11): o ar-condicionado do quarto pela Automacao -- ligar (acima de 24 C, janela fechada, sem
+760:    trava) ou desligar (trava de 30 min para todos do quarto). Mesmo freio de toques da luz."""
+813:    """v1.0.250: porta/portao Tuya marcado para o hospede -- so a estadia dele, so na janela (mesmo freio de toques)."""
+1175:    if not code or not _janela(_erros_ip, ip or "?", ERROS_POR_IP, ERROS_JANELA_S, gastar=True):
+1186:            not _janela(_erros_codigo, code, ERROS_PARA_AVISAR - 1, ERROS_AVISO_JANELA_S, gastar=True):
+1223:    if not _janela(_fotos_codigo, alvo, FOTOS_MAX, FOTOS_JANELA_S, gastar=True):
+276:    ("A foto ficou escura demais: acenda a luz ou chegue perto de uma janela e tire de novo.",
+597:    a janela da chegada (quem ja esta na casa)."""
+71:    janela cobre agora (da chegada ao checkout -- ou ao horario estendido pelo anfitriao). O Evento nao precisa estar
+80:    elo continua na janela ate o fim da ULTIMA estadia (o acesso e um so). O elo cuja propria saida ja passou e cuja
+112:    """`chegada_nao_registrada`: na casa pela janela, mas o Evento continua "confirmado" (ninguem tocou "Chegou").
+217:            # 03/10: "hospedado" e quem esta na janela da estadia AGORA -- confirmado ou em andamento. Antes so contava
+316:    # (a primeira estadia/bloqueio que toca a noite e a que aparece), so os que tocam a janela
+13:  hospede   portas: o hospede pode abrir pelo app, so dentro da janela da estadia (padrao: nao)
+20:      v1.0.249 (Dom 14/11, ar das capsulas 12-14: "liga sozinho a 24 C, regulado em 22 C, so com janela e porta
+21:      fechadas"): `desliga_abaixo` pode faltar (o proprio ar regula); `janela`: id do sensor de janela -- aberta
+79:    janela: str = ""
+154:        janela = str(x.get("janela") or "")
+155:        if janela and not _ID.match(janela):
+168:                                 so_ocupado=_bool(x.get("so_ocupado")), janela=janela,
+5:                          marcadas `hospede`, so a propria estadia e so dentro da janela dela (6h da chegada ate 18h
+29:    description="abrir uma porta ou o portao Tuya da casa (hospede: so a dele, so na janela da estadia)",
+258:    depois ele gera um cronometro que so vai deixar ligar de novo depois de 30 minutos ... vale para todo mundo";
+259:    "abrir a janela ... deveria desligar o ar-condicionado sempre, ou nem deixar o ar-condicionado ligar").
+260:    `leitura` vem do servico (o que os aparelhos contaram agora): ligado, janela, temperatura."""
+295:    if leitura.get("janela") is True:
+296:        raise ValueError("A janela do quarto está aberta: feche a janela para ligar o ar.")
+297:    if leitura.get("janela") is None and regra.janela:
+== regra (constantes) ==
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:261:    from app.tuya_casa.service import TRAVA_MIN, regra_do_espaco
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:286:        ate = (ctx.at + timedelta(minutes=TRAVA_MIN)).isoformat()
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:289:                f"({TRAVA_MIN} min), por qualquer pessoa do quarto.")
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/service.py:27:    TRAVA_MIN = max(1, min(240, int(os.environ.get("PMS_AR_TRAVA_MIN", "30"))))   # Dom 17/11: 30 min para todos
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/service.py:29:    TRAVA_MIN = 30
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/service.py:225:    ligar"): o sistema NAO liga o ar sozinho. So com PMS_AR_LIGA_SOZINHO=on volta o jeito antigo (liga pelo calor)."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/service.py:226:    return str(env.get("PMS_AR_LIGA_SOZINHO") or "").strip().lower() in ("on", "1", "sim", "true")
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/service.py:393:        out = _chamar(state, "luz.tuya_clima", {**base, "ligar": False, "comando": False, "trava_min": TRAVA_MIN,
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/service.py:458:           "limite": regra.liga_acima, "alvo": alvo(regra), "trava_min": TRAVA_MIN,
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/temp_rua.py:24:BUSCA_MIN = 15
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/temp_rua.py:25:VALE_MIN = 90
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/temp_rua.py:72:    if not isinstance(d.get("temp"), (int, float)) or _idade_min(d, agora) > VALE_MIN:
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/temp_rua.py:98:    if _idade_min(d, agora) < BUSCA_MIN or _idade_min({"em": d.get("tentou")}, agora) < 5:
+[nuvem] fim 2026-11-20 05:22:44 codigo=0 duracao=0s

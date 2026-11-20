@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 060 -- SO LEITURA (codigo, nao dados): o resto do tuya_casa/ventilador.py da V1.0 -- vel_real, estado_real,
+# 061 (060 com nome errado, nunca rodou) -- SO LEITURA (codigo, nao dados): o resto do tuya_casa/ventilador.py da V1.0 -- vel_real, estado_real,
 # fora_do_ar, hospede_do_quarto, view, vigiar -- para montar a sombra do fim de semana (V1.1, Dom 20/11 18h03).
 set -u
 exec 2>&1

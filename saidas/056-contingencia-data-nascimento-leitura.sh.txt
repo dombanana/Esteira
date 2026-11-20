@@ -1,0 +1,37 @@
+[nuvem] inicio 2026-11-20 05:13:35 056-contingencia-data-nascimento-leitura.sh
+versao no ar: 1.0.281
+PMS_CONTINGENCIA_DATA = None
+PMS_REMOTE_OPEN = None
+== onde o codigo liga a contingencia ==
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/contingencia.py:27:Desligado por padrao: `PMS_CONTINGENCIA_DATA=on` e a abertura a distancia ligada (`PMS_REMOTE_OPEN=on`).
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/contingencia.py:36:contingencia por data (`PMS_CONTINGENCIA_DATA`). Os numeros digitados e a senha so se comparam em memoria.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/contingencia.py:72:    return str(env.get("PMS_CONTINGENCIA_DATA", "off") or "off").strip().lower() == "on" and enabled(env)
+== textos ao hospede que citam data de nascimento na porta (fora de tests) ==
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/service.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/reservar.html
+/opt/PMS-Banana-AI/SISTEMA/api/app/alerts.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/versao.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/confere_documento.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/entry_log.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/contingencia.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/cadastro.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/guest.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/capsulas.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/channel/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/main.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/aberturas.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/clinica/ura.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/governance/equipe.html
+/opt/PMS-Banana-AI/SISTEMA/api/app/luz/service.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/idioma_hospede.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/static/hospede.html
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/static/painel.html
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/drill.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/contingencia.py:4:A ideia: hospede sem celular e sem a senha digita a DATA DE NASCIMENTO (DDMMAA) no teclado da fechadura. Nao e
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/contingencia.py:154:def ddmmaa(nascimento: str) -> str:
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/contingencia.py:198:    """(estadia, DDMMAA) de quem pode abrir esta porta agora: estadia ativa, porta dela, dentro da janela, FNRH
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/contingencia.py:224:        d = ddmmaa(ficha.get("birth_date", ""))
+== aberturas pela contingencia registradas (contagem) ==
+[nuvem] fim 2026-11-20 05:13:35 codigo=0 duracao=0s

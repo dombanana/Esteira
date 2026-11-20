@@ -1,0 +1,293 @@
+[nuvem] inicio 2026-11-20 23:33:05 061-ventilador-v10-funcoes-leitura.sh
+versao: 1.0.282
+43:def vel_auto(temp: float | None, alvo: float | None, atual: Any = None) -> int:
+58:def _hora(txt: Any) -> time | None:
+66:def no_intervalo(agora: time, ini: time, fim: time) -> bool:
+70:def decidir(modo: str, *, alvo: float | None, liga: str | None, desliga: str | None, velocidade: str,
+97:def aparelhos(env: Mapping[str, str] = os.environ) -> dict[str, dict]:
+118:def invertidos(env: Mapping[str, str] = os.environ) -> set[str]:
+132:def _quarto(espaco: str) -> str:
+141:def tem_vel(ap: Mapping[str, Any]) -> bool:
+145:def _vel_n(vel: Any) -> int:
+152:def pedido(ap: Mapping[str, Any], ligar: bool, vel: Any) -> dict:
+165:def comandos(ap: Mapping[str, Any], ligar: bool, vel: int | None) -> list[dict]:
+178:def _ligado(v: Any) -> bool:
+182:def reles_ligados(state: Any, ap: Mapping[str, Any]) -> list[int] | None:
+192:def fora_do_ar(state: Any, ap: Mapping[str, Any]) -> bool:
+198:def vel_real(state: Any, ap: Mapping[str, Any]) -> int | None:
+204:def estado_real(state: Any, ap: Mapping[str, Any]) -> bool | None:
+215:def temperatura_e_origem(state: Any, ap: Mapping[str, Any],
+232:def temperatura(state: Any, ap: Mapping[str, Any], env: Mapping[str, str] = os.environ) -> float | None:
+237:def hospede_do_quarto(store: Any, quarto: str, at: datetime) -> Any:
+259:def linha(store: Any, quarto: str, event_id: str) -> dict:
+268:def _desde(row: Mapping[str, Any], at: datetime) -> float:
+276:def view(state: Any, event: Any, at: datetime, env: Mapping[str, str] = os.environ) -> dict | None:
+299:def vigiar(state: Any, *, at: datetime | None = None, env: Mapping[str, str] = os.environ) -> list[str]:
+361:def _chamar(state: Any, q: str, ap: dict, ligar: bool, vel: int | None, motivo: str, at: datetime,
+== linhas 130-366
+
+
+def _quarto(espaco: str) -> str:
+    s = str(espaco or "").strip().upper()
+    if not s:
+        return ""
+    if not s.startswith("Q"):
+        s = "Q" + s
+    return s if len(s) >= 3 else s[0] + s[1:].zfill(2)
+
+
+def tem_vel(ap: Mapping[str, Any]) -> bool:
+    return bool(ap.get("vel_code") or ap.get("reles"))
+
+
+def _vel_n(vel: Any) -> int:
+    try:
+        return max(1, min(3, int(vel or VEL_INICIAL)))
+    except (TypeError, ValueError):
+        return int(VEL_INICIAL)
+
+
+def pedido(ap: Mapping[str, Any], ligar: bool, vel: Any) -> dict:
+    """O que vai para a Tuya. Reles (v1.0.265): desligar = os 3 desligados; ligar na velocidade n = primeiro os OUTROS
+    desligados, espera PASSO_S e so entao o rele n ligado (`depois_so_se_ok`: se o primeiro falhar, o segundo nao sai)."""
+    reles = list(ap.get("reles") or [])
+    if not reles:
+        return {"commands": comandos(ap, ligar, vel)}
+    if not ligar:
+        return {"commands": [{"code": r, "value": False} for r in reles]}
+    escolhido = reles[_vel_n(vel) - 1]
+    return {"commands": [{"code": r, "value": False} for r in reles if r != escolhido],
+            "depois": [{"code": escolhido, "value": True}], "pulso_s": PASSO_S, "depois_so_se_ok": True}
+
+
+def comandos(ap: Mapping[str, Any], ligar: bool, vel: int | None) -> list[dict]:
+    if ap.get("reles"):                                    # v1.0.265: a ordem toda (o envio separa em dois passos)
+        p = pedido(ap, ligar, vel)
+        return list(p["commands"]) + list(p.get("depois") or [])
+    if not ligar:
+        return [{"code": ap["switch"], "value": False}]
+    out = [{"code": ap["switch"], "value": True}]
+    vals = ap.get("vel_vals") or []
+    if ap.get("vel_code") and vel and len(vals) >= 3:
+        out.append({"code": ap["vel_code"], "value": vals[max(1, min(3, int(vel))) - 1]})
+    return out
+
+
+def _ligado(v: Any) -> bool:
+    return v in (True, 1, "1", "true", "on")
+
+
+def reles_ligados(state: Any, ap: Mapping[str, Any]) -> list[int] | None:
+    """v1.0.265: quais velocidades (1, 2, 3) estao ligadas agora no modulo de reles; None sem leitura."""
+    from app.tuya_casa.service import ultimo
+    st = (ultimo(state).get(ap["device"]) or {}).get("status") or {}
+    reles = list(ap.get("reles") or [])
+    if not reles or not any(r in st for r in reles):
+        return None
+    return [n for n, r in enumerate(reles, 1) if _ligado(st.get(r))]
+
+
+def fora_do_ar(state: Any, ap: Mapping[str, Any]) -> bool:
+    """v1.0.266 (Q06 "Ventilador 06" fora do ar, 18/11): a Tuya diz offline -- o worker nao insiste."""
+    from app.tuya_casa.service import ultimo
+    return (ultimo(state).get(ap["device"]) or {}).get("online") is False
+
+
+def vel_real(state: Any, ap: Mapping[str, Any]) -> int | None:
+    """A velocidade ligada agora (so modulo de reles e so quando ha exatamente uma ligada)."""
+    on = reles_ligados(state, ap)
+    return on[0] if on and len(on) == 1 else None
+
+
+def estado_real(state: Any, ap: Mapping[str, Any]) -> bool | None:
+    from app.tuya_casa.service import ultimo
+    if ap.get("reles"):
+        on = reles_ligados(state, ap)
+        return None if on is None else bool(on)
+    st = (ultimo(state).get(ap["device"]) or {}).get("status") or {}
+    if ap["switch"] in st:
+        return st[ap["switch"]] in (True, 1, "1", "true", "on")
+    return None
+
+
+def temperatura_e_origem(state: Any, ap: Mapping[str, Any],
+                         env: Mapping[str, str] = os.environ) -> tuple[float | None, str | None]:
+    """(graus, "quarto" | "rua" | None). v1.0.265: sem termometro no quarto, a temperatura da rua (Dom 18/11)."""
+    from app.tuya_casa.service import temperatura as temp_de, ultimo
+    for dev in (ap.get("termometro"), ap.get("device")):
+        if dev:
+            t = temp_de((ultimo(state).get(dev) or {}).get("status") or {})
+            if t is not None:
+                return round(t, 1), "quarto"
+    if not ap.get("termometro"):
+        from app.tuya_casa import temp_rua
+        t = temp_rua.ler(env)
+        if t is not None:
+            return t, "rua"
+    return None, None
+
+
+def temperatura(state: Any, ap: Mapping[str, Any], env: Mapping[str, str] = os.environ) -> float | None:
+    return temperatura_e_origem(state, ap, env)[0]
+
+
+# -- a estadia que manda no quarto ----------------------------------------------------------------------------
+def hospede_do_quarto(store: Any, quarto: str, at: datetime) -> Any:
+    """A estadia valendo agora no quarto. v1.0.27x (Dom 18/11, sobre o ar: "a pessoa fez o check-out, ja deu o horario
+    do check-out, nao tem ninguem mais para entrar, ai ele desliga" -- e para o ventilador: "Ok, mesma regra"): a janela
+    do QUARTO, a mesma do ar (14h da chegada -> hora da saida; entrada antecipada paga a partir das 6h), nao mais a da
+    porta de entrada (6h -> 18h)."""
+    from zoneinfo import ZoneInfo
+
+    from app.core.event import EventState
+    from app.tuya_casa.service import _janela_do_ar
+    tz = ZoneInfo(store.timezone)
+    for e in store.events.values():
+        if e.state not in (EventState.CONFIRMED, EventState.IN_PROGRESS) or not e.where or e.where[0] != quarto:
+            continue
+        try:
+            ini, fim = _janela_do_ar(store, e, tz)
+        except ValueError:
+            continue
+        if ini <= at < fim:
+            return e
+    return None
+
+
+def linha(store: Any, quarto: str, event_id: str) -> dict:
+    """A escolha do quarto PARA esta estadia (a do hospede anterior nao vale)."""
+    row = dict((getattr(store, "tuya_vent", {}) or {}).get(quarto) or {})
+    if row.get("event_id") != event_id:
+        row = {"modo": "manual", "alvo": None, "liga": None, "desliga": None, "velocidade": VEL_INICIAL,
+               "manual_ligado": False, "event_id": event_id}
+    return row
+
+
+def _desde(row: Mapping[str, Any], at: datetime) -> float:
+    try:
+        return (at - datetime.fromisoformat(str(row.get("enviado_at")))).total_seconds()
+    except (TypeError, ValueError):
+        return 1e9
+
+
+# -- o que o painel mostra ------------------------------------------------------------------------------------
+def view(state: Any, event: Any, at: datetime, env: Mapping[str, str] = os.environ) -> dict | None:
+    if not event.where:
+        return None
+    q = _quarto(event.where[0])
+    ap = aparelhos(env).get(q)
+    if ap is None:
+        return None
+    from app.tuya_casa.service import semear
+    semear(state, env)
+    row = linha(state.store, q, event.event_id)
+    real = estado_real(state, ap)
+    ligado = real if real is not None else row.get("estado") == "ligado"
+    temp, origem = temperatura_e_origem(state, ap, env)
+    vr = vel_real(state, ap)
+    agora_vel = vr if vr is not None else (row.get("vel_enviada") if ligado and tem_vel(ap) else None)
+    return {"ligado": bool(ligado), "temp": temp, "temp_origem": origem, "modo": row["modo"], "alvo": row.get("alvo"),
+            "liga": row.get("liga"), "desliga": row.get("desliga"), "velocidade": row.get("velocidade") or VEL_INICIAL,
+            "tem_vel": tem_vel(ap), "reles": bool(ap.get("reles")), "vel_agora": agora_vel,
+            "faixa": {"min": FAIXA[0], "max": FAIXA[1]},
+            "tem_termometro": temp is not None or bool(ap.get("termometro"))}
+
+
+# -- o worker: aplica a escolha (temperatura/horario) e desliga o quarto vazio -------------------------------
+def vigiar(state: Any, *, at: datetime | None = None, env: Mapping[str, str] = os.environ) -> list[str]:
+    from zoneinfo import ZoneInfo
+
+    from app.tuya_casa.service import _refrescar
+    at = at or datetime.now(timezone.utc)
+    aps = aparelhos(env)
+    if not aps:
+        return []
+    _refrescar(state, env, at)
+    if any(not ap.get("termometro") for ap in aps.values()):     # v1.0.265: a temperatura da rua (a cada 15 min)
+        try:
+            from app.tuya_casa import temp_rua
+            temp_rua.atualizar(env, at)
+        except Exception:  # noqa: BLE001 -- sem a rua o ventilador fica como antes (sem leitura)
+            pass
+    tz = ZoneInfo(state.store.timezone)
+    feitos = []
+    from app.tuya_casa.anfitriao import manda
+    for q, ap in aps.items():
+        if manda(state.store, f"vent:{q}", at):
+            continue                           # v1.0.283: o anfitriao esta mandando neste ventilador
+        e = hospede_do_quarto(state.store, q, at)
+        row = (getattr(state.store, "tuya_vent", {}) or {}).get(q) or {}
+        real = estado_real(state, ap)
+        ligado_atual = real if real is not None else row.get("estado") == "ligado"
+        if fora_do_ar(state, ap):
+            continue                           # v1.0.266: aparelho fora do ar -- comando nao chega (Tuya 2001); volta sozinho
+        on = reles_ligados(state, ap) if ap.get("reles") else None
+        if on and len(on) > 1:                 # v1.0.265: dois reles ligados (por fora) -- nunca; fica so um
+            if not (row.get("motivo") == "dois botoes" and _desde(row, at) < DOIS_S):
+                fica = row.get("vel_enviada") if row.get("vel_enviada") in on else max(on)
+                if e is None:
+                    feitos.append(_chamar(state, q, ap, False, None, "dois botoes", at, zerar=True))
+                else:
+                    feitos.append(_chamar(state, q, ap, True, fica, "dois botoes", at))
+            continue
+        if e is None:
+            if ligado_atual and not (row.get("estado") == "desligado" and _desde(row, at) < ECO_S):
+                feitos.append(_chamar(state, q, ap, False, None, "quarto vazio", at, zerar=True))
+            continue
+        r = linha(state.store, q, e.event_id)
+        if r["modo"] == "manual":
+            continue                       # manual: quem manda e a chave do hospede (ou o botao do proprio aparelho)
+        temp = temperatura(state, ap, env)
+        vr = vel_real(state, ap)
+        quer, vel = decidir(r["modo"], alvo=r.get("alvo"), liga=r.get("liga"), desliga=r.get("desliga"),
+                            velocidade=str(r.get("velocidade") or VEL_INICIAL), manual_ligado=bool(r.get("manual_ligado")),
+                            temp=temp, agora_t=at.astimezone(tz).time(), ligado_atual=bool(ligado_atual),
+                            vel_atual=vr if vr is not None else row.get("vel_enviada"))
+        if ap.get("reles") and vr is not None:
+            mesma_vel = not quer or vr == vel             # a velocidade de verdade (botao do aparelho conta)
+        else:
+            mesma_vel = not quer or not tem_vel(ap) or row.get("vel_enviada") == vel
+        if quer == bool(ligado_atual) and mesma_vel:
+            continue
+        if row.get("estado") == ("ligado" if quer else "desligado") and row.get("vel_enviada") == vel \
+                and _desde(row, at) < ECO_S:
+            continue                       # o mesmo pedido acabou de sair
+        feitos.append(_chamar(state, q, ap, quer, vel, f"{r['modo']}", at))
+    return feitos
+
+
+def _chamar(state: Any, q: str, ap: dict, ligar: bool, vel: int | None, motivo: str, at: datetime,
+            zerar: bool = False) -> str:
+    from app.tuya_casa.service import _chamar as chamar
+    out = chamar(state, "luz.tuya_vent_aplicar", {"store": state.store, "quarto": q, "aparelho": ap, "ligar": ligar,
+                                                  "vel": vel, "motivo": motivo, "zerar": zerar}, at)
+    return out.answer
+== worker: como o vigiar e chamado
+                log.info("tuya (ar/ventilador): %s", feito)
+        except Exception as erro:  # noqa: BLE001
+            log.error("tuya (ar/ventilador) falhou: %s", type(erro).__name__)
+        try:                                       # v1.0.283 (Dom 20/11): automacao em massa do anfitriao
+            from app.tuya_casa.anfitriao import vigiar as anf_vigiar
+            if feito := anf_vigiar(state):
+                log.info("automacao do anfitriao: %s", feito)
+        except Exception as erro:  # noqa: BLE001
+            log.error("automacao do anfitriao falhou: %s", type(erro).__name__)
+        try:                                       # v1.0.257 (Dom 17/11): ventilador dos quartos privativos
+            from app.tuya_casa.ventilador import vigiar as vent_vigiar
+            if feito := vent_vigiar(state):
+                log.info("tuya (ventilador do quarto): %s", feito)
+        except Exception as erro:  # noqa: BLE001
+            log.error("tuya (ventilador do quarto) falhou: %s", type(erro).__name__)
+        try:                                       # v1.0.242 (Dom 14/11): codigo de contingencia da porta sem gateway
+            from app.reservation import contingencia_offline
+            if feito := contingencia_offline.rodar(state):
+                log.info("contingencia sem gateway: %s", feito)
+        except Exception as erro:  # noqa: BLE001
+            log.error("contingencia sem gateway falhou: %s", type(erro).__name__)
+        if luz_ponte is not None and time.monotonic() - luz_auto_ultimo >= luz_auto_cada:
+            luz_auto_ultimo = time.monotonic()
+            try:                                                    # v1.0.254: luzes das camas pelo nome ("13.B")
+                if feito := luz_auto.atualizar(luz_ponte, os.environ, agora=datetime.now(timezone.utc).isoformat()):
+                    log.info("luz (cadastro pelo nome): %s", feito)
+fim
+[nuvem] fim 2026-11-20 23:33:05 codigo=0 duracao=0s

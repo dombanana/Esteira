@@ -1,0 +1,52 @@
+[nuvem] inicio 2026-11-21 23:43:08 107-painel-do-hospede-sem-ficha-leitura.sh
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/intents.py:394:        _set(ctx, store, pedido["pedido_id"], {**_sem_ficha(ctx, store, pedido), "status": "cancelado"})
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/intents.py:448:def _sem_ficha(ctx: IntentContext, store: Any, pedido: dict) -> dict:
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/intents.py:495:        _set(ctx, store, pid, _sem_ficha(ctx, store, pedido))
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/intents.py:560:    _set(ctx, store, pedido["pedido_id"], {**_sem_ficha(ctx, store, pedido), "status": "cancelado",
+/opt/PMS-Banana-AI/SISTEMA/api/app/alerts.py:91:    "acompanhante_sem_ficha": "Reserva com acompanhante sem ficha e sem aviso de que não veio",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/ficha_na_porta.py:17:    anfitriao e avisado (o mesmo alerta das 22h, `reservation.alerta_acompanhante_sem_ficha`, que continua valendo).
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/ficha_na_porta.py:276:                chamar("reservation.alerta_acompanhante_sem_ficha", {"store": store, "reservation_id": rid})
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/nao_veio.py:91:    name="reservation.alerta_acompanhante_sem_ficha",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/nao_veio.py:112:    raise_alert(ctx, store, "acompanhante_sem_ficha", ref=rid, urgent=False, avisar=True,
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/continuacao.py:83:    """A continuacao de `event` NO MESMO espaco (a limpeza de troca so e dispensada assim: se a cama ou o quarto mudou,
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/lembretes.py:830:                chamar("reservation.alerta_acompanhante_sem_ficha", {"store": store, "reservation_id": rid})
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/lembretes.py:831:                out.setdefault("acompanhante_sem_ficha", []).append(rid)
+/opt/PMS-Banana-AI/SISTEMA/api/app/casa_viva_convite.py:33:NAO = re.compile(r"^\s*(n[aã]o|n|nao quero|não quero|no|dispenso|agora n[aã]o|n[aã]o,? obrigad[oa])\s*[!.]*\s*$",
+/opt/PMS-Banana-AI/SISTEMA/api/app/nucleo/intents.py:55:ITEM_STATUS = ("em_dia", "protocolado", "pendente", "dispensado")
+/opt/PMS-Banana-AI/SISTEMA/api/app/nucleo/leitura.py:281:        order = {"vencido": 0, "vencendo": 1, "pendente": 2, "em_dia": 3, "dispensado": 4}
+== ficha_done
+66:def ficha_done(store: Any, event: Any) -> bool:
+67-    """A ficha vale para esta estadia: feita aqui ou -- Dom 03/10, "quando um hospede segue na casa... sem perguntar"
+68-    -- herdada da estadia anterior da mesma pessoa, no mesmo quarto, emendada (`app.reservation.continuacao`)."""
+69-    if ficha_feita_aqui(store, event):
+70-        return True
+71-    person = store.persons.get(event.who.person)
+72-    if not (person and person.document_ref):
+73-        return False
+74-    from app.reservation.continuacao import ficha_herdada
+75-    return ficha_herdada(store, event)
+76-
+77-
+78-def credential_state(store: Any, outbox: Any, event: Any, now: datetime) -> tuple[str, list[str]]:
+79-    """("pronta" | "aguardando" | "encerrada", codigos do que falta -- WAIT_TEXT)."""
+80-    from app.reservation.access import access_plan
+81-    checkin, checkout, tz = _dates(store, event)
+82-    if event.state not in _LIVE or now >= datetime.combine(checkout, time(CHECKOUT_HOUR), tz):
+83-        return "encerrada", ["fim"]
+84-    if outbox.get(f"senha:email:{event.event_id}") is not None:
+85-        return "pronta", []
+86-    from app.reservation.continuacao import coberta_pela_anterior, dona_da_senha
+87-    dona = dona_da_senha(store, event)
+88-    if dona is not event and coberta_pela_anterior(store, outbox, event) \
+89-            and outbox.get(f"senha:email:{dona.event_id}") is not None:
+90-        return "pronta", []          # v1.0.91: estadia emendada -- a senha e a mesma de antes, ja emitida
+91-    codes: list[str] = []
+== onde a pagina usa ficha_done
+291:            "ficha_done": False, "ficha_saved": False, "digits_set": False, "prefill": {},
+321:    if isinstance(data, dict) and data.get("ficha_done"):
+377:            data["troca_senha"] = situacao_troca(state.store, fila, event, at) if data.get("ficha_done") else None
+382:            data["rfid"] = cartao_rfid.situacao(state.store, event, at) if data.get("ficha_done") else None
+468:    from app.reservation.guest import ficha_done
+469:    ja_feita = ficha_done(state.store, event)            # 01/10: so o endereco que faltou -- a ficha ja foi feita
+fim
+[nuvem] fim 2026-11-21 23:43:08 codigo=0 duracao=0s

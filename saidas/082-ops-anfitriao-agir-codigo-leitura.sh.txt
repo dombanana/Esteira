@@ -1,0 +1,213 @@
+[nuvem] inicio 2026-11-21 17:12:15 082-ops-anfitriao-agir-codigo-leitura.sh
+#!/usr/bin/env python3
+"""Acoes do anfitriao pela linha de comando, so as da lista (03/10/2026).
+
+Producao, 03/10: tres correcoes precisavam sair antes de a tela nova subir -- o nome errado de alguem da casa, o
+bloqueio de menor do Q12A que foi erro de digitacao (o Dom viu a pessoa: e adulta) e o lojista inativo. O script
+chama a MESMA intencao da tela, como o anfitriao que assina (`--como`): papel conferido no cadastro de acesso, o
+diario fica com o nome dele como autor, uma transacao do banco por acao.
+
+    python ops/anfitriao_agir.py --como person-dom --renomear person-... "Nome Novo"          # SO LEITURA
+    python ops/anfitriao_agir.py --como person-dom --desfazer-menor event-... --aplicar
+    python ops/anfitriao_agir.py --como person-dom --reativar-lojista lojista-... --aplicar
+
+So estas acoes existem aqui (lista fechada): `person.update_contact` (so o nome; o anfitriao pode trocar o
+proprio), `reservation.desfazer_menor`, `shop.reactivate_owner` e, desde 03/10 (noite), `finance.cancelar_cobranca` e
+`reservation.cancelar_reserva` (com `--motivo`; irreversiveis: o cartao de confirmacao e montado aqui, como no
+plano de acesso do worker), `person.assign_role` SO com o papel staff (`--papel-equipe`) e `person.invite`
+(`--convidar`). Nenhuma outra intencao e alcancavel.
+
+    python ops/anfitriao_agir.py --como person-dom --cancelar-reserva reserva-nobeds-... --motivo "teste" --aplicar
+Sem `--aplicar`, nada e gravado. Na saida: ids e a resposta da intencao com nomes, e-mails e telefones mascarados.
+"""
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import sys
+from datetime import datetime, timezone
+from typing import Any, Iterable
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "api"))
+
+#: a lista fechada: acao -> (intencao, nome do parametro do alvo)
+ACOES = {
+    "renomear": ("person.update_contact", "person_id"),
+    "desfazer_menor": ("reservation.desfazer_menor", "event_id"),
+    "reativar_lojista": ("shop.reactivate_owner", "owner_id"),
+    # Dom 03/10 20h23 ("Cancele essa ocorrencia e essa reserva. Eu mesmo fiz de teste."): as mesmas da tela nova
+    "cancelar_cobranca": ("finance.cancelar_cobranca", "charge_id"),
+    "cancelar_reserva": ("reservation.cancelar_reserva", "reservation_id"),
+    # Dom 03/10 ("Integre o Italo a casa como um colaborador... ele precisa comunicar com hospedes"): papel de equipe
+    # (staff) e o convite do painel (sem e-mail no cadastro: vai pelo WhatsApp do proprio cadastro)
+    "papel_equipe": ("person.assign_role", "person_id"),
+    "convidar": ("person.invite", "person_id"),
+    # Dom 05/10 (o Italo cadastrado duas vezes): o celular passa do cadastro antigo (sem papel) para o da equipe
+    "transferir_celular": ("person.transferir_celular", "from_person"),
+}
+
+
+class Recusa(Exception):
+    """A acao nao roda (quem assina nao e anfitriao, alvo nao existe, acao fora da lista). Frase sem dado pessoal."""
+
+
+_EMAIL = re.compile(r"[^\s@]+@[^\s@]+")
+_FONE = re.compile(r"\+?\d[\d\s().-]{6,}\d")
+
+
+def mascarar(texto: str, nomes: Iterable[str] = ()) -> str:
+    """E-mail, telefone e cada palavra dos nomes conhecidos viram mascara (so a inicial do nome fica)."""
+    out = _FONE.sub("•••", _EMAIL.sub("•••@•••", str(texto or "")))
+    palavras = {p for n in nomes for p in str(n or "").split() if len(p) >= 2}
+    for p in sorted(palavras, key=len, reverse=True):
+        out = re.sub(r"(?<!\w)" + re.escape(p) + r"(?!\w)", p[0] + "•••", out)
+    return out
+
+
+def anfitriao(state: Any, como: str):
+    """O Caller de quem assina -- so se a pessoa existe e TEM o papel de anfitriao no cadastro de acesso."""
+    from app.core.event import Role
+    from app.core.intent import Caller, Surface
+    from app.core.record import Actor, ActorKind
+    store = state.store
+    if not como or como not in store.persons or Role.HOST.value not in (store.access.roles.get(como) or set()):
+        raise Recusa(f"{como or '(vazio)'} nao e anfitriao desta casa -- nada feito.")
+    return Caller(Actor(ActorKind.PERSON, como), Role.HOST, state.house, Surface.SCREEN)
+
+
+def _alvo(state: Any, acao: str, alvo: str) -> list[str]:
+    """Confere o alvo e devolve os nomes a mascarar na saida."""
+    store = state.store
+    if acao == "transferir_celular":
+        de, _, para = alvo.partition(">")
+        for pid in (de, para):
+            if pid not in store.persons:
+                raise Recusa(f"{pid or '(vazio)'}: pessoa nao cadastrada -- nada feito.")
+        return [store.persons[de].name, store.persons[para].name]
+    if acao in ("papel_equipe", "convidar"):
+        p = store.persons.get(alvo)
+        if p is None:
+            raise Recusa(f"{alvo}: pessoa nao cadastrada -- nada feito.")
+        return [p.name]
+    if acao == "renomear":
+        p = store.persons.get(alvo)
+        if p is None:
+            raise Recusa(f"{alvo}: pessoa nao cadastrada -- nada feito.")
+        return [p.name]
+    if acao == "desfazer_menor":
+        if alvo not in (getattr(store, "minor_blocks", None) or {}):
+            raise Recusa(f"{alvo}: esta estadia nao esta barrada por menor de 18 -- nada feito.")
+        return []
+    if acao == "cancelar_cobranca":
+        fin = getattr(store, "finance", None)
+        if fin is None or alvo not in fin.charges:
+            raise Recusa(f"{alvo}: cobranca nao encontrada -- nada feito.")
+        return []
+    if acao == "cancelar_reserva":
+        if not any(r.reservation_id == alvo for r in store.reservations.values()):
+            raise Recusa(f"{alvo}: reserva nao encontrada -- nada feito.")
+        return []
+    from app.shop.intents import _cfg
+    owners = _cfg(store).get("owners") or {}
+    if alvo not in owners:
+        raise Recusa(f"{alvo}: lojista nao encontrado -- nada feito.")
+    return [owners[alvo].get("name") or ""]
+
+
+def agir(state: Any, como: str, acao: str, alvo: str, *, nome: str = "", aplicar: bool = False,
+         at: datetime | None = None) -> tuple[str, list[str]]:
+    """(resposta, nomes a mascarar). Sem `aplicar`, so confere e diz o que faria."""
+    if acao not in ACOES:
+        raise Recusa("acao fora da lista -- nada feito.")
+    caller = anfitriao(state, como)
+    nomes = _alvo(state, acao, alvo) + [nome]
+    intencao, chave = ACOES[acao]
+    params: dict = {chave: alvo}
+    if acao == "transferir_celular":             # alvo = "DE>PARA" (person_ids)
+        de, _, para = alvo.partition(">")
+        params = {"from_person": de, "to_person": para}
+    if acao == "renomear":
+        nome = " ".join(str(nome or "").split())
+        if len(nome) < 3:
+            raise Recusa("nome novo vazio -- nada feito.")
+        params["name"] = nome                    # so o nome: e-mail e celular nunca por aqui
+    if acao == "papel_equipe":
+        params["role"] = "staff"                 # so este papel: anfitriao nunca por aqui
+    if acao in ("cancelar_cobranca", "cancelar_reserva"):
+        motivo = " ".join(str(nome or "").split())
+        if len(motivo) < 3:
+            raise Recusa("motivo vazio (--motivo) -- nada feito.")
+        params["motivo"] = motivo
+        nomes = nomes[:-1]                       # o motivo e do anfitriao, nao precisa de mascara
+    if not aplicar:
+        return f"SO LEITURA: rodaria {intencao} em {alvo} como {como}. Para gravar: --aplicar", nomes
+    with state.unit_of_work():
+        full = {**params, "store": state.store}
+        card = state.router.card_for(intencao, full, state.house)     # irreversivel: o "Confirmar" da tela
+        out = state.router.call(intencao, caller=caller, house=state.house,
+                                params=full, ledger=state.ledger, outbox=state.outbox,
+                                switches=state.switches, at=at or datetime.now(timezone.utc),
+                                confirmation=card.token if card is not None else None)
+    return out.answer, nomes
+
+
+def main(argv: list[str] | None = None, state: Any = None, agora: datetime | None = None) -> int:
+    ap = argparse.ArgumentParser(description="acoes do anfitriao (so as da lista)")
+    ap.add_argument("--como", required=True, help="person_id do anfitriao que assina (vai como autor no diario)")
+    grupo = ap.add_mutually_exclusive_group(required=True)
+    grupo.add_argument("--renomear", nargs=2, metavar=("PERSON_ID", "NOME"))
+    grupo.add_argument("--desfazer-menor", metavar="EVENT_ID")
+    grupo.add_argument("--reativar-lojista", metavar="OWNER_ID")
+    grupo.add_argument("--papel-equipe", metavar="PERSON_ID")
+    grupo.add_argument("--convidar", metavar="PERSON_ID")
+    grupo.add_argument("--transferir-celular", metavar="DE>PARA", help="person_ids: cadastro antigo sem papel > cadastro da equipe")
+    grupo.add_argument("--cancelar-cobranca", metavar="CHARGE_ID")
+    grupo.add_argument("--cancelar-reserva", metavar="RESERVATION_ID")
+    ap.add_argument("--motivo", default="", help="obrigatorio para cancelar (vai ao diario)")
+    ap.add_argument("--aplicar", action="store_true", help="grava (sem isto, so confere)")
+    args = ap.parse_args(argv)
+    de_verdade = state is None           # os testes passam a memoria pronta; na VPS e o banco real
+    if de_verdade:
+        from app.main import build_state
+        state = build_state()
+    if args.aplicar and de_verdade and state.db is None:
+        print("ERRO: sem banco -- nada gravado")
+        return 2
+    if args.renomear:
+        acao, alvo, nome = "renomear", args.renomear[0], args.renomear[1]
+    elif args.desfazer_menor:
+        acao, alvo, nome = "desfazer_menor", args.desfazer_menor, ""
+    elif args.reativar_lojista:
+        acao, alvo, nome = "reativar_lojista", args.reativar_lojista, ""
+    elif args.papel_equipe:
+        acao, alvo, nome = "papel_equipe", args.papel_equipe, ""
+    elif args.convidar:
+        acao, alvo, nome = "convidar", args.convidar, ""
+    elif args.transferir_celular:
+        acao, alvo, nome = "transferir_celular", args.transferir_celular, ""
+    elif args.cancelar_cobranca:
+        acao, alvo, nome = "cancelar_cobranca", args.cancelar_cobranca, args.motivo
+    else:
+        acao, alvo, nome = "cancelar_reserva", args.cancelar_reserva, args.motivo
+    from app.core.intent import NotAuthorized
+    nomes: list[str] = [nome]
+    try:
+        resposta, nomes = agir(state, args.como, acao, alvo, nome=nome, aplicar=args.aplicar, at=agora)
+    except Recusa as e:
+        print("RECUSADO:", mascarar(str(e), nomes))
+        return 1
+    except (ValueError, NotAuthorized) as e:        # a regra da intencao recusou
+        print("RECUSADO:", mascarar(str(e)[:200], nomes))
+        return 1
+    print(f"{ACOES[acao][0]} {alvo}: {mascarar(resposta, nomes)}")
+    if args.aplicar:
+        print("diario integro:", state.ledger.verify())
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+== tuya_vent_aplicar
+fim
+[nuvem] fim 2026-11-21 17:12:15 codigo=0 duracao=0s

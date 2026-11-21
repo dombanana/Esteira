@@ -1,0 +1,126 @@
+[nuvem] inicio 2026-11-21 22:03:35 097-v10-leituras-ttlock-que-sobraram-leitura.sh
+                log.info("aparelhos tirados da internet: %d", len(tirados))
+            speed_switch(state)
+            if env_silence:
+                silence_cuts(state)
+        except Exception as erro:  # noqa: BLE001
+            log.error("internet (recolhedor/silencio) falhou: %s", type(erro).__name__)
+        if lock_client is not None and entry_lock and now - last_records >= records_every:
+            try:
+                # sempre desde as 5h de hoje: registro que a fechadura sincroniza atrasado (sem gateway)
+                # tambem conta; a chave do aviso impede mandar duas vezes
+                tz = ZoneInfo(state.store.timezone)
+                since = datetime.combine(datetime.now(tz).date(), datetime.min.time().replace(hour=5), tzinfo=tz)
+                # uma leitura so por volta; as tres leituras abaixo usam a mesma lista
+                agora_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
+                try:
+                    lidos = lock_client.list_records(entry_lock, int(since.timestamp() * 1000), agora_ms)
+                except Exception:
+                    try:                           # 03/10: sem a lista, ninguem vira "nao confirmada" (nem alerta)
+                        entrance_unread(state)
+                    except Exception as erro:  # noqa: BLE001
+                        log.error("registro da entrada (sem leitura) falhou: %s", type(erro).__name__)
+                    raise
+                from app.cameras.service import registrar_aberturas   # cameras (27/09): a mesma leitura, sem chamada a mais
+                registrar_aberturas(state, [{**r, "lockId": r.get("lockId") or entry_lock} for r in lidos],
+                                    via="leitura")
+                mesmos = lambda *_a: lidos  # noqa: E731
+                avisos = notify_early_arrivals(state, mesmos, entry_lock, since=since)
+                if avisos:
+                    log.info("avisos 'quarto as 14h': %d", len(avisos))
+                chegadas: dict[str, datetime] = {}
+                arrived_now = detect_arrivals(state, mesmos, entry_lock, since=since, times=chegadas)
+                try:                               # 01/10: a hora da chegada fisica, para o check-in na FNRH
+                    record_arrivals(state, chegadas)
+                except Exception as erro:  # noqa: BLE001
+                    log.error("hora da chegada (FNRH) falhou: %s", type(erro).__name__)
+                try:                               # 07/10: recorrente chegou -> a ficha guardada vale, FNRH e quarto
+                    if recorrentes := fichas_recorrentes(state):
+                        log.info("fichas de recorrentes aplicadas na chegada: %d", len(recorrentes))
+                except Exception as erro:  # noqa: BLE001
+                    log.error("ficha do recorrente falhou: %s", type(erro).__name__)
+                try:
+                    if feito := reconcile_entry(state, mesmos, entry_lock, since=since):
+                        log.info("registro da entrada: %s", feito)
+                except Exception as erro:  # noqa: BLE001
+                    log.error("registro da entrada falhou: %s", type(erro).__name__)
+                try:                               # v1.0.130 (Dom 21/10): ficha de todos na porta
+                    from app.reservation.ficha_na_porta import modo as modo_ficha_porta
+                    if modo_ficha_porta() != "off":
+                        if (fp := ficha_na_porta(state, lock_client.list_records)) and any(fp.values()):
+                            log.info("ficha na porta: %s", fp)
+                except Exception as erro:  # noqa: BLE001
+                    log.error("ficha na porta falhou: %s", type(erro).__name__)
+                from app.reservation import contingencia       # data de nascimento na fechadura (28/09), desligada por padrao
+                if contingencia.ativo(store=state.store):   # v1.0.194/195: ou a senha conferida (botao do anfitriao)
+                    if feitos := contingencia.rotina(state, lock_client.list_records, lidos_entrada=lidos,
+                                                     entry_lock=entry_lock):
+                        log.info("contingencia por data: %s", feitos)
+            except Exception as erro:  # noqa: BLE001
+                log.error("leitura das aberturas da entrada falhou: %s", type(erro).__name__)
+            last_records = now
+        if lock_client is not None and now - last_doors >= records_every:
+            try:                                   # 03/10: portao, quarto e armario -- a fechadura que cada botao abriu
+                tz = ZoneInfo(state.store.timezone)
+                since = datetime.combine(datetime.now(tz).date(), datetime.min.time().replace(hour=5), tzinfo=tz)
+                if feito := reconcile_doors(state, lock_client.list_records, house_locks(state), since=since):
+                    log.info("botoes de abrir: %s", feito)
+            except Exception as erro:  # noqa: BLE001
+                log.error("botoes de abrir (registro das fechaduras) falhou: %s", type(erro).__name__)
+            last_doors = now
+        if lock_client is not None and now - last_sentinela >= 3600:
+            try:                                   # v1.0.237 (Dom 14/11): senha recusada no prazo / nao gravada
+                from app.reservation import sentinela_senhas
+                if feito := sentinela_senhas.rodar(state, lock_client, house_locks(state)):
+                    log.info("sentinela das senhas: %s", feito)
+            except Exception as erro:  # noqa: BLE001
+                log.error("sentinela das senhas falhou: %s", type(erro).__name__)
+            last_sentinela = now
+        try:                                       # v1.0.243 (Dom 14/11): a caixa das reservas lida direto (sem Nobeds)
+=====
+        if luz_ponte is not None and time.monotonic() - luz_auto_ultimo >= luz_auto_cada:
+            luz_auto_ultimo = time.monotonic()
+            try:                                                    # v1.0.254: luzes das camas pelo nome ("13.B")
+                if feito := luz_auto.atualizar(luz_ponte, os.environ, agora=datetime.now(timezone.utc).isoformat()):
+                    log.info("luz (cadastro pelo nome): %s", feito)
+            except Exception as erro:  # noqa: BLE001
+                log.error("luz (cadastro pelo nome) falhou: %s", type(erro).__name__)
+        if luz_on:
+            # cada rotina da luz no seu proprio try: uma falha numa nao para as outras (o apagar das 14h, sobretudo)
+            from app.luz import service as luz
+
+            def ler_e_acender():
+                lidas = luz.poll(state, lock_client.list_records, house_locks(state))
+                if lidas.get("commands"):
+                    luz.dispatch_now(state, lidas["commands"])     # na hora, e mede quando o interruptor aceitou
+                return lidas
+            for nome, rotina in (
+                    ("leitura das aberturas", lambda: ler_e_acender() if luz_poll else None),
+                    ("comandos vencidos", lambda: luz.expire(state)),
+                    ("marco das 11h", lambda: luz.eleven_oclock(state)),
+                    ("apagar no tempo", lambda: luz.turn_off_due(state)),
+===== contingencia.rotina
+580:def rotina(state: Any, list_records: Any, *, lidos_entrada: Iterable[Mapping] = (), entry_lock: int | None = None,
+581-           at: datetime | None = None, env: Mapping[str, str] = os.environ) -> list[str]:
+582-    """Plano B sem aviso da nuvem: le as recusas dos ultimos minutos. A entrada reaproveita a leitura que o worker
+583-    ja fez (sem chamada a mais)."""
+584-    if not ativo(env, state.store):
+585-        return []
+586-    from app.worker import house_locks
+587-    at = at or datetime.now(timezone.utc)
+588-    locks = house_locks(state, env)
+589-    since = at - timedelta(minutes=5)
+590-    registros = [{**r, "lockId": r.get("lockId") or entry_lock} for r in lidos_entrada]
+591-    for lock in portas_para_ler(state, locks, at):
+592-        if lock == entry_lock and registros:
+593-            continue
+594-        try:
+595-            registros += [{**r, "lockId": r.get("lockId") or lock}
+596-                          for r in list_records(lock, int(since.timestamp() * 1000), int(at.timestamp() * 1000))]
+597-        except Exception:  # noqa: BLE001 -- uma fechadura fora do ar nao para as outras
+598-            continue
+599-    return processar(state, registros, locks=locks, at=at, env=env)
+===== chaves
+PMS_TTLOCK_CALLBACK_TOKEN definido: 1
+fim
+[nuvem] fim 2026-11-21 22:03:35 codigo=0 duracao=0s

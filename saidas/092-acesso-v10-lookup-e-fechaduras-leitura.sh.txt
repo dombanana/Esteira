@@ -1,0 +1,98 @@
+[nuvem] inicio 2026-11-21 21:45:25 092-acesso-v10-lookup-e-fechaduras-leitura.sh
+180-        # a unica fechadura sem gateway; todas as outras portas das senhas recusadas ja estavam gravadas. Porta sem
+181-        # gateway fica de fora da gravacao a distancia (como porta sem fechadura no mapa) e a senha sai completa.
+182-        sem_gw = {x.strip().upper() for x in env.get("PMS_TTLOCK_SEM_GATEWAY", "PANELAS").split(",") if x.strip()}
+183:        adapters["ttlock"] = make_ttlock_adapter(
+184-            GatewayNoRitmo(ttlock_client, RITMO_TTLOCK), vault, state.outbox,
+185-            locks_by_space=locks.rooms, event_lookup=_event_lookup(state), credentials=VaultCredentials(vault),
+186-            common_locks={k: v for k, v in locks.common.items() if k.upper() not in sem_gw}, lock_for=climbing(locks.rooms),
+187-            armarios_by_space=locks.armarios, armario_for=climbing(locks.armarios),
+188-            guest_accounts=guest_accounts,
+189-        )
+190-    # Escrita no Nobeds: trava dupla. Alem do interruptor do modulo, o worker
+191-    # so monta o escritor com PMS_NOBEDS_WRITES=on -- o calendario do Nobeds e
+192-    # o mesmo que a V3.4 usa em producao, e ligar um modulo por outro motivo
+193-    # nao pode, sem querer, comecar a escrever nele.
+194-    if "NOBEDS_MCP_TOKEN" in env and env.get("PMS_NOBEDS_WRITES", "").strip().lower() == "on":
+195-        adapters["nobeds"] = make_nobeds_adapter(
+196-            lambda name, args: NobedsMcpClient(
+197-                base_url=env.get("NOBEDS_API_BASE_URL", "https://api.nobeds.com").rstrip("/"),
+198-                token=env["NOBEDS_MCP_TOKEN"].strip()).call_tool(name, args),
+199-            vault=vault,
+200-            booking_writer=(NobedsBookingWriter(base_url=env.get("NOBEDS_API_BASE_URL", "https://api.nobeds.com").rstrip("/"),
+201-                                                token=env["NOBEDS_API_TOKEN"].strip())
+202-                            if env.get("NOBEDS_API_TOKEN") else None),
+203-            # Relê o retrato mais novo na hora de enviar: comando atrasado nunca
+204-            # sobrescreve publicacao posterior; e nunca manda hoje nem o passado.
+205-            latest=lambda key: state.store.publications.get(key),
+206-            today=lambda: datetime.now(ZoneInfo(state.store.timezone)).date(),
+207-            # motor de reservas proprio (26/09): acha a reserva pela marca e conta ao PMS o que houve
+208-            find_motor=(motor_finder(state, vault, NobedsReadOnlyClient(
+===== _ttlock_lookup / event_info
+===== ipiranga.py LOCKS
+62:LOCKS = {"Q02": 15672794, "Q03": 15672838, "Q04": 15673120, "Q05": 15572854, "Q06": 15638346,
+63-         "Q07": 15572412, "Q08": 16581872, "Q09": 15635192, "Q10": 15635170, "Q11": 15635196,
+64-         "Q12": 15690636, "Q13": 16581848, "Q14": 16005244}
+65-#: ENTRY/EXIT = ENTRADA/SAIDA. KITCHEN (33999008, "localizar" na conta) veio da V3.4 como "cozinha" so
+66-#: do Smart -- e o armario de PANELAS (CONFIRMADO pelo Dom em 26/09). COZINHA (34679130) e a porta da
+67-#: cozinha (varredura de 29/09; Dom: "cozinha e cozinha"), so do Smart. QUINTAL ainda nao tem fechadura.
+68:COMMON_LOCKS = {"ENTRY": 16190236, "EXIT": 16190206, "COZINHA": 34679130, "KITCHEN": 33999008}
+69-#: Armarios e gavetas da cozinha por quarto/cama (varredura TTLock de 29/09; Dom: "armario 3 e do quarto 3,
+70-#: gaveta 8 e do quarto 8, armario 13A e da cama A do quarto 13"). Quarto sem armario (04, 12, 14): sem porta.
+71:ARMARIOS: dict[str, int] = {
+72-    "Q02": 35502154, "Q03": 35502214, "Q05": 35501148, "Q06": 35470816, "Q07": 35470912, "Q08": 33415241,
+73-    "Q09": 34960342, "Q10": 34959798, "Q11": 34960586, "Q13A": 34483410, "Q13B": 34485052, "Q13C": 34485540,
+74-}
+75-
+76-
+77-def spaces() -> list[Space]:
+78-    out = [Space(CASA, "Casa Ipiranga", SpaceKind.BUILDING)]
+79-    for n in range(1, 15):
+80-        out.append(Space(f"Q{n:02d}", f"Quarto {n:02d}", SpaceKind.ROOM, CASA))
+81-    for bed in CAMAS:
+82-        out.append(Space(bed, f"Quarto {bed[1:3]} cama {bed[3]}", SpaceKind.BED, bed[:3]))
+83-    for letter in "ABCD":
+84-        out.append(Space(f"Q14{letter}", f"Quarto 14 cama {letter}", SpaceKind.BED, "Q14"))
+85-    # v1.0.45 (Dom 05/10: "uma das camas do quarto 1"): o Q01 tem 2 camas. Nao tem anuncio nem fechadura e nao e vendido: as
+86-    # camas existem para o plano de camas de quem mora (o Q01 e o quarto de reserva do morador da equipe sem cama).
+87-    for letter in "AB":
+88-        out.append(Space(f"Q01{letter}", f"Quarto 01 cama {letter}", SpaceKind.BED, "Q01"))
+89-    return out
+90-
+91-
+92-def instances() -> list[Instance]:
+93-    return [
+94-        Instance("smart", "Smart", "hospedagem", remote_lock=True, min_stay=2, max_stay=90, liberties=SMART),
+95-        Instance("hostel", "Hostel", "hospedagem", remote_lock=True, min_stay=1, max_stay=28, liberties=HOSTEL),
+96-        # Dom, 26/09: so estas duas. "Por cama" e o espaco da reserva (a cama 12A); voluntario/equipe e uma
+97-        # Conquista da pessoa, que dorme numa cama normal, com FNRH, como qualquer hospede.
+98-    ]
+99-
+100-
+101-@dataclass(frozen=True)
+102-class Proposed:
+103-    room_id: str
+104-    space: str
+105-    instance: str
+106-    note: str = ""
+107-    per_person: bool = False       # o anuncio vende pessoas num quarto com camas (o sistema escolhe a cama)
+108-
+109-
+110-def mappings() -> list[Proposed]:
+111-    out = [Proposed(rid, room, "smart", f"{pessoas} pessoa(s)" + (" + rede" if rede else ""))
+112-           for room, (rid, pessoas, rede) in PRIVATIVOS.items()]
+113-    out += [Proposed(rid, bed, "smart", "cama individual") for bed, rid in CAMAS.items()]
+114-    out += [Proposed(rid, room, "smart", "quarto coletivo de 6 camas, vendido por pessoa (o sistema escolhe a cama)",
+115-                     per_person=True) for room, rid in POOLS.items()]
+116-    out += [Proposed(rid, "Q14", "hostel", "quarto 14 (feminino, 4 camas), vendido por pessoa", per_person=True)
+===== PMS_TTLOCK_LOCKS definido?
+1
+PMS_DISPATCH_SECONDS=15
+PMS_QUARTO_DESDE=11:30
+PMS_SENHA_1A5_QUARTOS=Q12,Q13,Q14
+PMS_SENHA_DIAS=7
+PMS_AUTO_CREDENTIALS=on
+PMS_SENHA_ESPERA_DOC=off
+PMS_SENHA_4=on
+fim
+[nuvem] fim 2026-11-21 21:45:25 codigo=0 duracao=0s

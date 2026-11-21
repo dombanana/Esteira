@@ -1,0 +1,9 @@
+[nuvem] inicio 2026-11-21 23:37:52 105-navegador-de-quem-deu-erro-leitura.sh
+logs: /var/log/nginx/access.log
+== 191.38.17.x
+== 177.73.42.x
+== 187.90.202.x
+== 177.54.156.x
+== 179.151.175.x
+fim
+[nuvem] fim 2026-11-21 23:37:52 codigo=0 duracao=0s

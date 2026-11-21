@@ -1,0 +1,78 @@
+[nuvem] inicio 2026-11-21 22:04:45 098-onde-ficam-as-aberturas-leitura.sh
+      2 ctx.change("entry_record"
+      2 ctx.change("remote_open"
+      2 getattr(store, "entry_log"
+      1 getattr(store, "remote_opens"
+      6 store.entry_log
+      4 store.events
+      1 store.inventory
+      2 store.persons
+      8 store.remote_opens
+      1 store.timezone
+=== cameras/aberturas.py
+"""Das aberturas da fechadura (TTLock) ao pedido de recorte nas cameras daquela porta.
+
+Regra do Dom (27/09): "quando a fechadura abrir por qualquer via (normal, contingencia, app)" o sistema
+guarda 30 s antes e 30 s depois nas cameras que vigiam a porta. A gravacao continua da casa fica dias
+em anel, entao o recorte pode ser pedido mesmo quando o aviso chega atrasado (a hora que conta e a da
+fechadura, `lockDate`, nao a da chegada).
+
+O que NUNCA sai daqui: a senha digitada (`keyboardPwd`). Nem na contingencia por data de nascimento --
+essa data so existe no registro da TTLock, e aqui ela e descartada na leitura (nem a impressao fica).
+"""
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Any, Iterable, Mapping
+
+#: tipos de registro da TTLock que sao ABRIR (API aberta da TTLock, `recordType`): app, senha, cartao, digital,
+#: pulseira, chave mecanica, gateway/remota (a abertura da contingencia sai por aqui), abrir por dentro,
+#: controle remoto, chave de abrir, cartao de hotel, rosto e QR. Trancar (11, 33-36, 45, 47...), sensor de porta
+#: (30/31), alarme (29, 44) e "travado por senha errada" (48) nao sao abertura -- viravam 2 a 4 trechos por porta.
+#: Registro sem tipo (formato antigo) conta como abertura.
+ABRIR = frozenset({1, 4, 7, 8, 9, 10, 12, 32, 37, 46, 49, 55, 57})
+ROTULOS = {1: "app", 4: "senha", 7: "cartao", 8: "digital", 9: "pulseira", 10: "chave", 12: "app, a distância",
+           32: "por dentro", 37: "controle remoto", 46: "chave", 49: "cartao", 55: "rosto", 57: "QR"}
+_OK = (1, True, "1", "true")
+#: v1.0.69 (Dom 08/10: "se alguem interagir com a fechadura do quarto 2, a gente vai tirar uma foto e mandar essa foto
+#: para os registros do quarto 2"): tambem conta a TENTATIVA -- senha errada (tipo 4 sem sucesso), cartao/digital
+#: recusados e a fechadura "travada por senha errada" (48). Trancar, sensor e alarme continuam de fora.
+TRAVADA = 48
+#: v1.0.246: alarme da fechadura (29 = alarme/violacao, 44 = alarme de arrombamento) -- so para a camera com gatilho
+#: "alarme" (o portao); nunca e abertura
+ALARME = frozenset({29, 44})
+ROTULOS_FALHA = {4: "senha errada", 7: "cartão recusado", 8: "digital recusada", 49: "cartão recusado",
+                 1: "app recusado", 12: "abertura remota recusada", TRAVADA: "travada por senhas erradas",
+                 29: "alarme da fechadura", 44: "alarme de arrombamento"}
+
+
+@dataclass(frozen=True)
+class Abertura:
+    lock_id: int
+    at: datetime
+    tipo: int | None
+    ok: bool = True              # v1.0.69: False = tentativa que nao abriu (senha errada, travada...)
+
+    @property
+    def id(self) -> str:
+        base = f"{self.lock_id}-{int(self.at.timestamp() * 1000)}-{self.tipo if self.tipo is not None else 'x'}"
+        return base if self.ok else base + "-f"
+
+    @property
+    def rotulo(self) -> str:
+        if not self.ok or self.tipo == TRAVADA:
+            return ROTULOS_FALHA.get(self.tipo, f"tentativa recusada (tipo {self.tipo})")
+        if self.tipo is None:
+            return "abertura"
+        return ROTULOS.get(self.tipo, f"tipo {self.tipo}")
+
+
+def ler(payload: Mapping[str, Any] | Iterable[Mapping[str, Any]], *, tentativas: bool = False) -> list[Abertura]:
+=== tuya_aberturas
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:89:    ultimos = getattr(store, "tuya_aberturas", {}) or {}
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:98:    ctx.transaction.after_commit(lambda: store.tuya_aberturas.__setitem__(aid, row))
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py:628:                  "host_alerts", "wa_acks", "minor_blocks", "remote_opens", "access_suspensions", "access_extensions", "access_continuations", "fichas_reabertas", "arquivos", "luzes", "luz_moradores", "moradias", "luz_medicoes", "luz_despertadores", "tuya_aberturas", "tuya_clima", "tuya_vent", "automacao_regras", "automacao_ordens",
+fim
+[nuvem] fim 2026-11-21 22:04:45 codigo=0 duracao=0s

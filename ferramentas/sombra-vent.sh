@@ -24,6 +24,12 @@ from app.tuya_casa import ventilador as V
 from app.tuya_casa.service import _refrescar, ultimo
 st = build_state(); at = datetime.now(timezone.utc)
 _refrescar(st, os.environ, at)
+if not ultimo(st):                      # a ponte nao respondeu (aconteceu em 21/11 11h): tenta mais 2 vezes
+    import time
+    from app.tuya_casa import service as SV
+    for _ in range(2):
+        time.sleep(8); SV._refrescado.clear(); _refrescar(st, os.environ, datetime.now(timezone.utc))
+        if ultimo(st): break
 hora = at.astimezone(ZoneInfo(st.store.timezone)).strftime("%Y-%m-%d %H:%M")
 aps = V.aparelhos(); print("cache:", len(ultimo(st)), "aparelhos")
 for q in ("Q07", "Q08", "Q09", "Q10"):

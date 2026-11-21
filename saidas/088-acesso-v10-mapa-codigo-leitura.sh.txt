@@ -1,0 +1,86 @@
+[nuvem] inicio 2026-11-21 21:40:55 088-acesso-v10-mapa-codigo-leitura.sh
+== arquivos
+    101 ./demo.py
+    114 ./cameras/aberturas.py
+    151 ./reservation/canceladas.py
+    168 ./reservation/saida_porta.py
+    175 ./governance/abrir.py
+    178 ./finance/versao.py
+    217 ./reservation/mais_noites.py
+    236 ./messaging/roteador.py
+    253 ./reservation/sentinela_senhas.py
+    280 ./reservation/ficha_na_porta.py
+    308 ./reservation/contingencia_offline.py
+    308 ./reservation/vender_noites.py
+    314 ./reservation/access.py
+    334 ./reservation/acesso_hospede.py
+    346 ./reservation/varredura_portas.py
+    348 ./finance/wallet.py
+    350 ./inventory/cadastro.py
+    352 ./reservation/espelho_portas.py
+    354 ./reservation/remote.py
+    380 ./reservation/continuacao.py
+    451 ./reservation/cartao_rfid.py
+    470 ./finance/catalog.py
+    490 ./cameras/service.py
+    493 ./reservation/entry_log.py
+    513 ./panel/views.py
+    552 ./entrada/intents.py
+    599 ./reservation/contingencia.py
+    640 ./reservation/distribuicao.py
+    642 ./governance/intents.py
+    664 ./motor/intents.py
+    688 ./luz/service.py
+    723 ./reservation/editar_estadia.py
+    816 ./finance/intents.py
+    857 ./panel/drill.py
+    929 ./record/persistence.py
+   1105 ./assistant/pendencias.py
+   2173 ./reservation/intents.py
+   2670 ./reservation/adapters.py
+   4104 ./worker.py
+  25464 total
+== rota do aviso
+./luz/routes.py:1:"""Rota do aviso da fechadura: `POST /api/ttlock/aviso/{token}`.
+./luz/routes.py:17:_TOKEN_IN_PATH = re.compile(r"(/api/ttlock/aviso/)[^/?\s]+")
+./luz/routes.py:24:        if isinstance(record.args, tuple) and any("/api/ttlock/aviso/" in str(a) for a in record.args):
+./luz/routes.py:26:        elif isinstance(record.msg, str) and "/api/ttlock/aviso/" in record.msg:
+./luz/routes.py:48:    @router.post("/api/ttlock/aviso/{token}")
+./luz/routes.py:49:    async def ttlock_aviso(token: str, request: Request, tasks: BackgroundTasks):
+./luz/config.py:32:  PMS_TTLOCK_CALLBACK_TOKEN     o segredo do endereco do callback
+./luz/__init__.py:11:     fechadura, rota `POST /api/ttlock/aviso/{token}`); sem callback, o
+./luz/service.py:256:    """O aviso da fechadura (callback) ou uma leitura de registros: cada
+./worker.py:3395:    # luz da cama: o aviso da fechadura (callback) e o caminho principal; sem ele, le as aberturas a cada volta
+== defs doors
+42:SAO_PAULO = ZoneInfo("America/Sao_Paulo")
+45:COZINHA = "COZINHA"      # a porta da cozinha (Dom, 29/09: "cozinha e cozinha" -- nao e o armario de panelas)
+47:ROLES = (QUARTO, ENTRADA, SAIDA, ARMARIO, COZINHA, PANELAS, QUINTAL)
+59:REVOKE_AFTER = timedelta(minutes=15)
+62:ALIASES = {"ENTRY": ENTRADA, "EXIT": SAIDA, "KITCHEN": PANELAS, "YARD": QUINTAL}
+63:COMMON_ROLES = (ENTRADA, SAIDA, COZINHA, PANELAS, QUINTAL)
+66:def roles_for(liberties: Iterable[str]) -> tuple[str, ...]:
+76:def base_role(role: str) -> str:
+81:def window(role: str, checkin: date, checkout: date, tz: ZoneInfo = SAO_PAULO) -> tuple[datetime, datetime]:
+90:def programada(role: str, checkin: date, checkout: date, tz: ZoneInfo = SAO_PAULO,
+107:def revoke_groups() -> dict[tuple[int, int], tuple[str, ...]]:
+117:class LockMap:
+152:class Door:
+159:def door_plan(space: str, checkin: date, checkout: date, liberties: Iterable[str], *,
+180:def room_prefix(space: str) -> str:
+189:def digits_problem(value: str) -> str | None:
+202:def suggestions(phone: str | None, document: str | None) -> list[str]:
+216:COWORKING_KEYS = frozenset({"coworking", "cowork", "cw"})
+217:HOUSE_PASS_KEYS = frozenset({"house_pass", "house-pass", "housepass", "hp"})
+220:def access_prefix(space: str, instance: str = "") -> str:
+234:def staff_lock_code(digits: str) -> str:
+238:def all_prefixes(spaces: Any = ()) -> set[str]:
+249:def contains_staff_code(guest_digits: str, staff_codes: Any, prefixes: Any) -> bool:
+256:def guest_pin(space: str, digits: str, instance: str = "") -> str:
+265:def senha_de_4(env: Any = None) -> bool:
+273:PIN_KINDS = ("cpf", "nascimento", "telefone", "propria")
+276:def pin_options(*, cpf: str | None = None, birth_date: str | None = None, phone: str | None = None) -> list[dict]:
+292:def so_1a5(space: str, env: Any = None) -> bool:
+301:def random_digits(taken: Any = (), rng: Any = None, alfabeto: str = "0123456789") -> str:
+== intents de acesso
+fim
+[nuvem] fim 2026-11-21 21:40:55 codigo=0 duracao=0s

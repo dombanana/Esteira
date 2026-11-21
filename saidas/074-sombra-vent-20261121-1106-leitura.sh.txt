@@ -1,0 +1,9 @@
+[nuvem] inicio 2026-11-21 14:07:35 074-sombra-vent-20261121-1106-leitura.sh
+versao: 1.0.285
+cache: 0 aparelhos
+SOMBRA;2026-11-21 11:07;Q07;1;None;None;0
+SOMBRA;2026-11-21 11:07;Q08;1;None;None;0
+SOMBRA;2026-11-21 11:07;Q09;0;None;None;0
+SOMBRA;2026-11-21 11:07;Q10;1;None;None;0
+fim
+[nuvem] fim 2026-11-21 14:07:37 codigo=0 duracao=2s

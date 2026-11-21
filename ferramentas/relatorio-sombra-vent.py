@@ -19,6 +19,7 @@ for f in sorted(glob.glob("saidas/*sombra-vent-*-leitura.sh.txt")):
                              "vel": None if vel in ("None", "?") else int(vel), "fora": fora == "1", "lido": lig != "None"})
 cfg = dict(agenda.PADRAO_DOM, quartos=["Q07", "Q08", "Q09", "Q10"])
 N = agenda.NOMES_VEL
+NOTAS = {"Q08": "rele liga mas o motor nao gira (leitura z-v08, 21/11): o que o rele diz pode nao ser o vento que o hospede sente"}
 for dia, leit in sorted(por_dia.items()):
     print(f"\n== {dia} ({len(leit)} leituras)")
     muda = 0
@@ -30,3 +31,5 @@ for dia, leit in sorted(por_dia.items()):
         print(f"{r['hora']} {r['quarto']} {'ocupado' if r['ocupado'] else 'vazio  '} | hoje {hoje:9} | agenda faria {faria:9}"
               f" | {'MUDARIA' if r['muda'] else 'igual  '} | {r['motivo']}{obs}")
     print(f"-- mudaria {muda} de {len(leit)} leituras")
+for q, t in NOTAS.items():
+    print(f"obs {q}: {t}")

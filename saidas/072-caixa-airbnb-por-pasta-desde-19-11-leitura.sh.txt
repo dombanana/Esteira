@@ -1,0 +1,10 @@
+[nuvem] inicio 2026-11-21 12:33:38 072-caixa-airbnb-por-pasta-desde-19-11-leitura.sh
+INBOX {}
+INBOX.03_Reservas {'Airbnb 19/11': 4, 'Hostelworld 20/11': 1, 'outro 19/11': 3, 'outro 20/11': 3}
+INBOX.05_Sistemas_e_Logs {'outro 19/11': 32, 'outro 20/11': 42, 'outro 21/11': 14}
+INBOX.02_Pagamentos {}
+INBOX.04_Seguranca {}
+INBOX.Junk {}
+INBOX.Trash {}
+fim
+[nuvem] fim 2026-11-21 12:33:54 codigo=0 duracao=16s

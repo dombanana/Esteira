@@ -1,0 +1,38 @@
+[nuvem] inicio 2026-11-21 23:52:05 109-como-grava-ficha-leitura.sh
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py:643:        store.persons[person.person_id] = person
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py:718:            store.prechecks[p["event_id"]] = p
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py:497:    def enqueue(self, command: OutboxCommand) -> bool:
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-498-        digest = _key_digest(command.idempotency_key)
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-499-        exists = self.db.one("SELECT 1 AS x FROM integration_outbox_commands WHERE partner_key=%s AND idempotency_key=%s",
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-500-                             [command.adapter, digest])
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-501-        if exists:
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-502-            return False
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-503-        self.db.execute(
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-504-            "INSERT INTO integration_outbox_commands (outbox_command_id,partner_key,command_type,aggregate_type,"
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-505-            "idempotency_key,correlation_id,payload_json,status,attempt_count,max_attempts,module_key,command_key,"
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-506-            "created_at,updated_at) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-507-            [uuid.uuid4().bytes, command.adapter, command.command_type, command.module, digest, str(uuid.uuid4()),
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-508-             _json(dict(command.payload)), _TO_DB[command.status], command.attempts, command.max_attempts,
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-509-             command.module, command.idempotency_key, _now(), _now()],
+--
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py:109:        def enqueue(self, c):
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-110-            self.append(c)
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-111-            return True
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-112-
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-113-    class C:
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-114-        def __init__(self, k):
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-115-            self.idempotency_key = k
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-116-
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-117-    a, b = C("a"), C("b")
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-118-    f = leitura.so_leitura(Fila([a, b]))
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-119-    assert list(f) == [a, b] and len(f) == 2 and b in f and retrato(f).get("b") is b
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-120-    with pytest.raises(leitura.EscritaNaLeitura):
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/tests/test_v1178_pacote_da_quarta.py-121-        f.enqueue(3)
+--
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py:112:    def enqueue(self, command: OutboxCommand) -> bool:
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py-113-        """Devolve False se a chave ja existia -- e nao duplica.
+grep: write error: Broken pipe
+1:/opt/PMS-Banana-AI/SISTEMA/api/app/channel/intents.py:95:class ChannelStore:
+/opt/PMS-Banana-AI/SISTEMA/api/app/core/record.py:344:    def commit(self) -> tuple[Record, ...]:
+fim
+[nuvem] fim 2026-11-21 23:52:05 codigo=0 duracao=0s

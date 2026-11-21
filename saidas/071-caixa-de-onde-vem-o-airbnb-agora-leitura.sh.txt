@@ -1,0 +1,40 @@
+[nuvem] inicio 2026-11-21 12:32:35 071-caixa-de-onde-vem-o-airbnb-agora-leitura.sh
+versao: 1.0.285
+PMS_AIRBNB_EMAIL_RESERVAS
+PMS_ALERT_EMAIL
+PMS_CAIXA_POSTAL_PIN
+PMS_EMAIL_IA
+PMS_EMAIL_WEBHOOK_OTA
+PMS_EMAIL_WEBHOOK_TOKEN
+PMS_EMAIL_WEBHOOK_TOKEN_
+PMS_RESERVAS_IMAP
+PMS_RESERVAS_IMAP
+PMS_RESERVAS_IMAP_PASTAS
+PMS_RESERVAS_IMAP_SENHA
+PMS_RESERVAS_IMAP_USUARIO
+ultimas linhas do Airbnb (recebido;tipo;fonte;caixa;autoria;assinatura):
+  2026-11-20T20:22 reserva_nova email contato canal:imap conferida (login IMAP)
+  2026-11-20T21:32 outro email contato canal:imap conferida (login IMAP)
+  2026-11-20T22:46 mensagem email contato canal:imap conferida (login IMAP)
+  2026-11-20T23:08 outro email contato canal:imap conferida (login IMAP)
+  2026-11-21T01:32 mensagem email contato canal:imap conferida (login IMAP)
+  2026-11-21T01:40 outro email contato canal:imap conferida (login IMAP)
+  2026-11-21T01:40 reserva_nova email contato canal:imap conferida (login IMAP)
+  2026-11-21T02:05 outro email contato canal:imap conferida (login IMAP)
+  2026-11-21T09:02 pagamento email contato canal:imap conferida (login IMAP)
+  2026-11-21T12:30 cancelamento email contato canal:imap conferida (login IMAP)
+autoria desde 19/11: {'canal:imap': 35}
+pastas configuradas: ['INBOX.03_Reservas', 'INBOX'] servidor: imap.hostinger.com
+pastas da conta:
+   INBOX 0
+   INBOX.05_Sistemas_e_Logs 1098
+   INBOX.04_Seguranca 2
+   INBOX.03_Reservas 1005
+   INBOX.02_Pagamentos 28
+   INBOX.01_Fiscal 0
+   INBOX.Trash 0
+   INBOX.Sent 21
+   INBOX.Junk 10
+   INBOX.Drafts 0
+fim
+[nuvem] fim 2026-11-21 12:32:39 codigo=0 duracao=4s

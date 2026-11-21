@@ -1,0 +1,44 @@
+[nuvem] inicio 2026-11-21 23:34:35 103-erro-na-pagina-registros-leitura.sh
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py:1178:def erro_na_pagina(state: Any, code: str, corpo: Any, ip: str = "", *, at: datetime | None = None) -> Outcome:
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1179-    """v1.0.178 (grupo de 6 do quarto 12, 27/10: P4 e P6 travaram no celular e o servidor nunca soube): a pagina do
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1180-    hospede conta ao servidor cada erro que MOSTROU -- so onde (a caixa) e qual (a chave da frase), nunca o texto, a
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1181-    foto ou o que a pessoa digitou. Fica no registro do servico; 3 erros do mesmo link em 30 min viram aviso (nao
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1182-    urgente) ao anfitriao."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1183-    import logging
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1184-    at = _now(at)
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1185-    corpo = corpo if isinstance(corpo, dict) else {}
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1186-    code = re.sub(r"[^A-Z0-9]", "", str(code or "").upper())[:24]
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1187-    onde = re.sub(r"[^a-z0-9_]", "", str(corpo.get("onde") or "").lower())[:20] or "?"
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1188-    chave = re.sub(r"[^A-Za-z0-9_]", "", str(corpo.get("chave") or ""))[:24] or "outro"
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1189-    try:
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1190-        status = int(corpo.get("status") or 0)
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1191-    except (TypeError, ValueError):
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1192-        status = 0
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1193-    if not code or not _janela(_erros_ip, ip or "?", ERROS_POR_IP, ERROS_JANELA_S, gastar=True):
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1194-        return Outcome(True, "")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1195-    logging.getLogger("pms.hospede").warning("erro mostrado na pagina: link=%s onde=%s chave=%s status=%s",
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1196-                                             code, onde, chave, status)
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1197-    from app.metricas import contar
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1198-    contar(f"pagina do hospede: erro {onde}/{chave}", 0.0)
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1199-    with _lock:
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1200-        ERROS_RECENTES.append({"at": at.isoformat(), "link": code, "onde": onde, "chave": chave, "status": status})
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1201-        del ERROS_RECENTES[:-200]
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1202-    dia = at.date().isoformat()
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1203-    if onde != "js" and (code, dia) not in _erros_avisados and \
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1204-            not _janela(_erros_codigo, code, ERROS_PARA_AVISAR - 1, ERROS_AVISO_JANELA_S, gastar=True):
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1205-        _erros_avisados.add((code, dia))
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1206-        if len(_erros_avisados) > 5000:
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1207-            _erros_avisados.clear()
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1208-        try:
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1209-            resumo = ", ".join(sorted({f"{e['onde']}/{e['chave']}" for e in ERROS_RECENTES if e["link"] == code}))[:160]
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1210-            caller = Caller(actor=Actor(ActorKind.AI, "pagina-do-hospede"), role=Role.STAFF, house=state.house,
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1211-                            surface=Surface.WORKER)
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1212-            _call(state, "reservation.alerta_erro_pagina", caller, {"codigo": code, "resumo": resumo}, at)
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1213-        except Exception:  # noqa: BLE001 -- o aviso nunca derruba a pagina
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1214-            logging.getLogger("pms.hospede").exception("aviso do erro da pagina nao saiu")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1215-    return Outcome(True, "")
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1216-
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1217-
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py-1218-def shop_catalog(state: Any, code: str, *, at: datetime | None = None) -> Outcome:
+fim
+[nuvem] fim 2026-11-21 23:34:37 codigo=0 duracao=2s

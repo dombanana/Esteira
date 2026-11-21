@@ -1,0 +1,18 @@
+[nuvem] inicio 2026-11-21 21:36:35 087-v11-saude-agora-leitura.sh
+dbv11-integracao: active | reinicios=0 | desde=Sat 2026-11-21 17:21:29 UTC | mem=14MB
+  erros 24h: 0
+dbv11-equipe: active | reinicios=0 | desde=Sat 2026-11-21 17:18:56 UTC | mem=12MB
+  erros 24h: 0
+dbv11-automacao: active | reinicios=0 | desde=Sat 2026-11-21 17:18:57 UTC | mem=12MB
+  erros 24h: 0
+dbv11-pegai: active | reinicios=0 | desde=Sat 2026-11-21 17:18:57 UTC | mem=13MB
+  erros 24h: 0
+https://equipe.dombanana.tech -> 404
+https://integracao.dombanana.tech -> 404
+https://automacao.dombanana.tech -> 404
+https://loja.dombanana.tech -> 404
+V1.0: api=active worker=active
+               total        used        free      shared  buff/cache   available
+Mem:            7940        2797         344          32        5130        5143
+fim
+[nuvem] fim 2026-11-21 21:36:36 codigo=0 duracao=1s

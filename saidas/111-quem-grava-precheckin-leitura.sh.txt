@@ -1,0 +1,54 @@
+[nuvem] inicio 2026-11-21 23:54:25 111-quem-grava-precheckin-leitura.sh
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/mais_noites.py:166:        ctx.change("precheckin", eid, None, row, evidence=(f"mais_noites:{base.event_id}",))
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1814:        ctx.change("precheckin", event.event_id, store.prechecks.get(event.event_id), row, evidence=(ref,))
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/acesso_hospede.py:315:    ctx.change("precheckin", eid, before, None)
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py:717:        for p in state.all("precheckin"):
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/intents.py:297:        ctx.change("person", person_id, None, person.as_payload())
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/companions.py:59:    person = str(getattr(e.who, "person", "") or "")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/companions.py:140:        ctx.change("person", person_id, None, person.as_payload())
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:387:        ctx.change("person", person.person_id, None, person.as_payload())
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1804:        ctx.change("person", person.person_id, person.as_payload(), updated.as_payload(), evidence=(ref,))
+== /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/mais_noites.py
+    if store.reservations.get(ext) is not None:
+        raise ValueError("Essas noites a mais já foram lançadas para este hóspede.")
+    person = store.persons.get(base.who.person)
+    nome = person.name if person else "Hospede"
+    # v1.0.187: "Vender noites" (vender_noites) passa o valor; o "Mais noites" de sempre e R$ 0 (pago na plataforma)
+    total = max(0, int(ctx.params.get("_total_cents") or 0))
+    booking = SiteBooking(external_id=ext, status=ReservationStatus.CONFIRMED, checkin=de, checkout=ate, guests=1,
+                          total_cents=total, room_id=mapping.room_id, guest_name=nome, guest_phone="", guest_email="",
+                          guest_language="pt", referral=f"{canal} (extensão)", balance_cents=0,
+                          version_hash=hashlib.sha256(f"{ext}|confirmed|{de}|{ate}|1|{total}".encode()).hexdigest())
+    sink = ctx.params.get("_sink")
+    if isinstance(sink, dict):
+        sink.update({"base_event": base, "reserva_base": reserva_base, "de": de, "ate": ate, "space": space})
+    import_booking(ctx, store, booking, mapping, contato_novo_apenas=True, person_id=base.who.person)
+    rid = f"reserva-{booking.channel}-{ext}"
+    eid = f"event-{rid}-{base.who.person}"
+    primeiro = (nome.split() or [""])[0]
+    if base.state in _VIVAS:
+        # a estadia de antes vale: a nova e a continuacao dela (ficha, senha e saida seguem a sequencia)
+        return (f"{primeiro}: mais {noites} noite(s) no {space}, de {de:%d/%m} a {ate:%d/%m} (saída às 11h). "
+                "Mesma ficha e mesma senha: a fechadura recebe a validade nova em até alguns minutos.")
+    # a estadia de antes ja foi fechada: a ficha dela vale para a nova; a chegada e agora (o anfitriao confirmou)
+    row = dict((getattr(store, "prechecks", {}) or {}).get(base.event_id) or {})
+    if row:
+        row = {**row, "event_id": eid}
+        ctx.change("precheckin", eid, None, row, evidence=(f"mais_noites:{base.event_id}",))
+        ctx.transaction.after_commit(lambda: store.prechecks.__setitem__(eid, row))
+    from app.reservation.intents import _remember_time, arrival_ref
+
+    class _E:                                        # so o id importa para guardar a hora
+        event_id = eid
+    _remember_time(ctx, store, [_E], arrival_ref, "anfitriao:mais-noites")
+    sala = base.where[0]
+    ctx.change("room_access", sala, {"room": sala, "state": "suspended"},
+89-            escrita = senha_no_texto(txt)
+90-            if escrita and escrita != pin:
+91-                out.append({"event_id": eid, "canal": "chat", "fp": fp, "chat": dict(chat.payload or {})})
+92:        email = state.outbox.get(f"senha:email:{eid}")
+93-        if email is not None and getattr(email.status, "value", email.status) == "sent" \
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/senha_copias.py:141:                     idempotency_key=f"senha:email:{eid}:troca:{fp}")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py:1796:                idempotency_key=f"senha:email:{event_id}", module="messaging", adapter="email",
+fim
+[nuvem] fim 2026-11-21 23:54:25 codigo=0 duracao=0s

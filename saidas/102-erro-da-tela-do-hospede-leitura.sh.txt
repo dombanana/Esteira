@@ -1,0 +1,37 @@
+[nuvem] inicio 2026-11-21 23:33:25 102-erro-da-tela-do-hospede-leitura.sh
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:994:    @router.post("/api/h/{code:guestcode}/erro")
+arquivo: /opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py
+994:    @router.post("/api/h/{code:guestcode}/erro")
+995-    async def hospede_erro(code: str, request: Request):
+996-        """v1.0.178: o erro que a pagina do hospede mostrou (so onde e qual; nada da pessoa)."""
+997-        if (bad := _csrf(request) or _too_big(request, 1)) is not None:
+998-            return bad
+999-        try:
+1000-            corpo = await request.json()
+1001-        except Exception:  # noqa: BLE001
+1002-            corpo = {}
+1003-        return await _guest(guest_service.erro_na_pagina, _pms(request), code, corpo, _ip_de(request))
+1004-
+1005-    @router.get("/api/h/{code:guestcode}/lojinha")
+1006-    async def hospede_lojinha(code: str, request: Request):
+1007-        return await _guest(guest_service.shop_catalog, _pms(request), code)
+1008-
+1009-    @router.post("/api/h/{code:guestcode}/lojinha/foto")
+1010-    async def hospede_lojinha_foto(code: str, request: Request):
+1011-        if (bad := _csrf(request) or _too_big(request, 8)) is not None:
+1012-            return bad
+1013-        barcode = str(request.headers.get("x-codigo-barras") or "")[:20]
+1014-        return await _guest(guest_service.shop_recognize, _pms(request), code, await request.body(), barcode)
+1015-
+1016-    @router.post("/api/h/{code:guestcode}/lojinha/pedido")
+1017-    async def hospede_lojinha_pedido(code: str, request: Request):
+1018-        if (bad := _csrf(request)) is not None:
+1019-            return bad
+1020-        body = await request.json()
+1021-        return await _guest(guest_service.shop_checkout, _pms(request), code, body.get("items") or [],
+1022-                            str(body.get("method") or "pix"))
+1023-
+1024-    @router.post("/api/h/{code:guestcode}/lojinha/cancelar")
+== journal (erros reportados pela tela)
+fim
+[nuvem] fim 2026-11-21 23:33:26 codigo=0 duracao=1s

@@ -1,0 +1,56 @@
+[nuvem] inicio 2026-11-21 23:53:15 110-persistencia-ficha-leitura.sh
+67:622:    store.mappings.clear(); store.precheck_links.clear()
+68:624:    for extra in ("prechecks", "account_links", "contacts", "conversations", "listings", "network_devices",
+69:664:    for link in state.all("precheck_link"):
+70:665:        store.precheck_links[link["reservation_id"]] = link["code"]
+71:716:    if hasattr(store, "prechecks"):
+72:717:        for p in state.all("precheckin"):
+73:718:            store.prechecks[p["event_id"]] = p
+        store.access.emails[key] = p["person_id"]
+    # A7: perfil fiscal, extras, cobrancas e notas
+    for p in state.all("fiscal_profile"):
+        store.finance.profile = p
+    for kind, target in (("finance_extra", store.finance.extras), ("finance_charge", store.finance.charges),
+                         ("finance_invoice", store.finance.invoices),
+                         ("nota_canal", store.finance.nota_canais), ("nota_pessoa", store.finance.nota_pessoas)):
+        for key, p in state.items(kind):
+            target[key] = p
+    for p in state.all("availability_publication"):
+        store.publications[f"availability:{p['room_id']}"] = p
+    for kind in ("price", "closure"):                       # V1.0.171: retrato de preco e de fechamento (trava)
+        for p in state.all(f"{kind}_publication"):
+            store.publications[f"{kind}:{p['room_id']}"] = p
+    # V1.0.3: ficha por estadia, cadastro ligado, indice de telefone (hash),
+    # conversas do WhatsApp (texto no cofre) e o publico dos anuncios.
+    if hasattr(store, "prechecks"):
+        for p in state.all("precheckin"):
+            store.prechecks[p["event_id"]] = p
+        for p in state.all("account_link"):
+            store.account_links[p["person_id"]] = p["account_id"]
+        for key, p in state.items("contact_index"):
+            store.contacts[key] = p["person_id"]
+        for key, p in state.items("whatsapp_message"):
+            if p.get("arquivada"):                # resposta do bot antigo arquivada (Dom 27/09): fica so no diario
+                continue
+72:class OutboxCommand:
+73-    """Um comando para um adaptador, esperando o worker.
+74-
+75-    `idempotency_key` e a identidade do comando: a mesma chave nunca entra
+76-    duas vezes. E o que faz um retry de HTTP, uma releitura de canal ou um
+77-    reinicio do servico nao reenviarem senha nem duplicarem FNRH.
+78-    """
+79-
+80-    idempotency_key: str
+81-    module: str
+82-    adapter: str
+83-    command_type: str
+84-    payload: Mapping[str, Any]
+85-    status: CommandStatus = CommandStatus.PENDING
+86-    attempts: int = 0
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/continuacao.py:263:            com_senha = outbox.get(f"senha:email:{e.event_id}") is not None or any(
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/lembretes.py:178:    if k.startswith("senha:email:") or k.startswith("senha:chat:"):   # v1.0.201: a senha tambem no chat
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/lembretes.py:870:                    "senha": any(c.idempotency_key == f"senha:email:{event.event_id}" for c in comandos)})
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/senha_copias.py:92:        email = state.outbox.get(f"senha:email:{eid}")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/senha_copias.py:94:                and state.outbox.get(f"senha:email:{eid}:troca:{fp}") is None:
+fim
+[nuvem] fim 2026-11-21 23:53:15 codigo=0 duracao=0s

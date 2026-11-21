@@ -1,0 +1,19 @@
+[nuvem] inicio 2026-11-21 22:01:20 095-onde-climbing-leitura.sh
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py:163:        def climbing(table: Mapping[str, int]) -> Callable[[str], int | None]:
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-164-            # a cama abre a porta do quarto: sobe a arvore ate achar fechadura
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-165-            def find(space: str) -> int | None:
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-166-                for sid in state.store.inventory.lineage(space):
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-167-                    if sid in table:
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-168-                        return table[sid]
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-169-                return None
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-170-            return find
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-171-
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-172-        ttlock_client = TtlockClient.from_environment()
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-173-        guest_accounts = None
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-174-        if env.get("PMS_TTLOCK_USUARIO_HOSPEDE", "off").strip().lower() == "on":     # opcao B (prototipo, 24/09)
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py-175-            from app.reservation.guest_lock_accounts import GuestLockAccounts
+163:        def climbing(table: Mapping[str, int]) -> Callable[[str], int | None]:
+186:            common_locks={k: v for k, v in locks.common.items() if k.upper() not in sem_gw}, lock_for=climbing(locks.rooms),
+187:            armarios_by_space=locks.armarios, armario_for=climbing(locks.armarios),
+fim
+[nuvem] fim 2026-11-21 22:01:20 codigo=0 duracao=0s

@@ -1,0 +1,42 @@
+[nuvem] inicio 2026-11-21 22:05:46 099-aberturas-de-hoje-leitura.sh
+atributos com abertura/camera/entry: ['cameras_pedidos', 'cameras_status', 'entry_log', 'fichas_reabertas', 'painel_fotos', 'tuya_aberturas']
+== cameras_pedidos: 5091 itens; campos: ['apagado_em', 'at', 'bytes', 'camera', 'clipe', 'criado_em', 'erro', 'espaco', 'fim', 'fotos', 'id', 'inicio', 'maximo', 'motivo', 'origem', 'passo_s', 'porta', 'pronto_em', 'status', 'via']
+   hoje: 151; ultimos 15:
+   18:10:49 {"at": "2026-11-21T21:10:49+00:00", "via": "leitura", "porta": "SAIDA", "origem": "porta", "status": "pronto"}
+   18:10:56 {"at": "2026-11-21T18:10:56-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:14:29 {"at": "2026-11-21T18:14:29-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:18:19 {"at": "2026-11-21T18:18:19-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:27:58 {"at": "2026-11-21T18:27:58-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:32:39 {"at": "2026-11-21T18:32:39-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:43:53 {"at": "2026-11-21T21:43:53+00:00", "via": "aviso", "porta": "SAIDA", "origem": "porta", "status": "pronto"}
+   18:47:30 {"at": "2026-11-21T18:47:30-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:47:43 {"at": "2026-11-21T21:47:43+00:00", "via": "aviso", "porta": "SAIDA", "origem": "porta", "status": "pronto"}
+   18:48:01 {"at": "2026-11-21T18:48:01-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:48:49 {"at": "2026-11-21T18:48:49-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:53:06 {"at": "2026-11-21T21:53:06+00:00", "via": "aviso", "porta": "SAIDA", "origem": "porta", "status": "pronto"}
+   18:53:38 {"at": "2026-11-21T18:53:38-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:54:09 {"at": "2026-11-21T18:54:09-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+   18:54:39 {"at": "2026-11-21T18:54:39-03:00", "via": "casa", "porta": "", "origem": "passagem", "status": "pronto"}
+== cameras_status: 1 itens; campos: ['cameras', 'disco_livre_gb', 'versao', 'visto_em']
+   hoje: 0; ultimos 15:
+== entry_log: 1227 itens; campos: ['at', 'codigo', 'conta', 'event_id', 'key', 'lock_id', 'open_id', 'person_id', 'por', 'seen_at', 'status', 'tipo']
+   hoje: 22; ultimos 15:
+   11:48:51 {"at": "2026-11-21T14:48:51+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q08", "porta_nome": "ENTRADA"}
+   12:17:51 {"at": "2026-11-21T15:17:51+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q13E", "porta_nome": "ENTRADA"}
+   13:08:12 {"at": "2026-11-21T16:08:12+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q07", "porta_nome": "ENTRADA"}
+   13:30:19 {"at": "2026-11-21T16:30:19+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q04", "porta_nome": "ENTRADA"}
+   13:58:28 {"at": "2026-11-21T16:58:28+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q02", "porta_nome": "ENTRADA"}
+   14:14:26 {"at": "2026-11-21T17:14:26+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q12F", "porta_nome": "ENTRADA"}
+   14:27:23 {"at": "2026-11-21T17:27:23+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q07", "porta_nome": "ENTRADA"}
+   15:17:16 {"at": "2026-11-21T18:17:16+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q07", "porta_nome": "ENTRADA"}
+   16:02:24 {"at": "2026-11-21T19:02:24+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q07", "porta_nome": "ENTRADA"}
+   16:26:39 {"at": "2026-11-21T19:26:39+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q09", "porta_nome": "ENTRADA"}
+   16:38:10 {"at": "2026-11-21T19:38:10+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q09", "porta_nome": "ENTRADA"}
+   16:41:10 {"at": "2026-11-21T19:41:10+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q14C", "porta_nome": "ENTRADA"}
+   17:21:02 {"at": "2026-11-21T20:21:02+00:00", "tipo": "cartao", "lock_id": 16190236, "status": "ok", "porta_nome": "ENTRADA"}
+   17:49:34 {"at": "2026-11-21T20:49:34+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "porta_nome": "ENTRADA"}
+   17:57:37 {"at": "2026-11-21T20:57:37+00:00", "tipo": "senha", "lock_id": 16190236, "status": "ok", "quarto_estadia": "Q07", "porta_nome": "ENTRADA"}
+   hoje: 0; ultimos 15:
+   hoje: 0; ultimos 15:
+fim
+[nuvem] fim 2026-11-21 22:05:47 codigo=0 duracao=1s

@@ -1,0 +1,66 @@
+[nuvem] inicio 2026-11-21 23:46:35 108-ficha-feita-aqui-e-acoes-leitura.sh
+59:def ficha_feita_aqui(store: Any, event: Any) -> bool:
+60-    """A ficha DESTA estadia foi confirmada (cadastro unico: quem ja tinha
+61-    cadastro so confirma os ultimos itens, mas confirma a cada estadia)."""
+62-    person = store.persons.get(event.who.person)
+63-    return bool(person and person.document_ref and event.event_id in getattr(store, "prechecks", {}))
+64-
+65-
+66-def ficha_done(store: Any, event: Any) -> bool:
+67-    """A ficha vale para esta estadia: feita aqui ou -- Dom 03/10, "quando um hospede segue na casa... sem perguntar"
+68-    -- herdada da estadia anterior da mesma pessoa, no mesmo quarto, emendada (`app.reservation.continuacao`)."""
+69-    if ficha_feita_aqui(store, event):
+70-        return True
+71-    person = store.persons.get(event.who.person)
+72-    if not (person and person.document_ref):
+73-        return False
+74-    from app.reservation.continuacao import ficha_herdada
+75-    return ficha_herdada(store, event)
+76-
+77-
+78-def credential_state(store: Any, outbox: Any, event: Any, now: datetime) -> tuple[str, list[str]]:
+79-    """("pronta" | "aguardando" | "encerrada", codigos do que falta -- WAIT_TEXT)."""
+80-    from app.reservation.access import access_plan
+81-    checkin, checkout, tz = _dates(store, event)
+82-    if event.state not in _LIVE or now >= datetime.combine(checkout, time(CHECKOUT_HOUR), tz):
+83-        return "encerrada", ["fim"]
+84-    if outbox.get(f"senha:email:{event.event_id}") is not None:
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/ficha_na_porta.py:187:    name="reservation.ficha_na_porta",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/nao_veio.py:91:    name="reservation.alerta_acompanhante_sem_ficha",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/recorrente.py:140:    name="reservation.ficha_recorrente",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/morador_ficha.py:75:    name="reservation.ficha_morador",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fotos_ficha.py:109:    name="reservation.ficha_foto", description="o hospede envia a foto do documento ou a selfie da ficha",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fotos_ficha.py:114:    name="reservation.ficha_foto_acompanhante",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fotos_ficha.py:120:    name="reservation.fichas_fotos_limpar", description="apaga as fotos da ficha depois do prazo de guarda",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fotos_ficha.py:312:    name="reservation.ficha_foto_recusar",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/cadastro.py:196:    name="reservation.corrigir_ficha",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/acesso_hospede.py:288:    name="reservation.reabrir_ficha",
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/assistant/conferencia.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/assistant/pendencias.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/casa_viva_convite.py
+      4 /opt/PMS-Banana-AI/SISTEMA/api/app/community/intents.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/espacos/intents.py
+      5 /opt/PMS-Banana-AI/SISTEMA/api/app/panel/drill.py
+      6 /opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py
+      5 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/access.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/cadastro.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/companions.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/confere_documento.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/convite_acompanhante.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/editar_estadia.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/ficha_na_porta.py
+      6 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/guest.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/hospede_extra.py
+      6 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/lembretes.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/nao_veio.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/recorrente.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/rotinas_figurinhas.py
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/worker.py
+"""A versao do sistema e o historico de melhorias (Dom 04/10: "a partir de agora, vamos considerar que essa e a v1.0.x
+-- x e a versao, ja comeca em 1" / "a partir de agora a gente vai gravar um historico das melhorias. Esse historico vai
+ficar disponivel no site de vendas").
+
+Regra de cada subida para producao: sobe o ultimo numero de VERSAO e poe a entrada nova NO TOPO de HISTORICO, no
+cat: write error: Broken pipe
+fim
+[nuvem] fim 2026-11-21 23:46:35 codigo=0 duracao=0s

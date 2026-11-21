@@ -1,0 +1,20 @@
+[nuvem] inicio 2026-11-21 23:35:45 104-erros-mostrados-na-pagina-leitura.sh
+Nov 21 13:48:44 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=3245217 onde=js chave=outro status=0
+Nov 21 14:02:19 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=3245217 onde=js chave=outro status=0
+Nov 21 14:11:50 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMBCQBE25Y onde=js chave=outro status=0
+Nov 21 14:17:07 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMCKQFC8MS onde=js chave=outro status=0
+Nov 21 14:53:35 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMRK9EBAFD onde=js chave=outro status=0
+Nov 21 15:52:31 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMCKQFC8MS onde=js chave=outro status=0
+Nov 21 16:30:34 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMCKQFC8MS onde=js chave=outro status=0
+Nov 21 16:30:41 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMCKQFC8MS onde=vtmsg chave=outro status=409
+Nov 21 16:54:41 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMR3BT8SBX onde=js chave=outro status=0
+Nov 21 16:59:33 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMCKQFC8MS onde=vtmsg chave=outro status=409
+Nov 21 18:36:20 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMBCQBE25Y onde=js chave=outro status=0
+Nov 21 19:24:41 srv1886750 uvicorn[2905035]: erro mostrado na pagina: link=HMR3BT8SBXP2 onde=js chave=outro status=0
+Nov 21 20:11:35 srv1886750 uvicorn[2981538]: erro mostrado na pagina: link=HMYPAB9D5T onde=js chave=outro status=0
+Nov 21 21:17:03 srv1886750 uvicorn[2991688]: erro mostrado na pagina: link=HMATH52845 onde=js chave=outro status=0
+Nov 21 23:11:31 srv1886750 uvicorn[2991688]: erro mostrado na pagina: link=HMSDMSEQZY onde=js chave=outro status=0
+Nov 21 23:13:46 srv1886750 uvicorn[2991688]: erro mostrado na pagina: link=HMSDMSEQZY onde=js chave=outro status=0
+Nov 21 23:15:17 srv1886750 uvicorn[2991688]: erro mostrado na pagina: link=HMSDMSEQZY onde=js chave=outro status=0
+fim
+[nuvem] fim 2026-11-21 23:35:45 codigo=0 duracao=0s

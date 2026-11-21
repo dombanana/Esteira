@@ -1,0 +1,185 @@
+[nuvem] inicio 2026-11-21 17:24:25 085-worker-laco-e-recarga-leitura.sh
+def main() -> None:  # pragma: no cover -- laco de servico
+    logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"), format="%(levelname)s %(name)s %(message)s")
+    from app.main import build_state
+
+    state = build_state()
+    from app.escopo_teste import EscopoDeTeste
+    scope = EscopoDeTeste.from_env(os.environ)
+    if scope is not None:
+        log.warning("ESCOPO DE TESTE ligado: %d e-mail(s), %d telefone(s), %d reserva(s); FNRH e publicacao de "
+                    "disponibilidade nao saem", len(scope.emails), len(scope.phones), len(scope.orders))
+    adapters = build_adapters(state, state.store.vault)
+    from app.escopo_teste import effects_allowed
+    if not effects_allowed(os.environ, scope):
+        log.critical("TRAVA DA VIRADA: ha modulo ligado para fora sem PMS_TEST_SCOPE e sem PMS_VIRADA=feita -- "
+                     "nada sera despachado (os comandos ficam na fila)")
+        adapters = {}
+    nobeds = NobedsReadOnlyClient.from_environment() if "NOBEDS_API_TOKEN" in os.environ else None
+    last_reconcile = 0.0
+    nobeds_mcp, last_nobeds_avisos = None, -float(NOBEDS_AVISOS_SEGUNDOS)        # v1.0.91: 1a leitura ja na subida
+    if os.environ.get("NOBEDS_MCP_TOKEN") and os.environ.get("PMS_NOBEDS_VIGIA", "on").strip().lower() != "off":
+        from app.channel.adapters import NobedsMcpClient
+        nobeds_mcp = NobedsMcpClient.from_environment()
+    zap_saude, last_zap = cliente_whatsapp(os.environ), 0.0
+    last_transcricao = 0.0
+    last_ia = 0.0
+    last_esgotadas = 0.0
+    last_push = 0.0
+    last_varredura = 0.0                                  # v1.0.202: varredura das senhas das portas
+    last_canceladas = 0.0                                 # v1.0.205: quem cancelou sai do sistema
+    last_senha_copias = 0.0                               # v1.0.209: chat/e-mail com a senha atual
+    last_espelho, last_espelho_check = 0.0, 0.0           # v1.0.203: portas x painel
+    last_rfid_cap, last_rfid_esp = 0.0, 0.0               # v1.0.221: cartao RFID do hospede
+    last_saida_zero = 0.0                                 # v1.0.222: "0 + senha" na porta de saida
+    last_nota_resposta = 0.0                              # v1.0.227: a resposta da prefeitura a nota
+    espelho_desde = datetime.now(timezone.utc)
+    last_pilhas, last_casa, casa_cliente = -float(PILHAS_SEGUNDOS), -float(CASA_SAUDE_SEGUNDOS), None   # 1a leitura ja
+    last_gateway, last_gateway_dados = -float(GATEWAY_SEGUNDOS), -float(PILHAS_SEGUNDOS)          # P8 (17/10)
+    if os.environ.get("PMS_MIKROTIK_URL"):
+        try:
+            from app.network.routeros import RouterOS
+            casa_cliente = RouterOS.from_environment(os.environ)
+        except Exception as erro:  # noqa: BLE001
+            log.error("roteador da casa sem configuracao valida: %s", type(erro).__name__)
+    from app.messaging import ota as ota_msgs                     # chat das OTAs com a IA (28/09): off/sombra/on
+    last_arquivo = 0.0                                    # v1.0.162: arquivo dos comandos parados
+    last_ota, ota_every = 0.0, max(60, int(os.environ.get("PMS_OTA_SEGUNDOS", "300")))
+    from app.messaging import email_ia                           # e-mail em modo sombra (v1.0.28): off/sombra
+    last_email_ia = 0.0
+    last_full = last_full_publication_day(state)
+    last_charges = 0.0
+    last_listings = 0.0
+    asaas_find = None
+    if "ASAAS_API_KEY" in os.environ:
+        from app.finance.adapters import find_payment
+        asaas_find = find_payment
+    lock_client, entry_lock, last_records, last_doors = None, None, 0.0, 0.0
+    last_sentinela = 0.0                  # v1.0.237: a sentinela das senhas, de hora em hora
+    if "ttlock" in adapters:
+        from app.reservation.doors import ENTRADA
+        lock_client = TtlockClient.from_environment()
+        entry_lock = house_locks(state).common.get(ENTRADA)
+    records_every = int(os.environ.get("PMS_LOCK_RECORDS_SECONDS", "60"))
+    # luz da cama: o aviso da fechadura (callback) e o caminho principal; sem ele, le as aberturas a cada volta
+    luz_on = bool(os.environ.get("PMS_LUZES", "").strip())
+    # v1.0.254: luz da cama pelo nome do aparelho na conta da Tuya (ponte) -- liga as rotinas da luz mesmo sem PMS_LUZES
+    from app.luz import auto as luz_auto
+    from app.tuya_casa import ponte as luz_ponte_mod
+    luz_ponte = luz_ponte_mod.from_env(os.environ) if luz_auto.ligado(os.environ) else None
+    luz_on = luz_on or luz_ponte is not None
+    luz_auto_cada = max(60, int(os.environ.get("PMS_LUZES_AUTO_MIN", "10") or 10) * 60)
+    luz_auto_ultimo = 0.0
+    luz_poll = luz_on and lock_client is not None and (
+        os.environ.get("PMS_LUZ_LEITURA", "").strip().lower() == "on"
+        or not os.environ.get("PMS_TTLOCK_CALLBACK_TOKEN", "").strip())
+    last_sig = None
+    last_price_sig = None
+    last_trava_sig = None     # V1.0.171
+    # avaliacoes: so leitura, pelo MCP do Nobeds, com PMS_AVALIACOES=on
+    reviews_client, last_reviews = None, 0.0
+    last_residents = 0.0
+    last_equipe_cv = 0.0
+    conferencia_dia = None                     # v1.0.118: conferencia da manha (uma vez por dia)
+    if os.environ.get("PMS_AVALIACOES", "off").strip().lower() == "on":
+        try:
+            reviews_client = NobedsMcpClient.from_environment()
+        except Exception as erro:  # noqa: BLE001
+            log.error("MCP do Nobeds indisponivel para avaliacoes: %s", type(erro).__name__)
+    arrived_now: list[str] = []
+    last_fnrh_varredura = 0.0
+    last_lembretes = 0.0
+    last_nfse = 0.0
+    last_piso = 0.0
+    last_saidas = 0.0
+    last_personagens = 0.0
+    last_saida_auto = 0.0
+    last_piscina = ""
+    # Dom 10/10: "vamos retirar essa questao dos 30 e 30 minutos. Voce so vai reduzir mesmo" -- desligado por padrao
+    env_silence = os.environ.get("PMS_WIFI_SILENCE", "off").strip().lower() == "on"
+    from app.metricas import amostrador as _amostrador
+    _amostrador()                    # v1.0.166: onde o laco gasta o tempo (amostra 2x por segundo, so nomes e tempos)
+    from app.channel import nobeds_fim                    # v1.0.277: a Nobeds sai sem estrago (fim do contrato 26/11)
+    nobeds_on = True
+    while True:
+        now = time.monotonic()
+        heartbeat()
+        if nobeds_on and not nobeds_fim.ligada():
+            nobeds_on = False
+            nobeds = nobeds_mcp = reviews_client = None
+            adapters.pop("nobeds", None)                 # comandos para a Nobeds ficam parados na fila, sem tentativa
+            try:
+                log.warning("Nobeds desligada (%s); saudes marcadas: %d", nobeds_fim.MOTIVO,
+                            nobeds_fim.marcar_saudes(state))
+            except Exception as erro:  # noqa: BLE001
+                log.error("Nobeds desligada; saudes nao marcadas: %s", type(erro).__name__)
+        try:
+            state.refresh()           # a API escreve no mesmo banco: le a memoria em dia antes de decidir
+        except Exception as erro:  # noqa: BLE001
+            log.error("releitura do banco falhou: %s", type(erro).__name__)
+        try:
+            if canal_escreve(state, adapters, scope):        # v1.0.162: so publica o que pode chegar ao Nobeds
+                last_full = daily_full_publication(state, last_full)
+        except Exception as erro:  # noqa: BLE001
+            log.error("publicacao diaria falhou: %s", type(erro).__name__)
+        # A API e o worker sao dois processos: cada unidade de trabalho trava a
+        # ponta do diario e reconstroi a memoria se o outro escreveu (A13).
+        if lock_client is not None and now - last_espelho_check >= 60:
+            from app.reservation import espelho_portas          # v1.0.203 (Dom 06/11): as portas espelham o painel
+            agora_dt = datetime.now(timezone.utc)
+            so = None
+            if now - last_espelho >= espelho_portas.segundos():
+                so = ()                                          # todas as estadias
+            else:
+                novos = espelho_portas.gatilhos_novos(state.outbox, espelho_desde, agora_dt - timedelta(seconds=30))
+                so = novos or None                               # so as que acabaram de trocar quarto/senha
+            if so is not None:
+                r = espelho_portas.rotina(state, lock_client, so=so or None)
+                if not r.startswith("ok") and r != "desligado":
+                    log.info("portas x painel: %s", r)
+== persistence no worker
+2502:        when = datetime.fromtimestamp(int(r.get("lockDate") or 0) / 1000, tz)
+2677:                    when = datetime.fromtimestamp(int(r.get("lockDate") or 0) / 1000, timezone.utc) \
+== persistence defs
+63:def _json(value: Any) -> str:
+67:def _now() -> str:
+85:    def __init__(self, conn: Any, dialect: str) -> None:
+94:    def from_url(cls, url: str) -> "Database":
+121:    def _sql(self, sql: str) -> str:
+124:    def _alive(self) -> None:
+130:    def execute(self, sql: str, params: Sequence[Any] = ()) -> Any:
+137:    def query(self, sql: str, params: Sequence[Any] = ()) -> list[dict]:
+142:    def one(self, sql: str, params: Sequence[Any] = ()) -> dict | None:
+146:    def for_update(self) -> str:
+149:    def trava_local(self) -> Any:
+155:    def has_table(self, table: str) -> bool:
+162:    def upsert(self, table: str, keys: Sequence[str], row: Mapping[str, Any]) -> None:
+173:    def transaction(self) -> Iterator["Database"]:
+207:    def __init__(self, db: Database, house: str) -> None:
+213:    def nucleo(self) -> bool:
+221:    def head_hash(self) -> str:
+226:    def ponta_sem_trava(self) -> str:
+234:    def state_head(self) -> str | None:
+241:    def append(self, record: Record) -> None:
+277:    def _rows(self, desde: int = 0) -> Iterator[dict]:
+286:    def depois_de(self, seq: int) -> Iterator[tuple[int, Record]]:
+291:    def por_id(self, entity_id: str) -> list[Record]:
+296:    def ultimo_seq(self) -> int:
+301:    def hash_em(self, seq: int) -> str | None:
+305:    def history(self, entity: str, entity_id: str) -> list[Record]:
+313:    def _record(row: dict) -> Record:
+324:    def verify(self) -> bool:
+341:    def __len__(self) -> int:
+345:    def __iter__(self) -> Iterator[Record]:
+348:    def __getitem__(self, index: int) -> Record:
+352:def ensure_chain_head(db: Database, house: str) -> None:
+362:    def __init__(self, db: Database, house: str) -> None:
+365:    def items(self, entity: str) -> list[tuple[str, dict]]:
+372:    def all(self, entity: str) -> list[dict]:
+383:def load_vault_key(env: Mapping[str, str] = os.environ) -> bytes:
+393:def new_vault_key() -> str:
+402:    def __init__(self, db: Database, key: bytes, *, key_version: str = "v1",
+410:    def _aad(self, ref: str) -> bytes:
+413:    def put(self, ref: str, data: Mapping[str, Any]) -> str:
+fim
+[nuvem] fim 2026-11-21 17:24:25 codigo=0 duracao=0s

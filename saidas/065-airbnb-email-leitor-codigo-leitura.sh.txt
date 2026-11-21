@@ -1,0 +1,501 @@
+[nuvem] inicio 2026-11-21 12:15:05 065-airbnb-email-leitor-codigo-leitura.sh
+versao: 1.0.285
+== airbnb_email.py
+"""v1.0.244 -- sair da Nobeds, camadas 2 e 3 (Dom 15/11/2026, "Alta"): ler o e-mail do Airbnb e montar, EM SOMBRA, a
+reserva que o sistema criaria sem a Nobeds.
+
+Camada 2 (leitura): do assunto e do texto do e-mail do Airbnb sai, por regra fixa (sem IA): codigo HM, check-in,
+checkout, numero de hospedes, noites, o anuncio (id do link airbnb.com/rooms/<id>) e o valor do anfitriao. Nada aqui
+guarda dado pessoal: o nome do hospede fica so no cofre (o texto inteiro do e-mail ja mora la, `entrada:<id>`).
+
+Conferencia (enquanto a Nobeds ainda existe): cada leitura e comparada com a reserva que a Nobeds trouxe (mesmo codigo
+HM). Bate = a leitura e confiavel; nao bate = o campo que diverge aparece na caixa e na prontidao. NENHUM aviso urgente e
+nada muda em reserva: e medicao.
+
+Mapa dos anuncios (aprendido, sem cadastro): quando o e-mail casa com a reserva da Nobeds, o anuncio do Airbnb fica
+ligado ao espaco que a Nobeds deu (a cama/quarto do anuncio). O mesmo anuncio sempre no mesmo espaco = aprendido; mais
+de um espaco possivel = ambiguo (o anfitriao decide depois).
+
+Camada 3 (reserva-sombra): com a leitura completa e o anuncio aprendido, `reserva_sombra` diz a reserva que seria
+criada (canal, codigo, datas, hospedes, espaco, instancia) e se ela e IGUAL a que a Nobeds criou. Nada e gravado: e o
+"decide, registra o que faria, nao faz" da secao 4.5. `prontidao` resume quanto falta para desligar a Nobeds.
+
+Limite honesto: o modelo do texto foi escrito pelo formato conhecido dos e-mails do Airbnb (pt e en); os e-mails reais
+da caixa 03_Reservas (v1.0.243, IMAP) sao a prova. Por isso a conferencia existe antes de qualquer reserva de verdade.
+"""
+from __future__ import annotations
+
+import re
+from datetime import date, datetime, timedelta
+from typing import Any, Mapping
+
+MESES_PT = {"jan": 1, "fev": 2, "mar": 3, "abr": 4, "mai": 5, "jun": 6, "jul": 7, "ago": 8, "set": 9, "out": 10,
+            "nov": 11, "dez": 12}
+MESES_EN = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10,
+            "nov": 11, "dec": 12}
+_PT = r"(\d{1,2})\s+de\s+(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)[a-zç]*\.?(?:\s+de\s+(\d{4}))?"
+_EN = r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s+(\d{4}))?"
+_RX_PT, _RX_EN = re.compile(_PT, re.I), re.compile(_EN, re.I)
+#: faixa no assunto: "1 – 3 de out." ou "28 de out. – 2 de nov."
+_RX_FAIXA = re.compile(r"(\d{1,2})(?:\s+de\s+(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)[a-zç]*\.?)?\s*[–-]\s*" + _PT,
+                       re.I)
+_RX_CODIGO = re.compile(r"\b(HM[A-Z0-9]{8})\b")
+_RX_ANUNCIO = re.compile(r"airbnb\.com(?:\.br)?/(?:rooms|hosting/listings(?:/editor)?|manage-your-space|"
+                         r"multicalendar)/(\d{5,25})", re.I)
+_RX_HOSP_PARTES = re.compile(r"(\d{1,2})\s+(adultos?|crian[cç]as?|adults?|child(?:ren)?)\b", re.I)
+_RX_HOSP = re.compile(r"(\d{1,2})\s+(h[oó]spedes?|guests?)\b", re.I)
+_RX_NOITES = re.compile(r"(\d{1,3})\s+(noites?|nights?)\b", re.I)
+# v1.0.284 (Felipe HMCPC4RS5T entrou com R$ 2,00 e o Andre HMF9MNMN33 com R$ 5,00): "PAGAMENTO DO ANFITRIAO Preco da
+# acomodacao para 2 noites R$ 186,00 ... VOCE RECEBE R$ 152,13" -- o numero de NOITES era lido como valor. O valor so vale
+# logo depois da moeda (R$, $, BRL); assim o "VOCE RECEBE R$ 152,13" e o que fica.
+_RX_GANHO = re.compile(r"(?:voc[eê]\s+(?:ganha|recebe|receber[aá])|you\s+earn|total\s+payout|"
+                       r"pagamento\s+(?:total\s+)?(?:do|ao)\s+anfitri[aã]o)[^\d$]{0,40}?(?:R\$|BRL|\$)\s*"
+                       r"(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)", re.I)
+_RX_TOTAL = re.compile(r"total\s*\((?:BRL|R\$)\)\D{0,20}?(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)", re.I)
+_RX_NOME = re.compile(r"(?:confirmad[ao]|confirmed|nova reserva|new reservation)\s*[-–:!]?\s*(.{2,60}?)\s+"
+                      r"(?:chega|arrives|vai chegar|is arriving)\b", re.I)
+
+
+def limpo(texto: str) -> str:
+    """Sem tags, sem entidades basicas e com espacos normais (o e-mail pode vir so em HTML)."""
+    s = str(texto or "")
+    if "<" in s and ">" in s:
+        s = re.sub(r"(?is)<(script|style)\b.*?</\1>", " ", s)
+        s = re.sub(r"(?i)<a\s[^>]*href=\"([^\"]+)\"[^>]*>", r" \1 ", s)       # o link do anuncio mora no href
+        s = re.sub(r"<[^>]+>", " ", s)
+    for a, b in (("&nbsp;", " "), ("&amp;", "&"), ("&#39;", "'"), ("&quot;", '"'), (" ", " "), (" ", " "),
+                 (" ", " ")):
+        s = s.replace(a, b)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _ano(dia: int, mes: int, ano: str | None, ref: date) -> date | None:
+    """O ano que falta: o mais perto de `ref` sem cair mais de 60 dias antes dele (reserva e para frente)."""
+    try:
+        if ano:
+            return date(int(ano), mes, dia)
+        d = date(ref.year, mes, dia)
+        if d < ref - timedelta(days=60):
+            d = date(ref.year + 1, mes, dia)
+        return d
+    except ValueError:
+        return None
+
+
+def _datas(texto: str, ref: date) -> list[date]:
+    """As datas do texto na ordem em que aparecem (pt e en misturados)."""
+    achadas: list[tuple[int, date]] = []
+    for m in _RX_PT.finditer(texto):
+        d = _ano(int(m.group(1)), MESES_PT[m.group(2).lower()[:3]], m.group(3), ref)
+        if d:
+            achadas.append((m.start(), d))
+    for m in _RX_EN.finditer(texto):
+        d = _ano(int(m.group(2)), MESES_EN[m.group(1).lower()[:3]], m.group(3), ref)
+        if d:
+            achadas.append((m.start(), d))
+    return [d for _, d in sorted(achadas, key=lambda x: x[0])]
+
+
+def _cents(v: str) -> int:
+    s = v.strip()
+    if re.search(r"[.,]\d{2}$", s):
+        inteiro, cent = s[:-3], s[-2:]
+    else:
+        inteiro, cent = s, "00"
+    inteiro = re.sub(r"[.,]", "", inteiro)
+    return int(inteiro or 0) * 100 + int(cent)
+
+
+def _faixa_do_assunto(assunto: str, ref: date) -> tuple[date, date] | None:
+    m = _RX_FAIXA.search(assunto or "")
+    if not m:
+        return None
+    mes_fim = MESES_PT[m.group(4).lower()[:3]]
+    mes_ini = MESES_PT[m.group(2).lower()[:3]] if m.group(2) else mes_fim
+    fim = _ano(int(m.group(3)), mes_fim, m.group(5), ref)
+    ini = _ano(int(m.group(1)), mes_ini, m.group(5), ref)
+    if not ini or not fim:
+        return None
+    if ini > fim:
+        ini = date(ini.year - 1, ini.month, ini.day)
+    return ini, fim
+
+
+def ler(assunto: str, texto: str, quando: datetime | date | None = None) -> dict:
+    """A leitura do e-mail do Airbnb: so o que nao e dado pessoal. Campo nao achado fica de fora (nunca chutado).
+    O nome do hospede vem em `_nome` (o chamador manda ao cofre e tira da linha)."""
+    ref = quando.date() if isinstance(quando, datetime) else (quando or date.today())
+    t = limpo(texto)
+    tudo = f"{assunto or ''} \n {t}"
+    out: dict[str, Any] = {}
+    if m := _RX_CODIGO.search(tudo):
+        out["codigo"] = m.group(1)
+    # datas: as duas primeiras depois de "check-in" no texto; senao a faixa do assunto
+    i = re.search(r"check[\s-]?in", t, re.I)
+    depois = _datas(t[i.start():], ref) if i else []
+    if len(depois) >= 2 and depois[1] > depois[0]:
+        out["checkin"], out["checkout"] = depois[0].isoformat(), depois[1].isoformat()
+    elif fx := _faixa_do_assunto(assunto, ref):
+        out["checkin"], out["checkout"] = fx[0].isoformat(), fx[1].isoformat()
+    elif len(depois) >= 2 and depois[1] <= depois[0]:
+        fim = date(depois[1].year + 1, depois[1].month, depois[1].day)     # dez -> jan sem ano escrito
+        if (fim - depois[0]).days <= 120:
+            out["checkin"], out["checkout"] = depois[0].isoformat(), fim.isoformat()
+    # hospedes: adultos + criancas (bebe nao ocupa cama); sem isso, "N hospedes" perto de "Hospedes"/"Guests"
+    j = re.search(r"\b(h[oó]spedes|guests|viajantes)\b", t, re.I)
+    janela = t[j.start(): j.start() + 120] if j else ""
+    partes = _RX_HOSP_PARTES.findall(janela) or (_RX_HOSP_PARTES.findall(t) if not j else [])
+    if partes:
+        out["hospedes"] = sum(int(n) for n, _ in partes)
+    elif janela and (m := _RX_HOSP.search(janela)):
+        out["hospedes"] = int(m.group(1))
+    if m := _RX_NOITES.search(t):
+        out["noites"] = int(m.group(1))
+    if m := _RX_ANUNCIO.search(t) or _RX_ANUNCIO.search(str(texto or "")):
+        out["anuncio_id"] = m.group(1)
+    if m := _RX_GANHO.search(t):
+        out["ganho_cents"] = _cents(m.group(1))
+    if m := _RX_TOTAL.search(t):
+        out["total_cents"] = _cents(m.group(1))
+    if m := _RX_NOME.search(assunto or ""):
+        out["_nome"] = m.group(1).strip(" .,-")
+    # noites confere as datas (o Airbnb sempre escreve as duas): se brigam, as datas nao sao confiaveis
+    if "checkin" in out and "noites" in out:
+        n = (date.fromisoformat(out["checkout"]) - date.fromisoformat(out["checkin"])).days
+        if n != out["noites"]:
+            out["aviso"] = f"datas dão {n} noite(s), o e-mail diz {out['noites']}"
+    out["completa"] = all(k in out for k in ("codigo", "checkin", "checkout", "hospedes", "anuncio_id")) \
+        and "aviso" not in out
+    return out
+
+
+# ---------------------------------------------------------------------------
+# conferencia com a reserva da casa (a que a Nobeds trouxe) -- medicao, nunca aviso urgente
+# ---------------------------------------------------------------------------
+
+def _reserva(store: Any, codigo: str) -> Any:
+    from app.entrada.intents import casar
+    return casar(store, codigo)
+
+
+def conferir(store: Any, leitura: Mapping[str, Any]) -> dict:
+    """{'estado': 'confere'|'diverge'|'sem reserva'|'incompleta', 'campos': [...]} -- o que bate com a reserva da casa."""
+    r = _reserva(store, str(leitura.get("codigo") or ""))
+    if r is None:
+        return {"estado": "sem reserva", "campos": []}
+    campos = []
+    if leitura.get("checkin") and r.checkin and leitura["checkin"] != r.checkin.isoformat():
+        campos.append("check-in")
+    if leitura.get("checkout") and r.checkout and leitura["checkout"] != r.checkout.isoformat():
+        campos.append("checkout")
+    if leitura.get("hospedes") and int(leitura["hospedes"]) != int(r.paid_occupancy):
+        campos.append("hóspedes")
+    if campos:
+        return {"estado": "diverge", "campos": campos}
+    return {"estado": "confere" if leitura.get("completa") else "incompleta", "campos": []}
+
+
+def leitura_de(store: Any, row: Mapping[str, Any]) -> dict:
+    """A leitura gravada na linha; a linha antiga (antes da 244) e lida de novo do cofre, sem gravar nada."""
+    if isinstance(row.get("leitura"), Mapping):
+        return dict(row["leitura"])
+    if row.get("ota") != "Airbnb" or row.get("tipo") not in ("reserva_nova", "alteracao", "cancelamento"):
+        return {}
+    try:
+        em = store.vault.open(f"entrada:{row['entrada_id']}", actor="entrada:airbnb", purpose="ler a reserva do e-mail")
+    except Exception:  # noqa: BLE001
+        return {}
+    quando = datetime.fromisoformat(row["recebido_em"]) if row.get("recebido_em") else None
+    out = ler(str(em.get("assunto") or ""), str(em.get("texto") or ""), quando)
+    out.pop("_nome", None)
+    return out
+
+
+def _espaco_da_reserva(store: Any, r: Any) -> str:
+    if getattr(r, "listing_space", ""):
+        return r.listing_space
+    for e in getattr(store, "events", {}).values():
+        if e.event_id.startswith(f"event-{r.reservation_id}-") or getattr(e, "reservation_id", "") == r.reservation_id:
+            if e.where:
+                return e.where[0]
+    ev = getattr(store, "events", {}).get(r.reservation_id)
+    return ev.where[0] if ev is not None and ev.where else ""
+
+
+def _linhas_airbnb(store: Any, desde: datetime | None = None) -> list[dict]:
+    rows = [x for x in getattr(store, "entradas", {}).values()
+            if x.get("fonte", "email") == "email" and x.get("ota") == "Airbnb" and x.get("tipo") == "reserva_nova"
+            and (desde is None or str(x.get("recebido_em") or "") >= desde.isoformat())]
+    return sorted(rows, key=lambda x: str(x.get("recebido_em") or ""))
+
+
+def mapa_aprendido(store: Any) -> dict[str, dict]:
+    """anuncio do Airbnb -> {'espacos': {espaco: vezes}, 'mapeamentos': [room_id...], 'estado': aprendido|ambiguo}.
+    Aprende so com reserva NOVA que casou e conferiu (datas e hospedes iguais)."""
+    out: dict[str, dict] = {}
+    mappings = getattr(store, "mappings", {}) or {}
+    for row in _linhas_airbnb(store):
+        lt = leitura_de(store, row)
+        if not lt.get("anuncio_id") or conferir(store, lt)["estado"] != "confere":
+            continue
+        r = _reserva(store, lt["codigo"])
+        esp = _espaco_da_reserva(store, r)
+        if not esp:
+            continue
+        a = out.setdefault(lt["anuncio_id"], {"espacos": {}, "mapeamentos": [], "estado": ""})
+        a["espacos"][esp] = a["espacos"].get(esp, 0) + 1
+    for aid, a in out.items():
+        espacos = set(a["espacos"])
+        cands = sorted({m.room_id for m in mappings.values() if m.space in espacos and not m.aposentado})
+        a["mapeamentos"] = cands
+        a["estado"] = "aprendido" if len(espacos) == 1 and len(cands) == 1 else "ambiguo"
+    return out
+
+
+def reserva_sombra(store: Any, leitura: Mapping[str, Any], mapa: Mapping[str, dict] | None = None) -> dict:
+    """Camada 3, sem gravar: a reserva que seria criada pelo e-mail, ou o que falta para cria-la."""
+    if not leitura.get("completa"):
+        falta = [k for k in ("codigo", "checkin", "checkout", "hospedes", "anuncio_id") if k not in leitura]
+        return {"criaria": False, "falta": "leitura incompleta" + (f" ({', '.join(falta)})" if falta else "")}
+    mapa = mapa if mapa is not None else mapa_aprendido(store)
+    a = mapa.get(str(leitura["anuncio_id"]))
+    if not a or a["estado"] != "aprendido":
+        return {"criaria": False, "falta": "anúncio ainda sem mapa" if not a else "anúncio ambíguo (mais de um espaço)"}
+    m = (getattr(store, "mappings", {}) or {}).get(a["mapeamentos"][0])
+    nova = {"criaria": True, "canal": "airbnb", "codigo": leitura["codigo"], "checkin": leitura["checkin"],
+            "checkout": leitura["checkout"], "hospedes": int(leitura["hospedes"]),
+            "espaco": next(iter(a["espacos"])), "room_id": a["mapeamentos"][0],
+            "instancia": getattr(m, "instance", ""), "valor_cents": int(leitura.get("ganho_cents") or 0)}
+    r = _reserva(store, leitura["codigo"])
+    if r is None:
+        nova["comparacao"] = "a Nobeds não tem esta reserva"
+    else:
+        dif = [n for n, a1, b1 in (("check-in", nova["checkin"], r.checkin.isoformat() if r.checkin else ""),
+                                   ("checkout", nova["checkout"], r.checkout.isoformat() if r.checkout else ""),
+                                   ("hóspedes", nova["hospedes"], int(r.paid_occupancy)))
+               if a1 != b1]
+        nova["comparacao"] = "igual à da Nobeds" if not dif else "diferente em " + ", ".join(dif)
+    return nova
+
+
+def prontidao(store: Any, now: datetime, dias: int = 14) -> dict:
+    """Quanto falta para desligar a Nobeds, medido pelos e-mails reais dos ultimos `dias`."""
+    rows = _linhas_airbnb(store, now - timedelta(days=dias))
+    mapa = mapa_aprendido(store)
+    tot = completas = conferem = criaria_igual = 0
+    divergem: list[dict] = []
+    faltas: dict[str, int] = {}
+    for row in rows:
+        lt = leitura_de(store, row)
+        tot += 1
+        completas += 1 if lt.get("completa") else 0
+        c = conferir(store, lt) if lt.get("codigo") else {"estado": "incompleta", "campos": []}
+        if c["estado"] == "confere":
+            conferem += 1
+        elif c["estado"] == "diverge":
+            divergem.append({"codigo": lt.get("codigo", ""), "campos": c["campos"]})
+        s = reserva_sombra(store, lt, mapa)
+        if s.get("criaria") and s.get("comparacao") == "igual à da Nobeds":
+            criaria_igual += 1
+        elif not s.get("criaria"):
+            faltas[s["falta"]] = faltas.get(s["falta"], 0) + 1
+    anuncios = len(getattr(store, "mappings", {}) or {})
+    aprendidos = sum(1 for a in mapa.values() if a["estado"] == "aprendido")
+    pronto = tot >= 10 and criaria_igual == tot and not divergem
+    if not tot:
+        resumo = "Ainda não chegou e-mail de reserva do Airbnb pela caixa (ligue a leitura com GRAVAR-IMAP-RESERVAS.bat)."
+    elif pronto:
+        resumo = f"Pronto: as últimas {tot} reservas do Airbnb seriam criadas iguais às da Nobeds."
+    else:
+        resumo = (f"Ainda não: das {tot} reservas do Airbnb dos últimos {dias} dias, {criaria_igual} seriam criadas iguais "
+                  f"às da Nobeds; {completas} lidas por inteiro, {conferem} conferem, {len(divergem)} divergem.")
+    return {"reservas": tot, "lidas_completas": completas, "conferem": conferem, "divergem": divergem,
+            "criaria_igual": criaria_igual, "faltas": faltas, "anuncios_aprendidos": aprendidos,
+            "anuncios_ambiguos": sum(1 for a in mapa.values() if a["estado"] == "ambiguo"),
+            "anuncios_mapeados_nobeds": anuncios, "pronto": pronto, "resumo": resumo}
+== intents.py: classificar / ota_do_dominio
+def classificar(dominio: str, assunto: str, texto: str = "") -> dict:
+    ota = ota_do_dominio(dominio)
+    base = (assunto or "").casefold()
+    tipos = [(t, rx) for t, rx in TIPOS if not (t == "cancelamento" and re.search(NAO_CANCELADA, base))]
+    tipo = next((t for t, rx in tipos if re.search(rx, base)), "")
+    if not tipo and ota:                 # pelo texto, nunca "cancelamento" (todo e-mail cita a politica de cancelamento)
+        tipo = next((t for t, rx in TIPOS if t != "cancelamento" and re.search(rx, (texto or "")[:600].casefold())), "")
+    rx = CODIGOS.get(ota, CODIGO_GERAL)
+    m = rx.search(assunto or "") or rx.search((texto or "")[:2000])
+    return {"ota": ota, "tipo": tipo or "outro", "codigo": m.group(1) if m else ""}
+
+
+def casar(store: Any, codigo: str) -> Any:
+    """A reserva da casa com este codigo (codigo da OTA ou numero do Nobeds)."""
+    if not codigo:
+        return None
+    for r in getattr(store, "reservations", {}).values():
+        if str(r.ota_code or "") == codigo or str(r.external_id or "") == codigo:
+            return r
+    return None
+
+
+def _status(r: Any) -> str:
+    return str(getattr(r.status, "value", r.status)) if r is not None else ""
+
+
+# ---------------------------------------------------------------------------
+# intencoes
+# ---------------------------------------------------------------------------
+
+def entrada_id(email: Mapping[str, Any]) -> str:
+    base = email.get("message_id") or "|".join(str(email.get(k) or "") for k in ("remetente", "assunto", "quando", "texto"))
+    return "em-" + hashlib.sha256(str(base).encode()).hexdigest()[:16]
+
+
+def _email(ctx: IntentContext) -> str:
+    store = ctx.params["store"]
+    email = dict(ctx.params["email"])
+    eid = entrada_id(email)
+    if eid in store.entradas:
+        return "E-mail ja registrado."
+    c = classificar(email.get("dominio", ""), email.get("assunto", ""), email.get("texto", ""))
+    r = casar(store, c["codigo"])
+    # v1.0.56 (Dom 05/10: "o contato@ e o e-mail que ele deixa eu fazer a configuracao ... o reservations@ e um alias"):
+    # o aviso da Hostinger e da caixa contato@; o que veio para o apelido reservations@ fica marcado
+    caixa = "reservations" if "reservations@" in str(email.get("para") or "").lower() else "contato"
+    row = {"entrada_id": eid, "fonte": "email", "caixa": caixa, "recebido_em": ctx.at.isoformat(),
+           "quando_no_aviso": str(email.get("quando") or ""), "dominio": email.get("dominio", ""),
+           "ota": c["ota"], "tipo": c["tipo"], "codigo": c["codigo"],
+           "reservation_id": r.reservation_id if r is not None else "", "status_na_chegada": _status(r),
+           "tamanho": len(email.get("texto") or ""), "modo": "sombra",
+           "id_na_fonte": str(email.get("message_id") or "")[:120],
+           "assinatura": "conferida (login IMAP)" if ctx.params.get("canal") == "imap" else "conferida (token)",
+           "estado": "indicio", "propriedade": str(ctx.caller.house),
+           "autoria": "canal:imap" if ctx.params.get("canal") == "imap" else "canal:hmail",   # v1.0.243: caixa lida direto
+           "conteudo_hash": hashlib.sha256((email.get("texto") or "").encode()).hexdigest()[:32]}
+    if c["ota"] == "Airbnb" and c["tipo"] in ("reserva_nova", "alteracao", "cancelamento"):
+        # v1.0.244 (sair da Nobeds, camada 2): datas, hospedes, anuncio e valor lidos por regra fixa; o nome fica no cofre
+        from app.entrada.airbnb_email import ler as ler_airbnb
+        try:
+            lt = ler_airbnb(email.get("assunto", ""), email.get("texto", ""), ctx.at)
+def ota_do_dominio(dominio: str) -> str:
+    d = (dominio or "").lower()
+    for suf, nome in OTA_DOMINIOS:
+        if d == suf or d.endswith("." + suf):
+            return nome
+    return ""
+
+
+def classificar(dominio: str, assunto: str, texto: str = "") -> dict:
+    ota = ota_do_dominio(dominio)
+    base = (assunto or "").casefold()
+    tipos = [(t, rx) for t, rx in TIPOS if not (t == "cancelamento" and re.search(NAO_CANCELADA, base))]
+    tipo = next((t for t, rx in tipos if re.search(rx, base)), "")
+    if not tipo and ota:                 # pelo texto, nunca "cancelamento" (todo e-mail cita a politica de cancelamento)
+        tipo = next((t for t, rx in TIPOS if t != "cancelamento" and re.search(rx, (texto or "")[:600].casefold())), "")
+    rx = CODIGOS.get(ota, CODIGO_GERAL)
+    m = rx.search(assunto or "") or rx.search((texto or "")[:2000])
+    return {"ota": ota, "tipo": tipo or "outro", "codigo": m.group(1) if m else ""}
+
+
+def casar(store: Any, codigo: str) -> Any:
+    """A reserva da casa com este codigo (codigo da OTA ou numero do Nobeds)."""
+    if not codigo:
+        return None
+    for r in getattr(store, "reservations", {}).values():
+        if str(r.ota_code or "") == codigo or str(r.external_id or "") == codigo:
+            return r
+    return None
+
+
+def _status(r: Any) -> str:
+    return str(getattr(r.status, "value", r.status)) if r is not None else ""
+
+
+# ---------------------------------------------------------------------------
+# intencoes
+# ---------------------------------------------------------------------------
+
+def entrada_id(email: Mapping[str, Any]) -> str:
+    base = email.get("message_id") or "|".join(str(email.get(k) or "") for k in ("remetente", "assunto", "quando", "texto"))
+    return "em-" + hashlib.sha256(str(base).encode()).hexdigest()[:16]
+
+
+def _email(ctx: IntentContext) -> str:
+    store = ctx.params["store"]
+    email = dict(ctx.params["email"])
+    eid = entrada_id(email)
+    if eid in store.entradas:
+        return "E-mail ja registrado."
+    c = classificar(email.get("dominio", ""), email.get("assunto", ""), email.get("texto", ""))
+    r = casar(store, c["codigo"])
+    # v1.0.56 (Dom 05/10: "o contato@ e o e-mail que ele deixa eu fazer a configuracao ... o reservations@ e um alias"):
+    # o aviso da Hostinger e da caixa contato@; o que veio para o apelido reservations@ fica marcado
+    caixa = "reservations" if "reservations@" in str(email.get("para") or "").lower() else "contato"
+    row = {"entrada_id": eid, "fonte": "email", "caixa": caixa, "recebido_em": ctx.at.isoformat(),
+           "quando_no_aviso": str(email.get("quando") or ""), "dominio": email.get("dominio", ""),
+           "ota": c["ota"], "tipo": c["tipo"], "codigo": c["codigo"],
+           "reservation_id": r.reservation_id if r is not None else "", "status_na_chegada": _status(r),
+           "tamanho": len(email.get("texto") or ""), "modo": "sombra",
+           "id_na_fonte": str(email.get("message_id") or "")[:120],
+           "assinatura": "conferida (login IMAP)" if ctx.params.get("canal") == "imap" else "conferida (token)",
+== airbnb_reservas.candidatas
+def candidatas(unidade: str, categoria: str, env: Mapping[str, str] = os.environ) -> list[str]:
+    from app.entrada.anuncios_airbnb import CATEGORIAS
+    from app.reservation.sem_numero import grupo_de, grupos
+    out = [unidade] if unidade else []
+    out += [u for u in CATEGORIAS.get(categoria, ()) if u not in out]
+    g = grupo_de(unidade, env) if unidade else None
+    out += [u for u in (grupos(env).get(g, ()) if g else ()) if u not in out]
+    return out
+
+
+def escolher(store: Any, anuncio_id: str, checkin: date, checkout: date,
+             env: Mapping[str, str] = os.environ) -> dict:
+    """{'mapping': UnitMapping, 'unidade', 'categoria', 'versao'} ou {'falta': motivo, ...}."""
+== imap_reservas.para_porta
+def para_porta(bruto: bytes) -> dict:
+    """O e-mail cru no formato da porta de entrada (`entrada.ler_email`)."""
+    msg = email.message_from_bytes(bruto)
+    remetente = parseaddr(_dec(msg.get("From")))[1].lower()
+    para = parseaddr(_dec(msg.get("Delivered-To") or msg.get("To")))[1].lower()
+    return {"message_id": str(msg.get("Message-ID") or "").strip()[:200], "remetente": remetente,
+            "dominio": remetente.rsplit("@", 1)[-1] if "@" in remetente else "", "para": para,
+            "assunto": _dec(msg.get("Subject"))[:300], "texto": _texto(msg), "quando": str(msg.get("Date") or "")[:40]}
+
+
+def ler_caixa(cfg: Mapping[str, Any], *, conectar: Callable[[str], Any] | None = None,
+              agora: datetime | None = None, ja: Iterable[str] = ()) -> list[dict]:
+    """Os e-mails de OTA dos ultimos dias, ainda nao vistos (so leitura: BODY.PEEK, a caixa fica como estava)."""
+    from app.entrada.intents import ota_do_dominio
+    agora = agora or datetime.now(timezone.utc)
+    ja = set(ja)
+    conn = (conectar or (lambda host: imaplib.IMAP4_SSL(host, 993, timeout=30)))(cfg["servidor"])
+    out: list[dict] = []
+    try:
+        conn.login(cfg["usuario"], cfg["senha"])
+        desde = (agora - timedelta(days=DIAS)).strftime("%d-%b-%Y")
+        for pasta in cfg["pastas"]:
+            typ, _ = conn.select(f'"{pasta}"', readonly=True)
+            if typ != "OK":
+                continue
+            typ, dados = conn.search(None, f"(SINCE {desde})")
+            if typ != "OK":
+                continue
+            for num in (dados[0] or b"").split():
+                typ, cab = conn.fetch(num, "(BODY.PEEK[HEADER.FIELDS (FROM MESSAGE-ID)])")
+                if typ != "OK" or not cab or not isinstance(cab[0], tuple):
+                    continue
+                h = email.message_from_bytes(cab[0][1])
+                mid = str(h.get("Message-ID") or "").strip()[:200]
+                rem = parseaddr(_dec(h.get("From")))[1].lower()
+                if not mid or mid in ja or mid[:120] in ja or not ota_do_dominio(rem.rsplit("@", 1)[-1]):
+                    continue
+                typ, corpo = conn.fetch(num, "(BODY.PEEK[])")
+                if typ != "OK" or not corpo or not isinstance(corpo[0], tuple):
+                    continue
+                ja.add(mid)
+                out.append(para_porta(corpo[0][1]))
+    finally:
+        try:
+            conn.logout()
+        except Exception:  # noqa: BLE001
+fim
+[nuvem] fim 2026-11-21 12:15:05 codigo=0 duracao=0s

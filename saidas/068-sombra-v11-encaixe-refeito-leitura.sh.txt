@@ -1,0 +1,13 @@
+[nuvem] inicio 2026-11-21 12:27:05 068-sombra-v11-encaixe-refeito-leitura.sh
+versao: 1.0.285
+(2) ENCAIXE;anuncio;hospedes;v10_unidade_anuncio;v10_escolheu;v11_codigo;v11_escolhe;v11_candidatas
+ENCAIXE;1293619007830537700;1;Q12B;Q12B;IPI-CAP-1-S-V2;Q12B;Q12B|Q12A|Q12C|Q12D...;hoje_ocupando_a_da_v10=
+ENCAIXE;1315433374850323180;1;Q12C;Q12C;IPI-CAP-1-S-V3;Q12C;Q12C|Q12A|Q12B|Q12D...;hoje_ocupando_a_da_v10=
+ENCAIXE;1803447447547629794;1;Q05;Q11;IPI-SOL-1-E-V1;Q11;Q05|Q11|Q04...;hoje_ocupando_a_da_v10=
+ENCAIXE;1803458500036229139;1;Q12C;Q12C;IPI-CAP-1-E-V3;Q12C;Q12C|Q12A|Q12B|Q12D...;hoje_ocupando_a_da_v10=
+ENCAIXE;1803460809881519834;1;Q12E;Q12E;IPI-CAP-1-E-V5;Q12E;Q12E|Q12A|Q12B|Q12C...;hoje_ocupando_a_da_v10=
+ENCAIXE;1803461973947947345;1;Q12F;Q12F;IPI-CAP-1-E-V6;Q12F;Q12F|Q12A|Q12B|Q12C...;hoje_ocupando_a_da_v10=
+    encaixe: 6 iguais, 0 diferentes
+(3) candidatas por anuncio (1 hospede): 8 iguais, 44 mesma lista em outra ordem, 0 com alcance diferente
+fim
+[nuvem] fim 2026-11-21 12:27:06 codigo=0 duracao=1s

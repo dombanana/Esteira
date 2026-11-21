@@ -1,0 +1,40 @@
+[nuvem] inicio 2026-11-21 17:23:15 084-worker-como-ve-ordens-do-painel-leitura.sh
+  dombanana-ainegocios.service                   loaded active     running       aí negócios — porta de entrada (dombanana.tech/ainegocios)
+  dombanana-midia-rotina.service                 loaded active     running       Dom Banana Tech - Midia Social (rotina: Drive, catalogo, semana, montagem, publicacao)
+  dombanana-midia-web.service                    loaded active     running       Dom Banana Tech - Midia Social (telas em /instagram)
+  esteira-nuvem.service                          loaded activating start   start Esteira na nuvem: leituras pedidas pelo Claude (github.com/dombanana/esteira)
+● pms-banana-ai-wifi-certificado.service         loaded failed     failed        V1.0 - renova o certificado do Wi-Fi no MikroTik (veio da V3.4 em 17/10)
+  pms-banana-ai-worker.service                   loaded active     running       PMS Banana AI - worker (outbox + reconciliacao)
+  pms-banana-ai.service                          loaded active     running       PMS Banana AI - API
+  pms-tuya-ponte.service                         loaded active     running       PMS Banana AI - ponte da Tuya (aparelhos da casa)
+  wg-quick@wg-dom-banana.service                 loaded active     exited        WireGuard via wg-quick(8) for wg/dom/banana
+== automacao_ordens
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py:628:                  "host_alerts", "wa_acks", "minor_blocks", "remote_opens", "access_suspensions", "access_extensions", "access_continuations", "fichas_reabertas", "arquivos", "luzes", "luz_moradores", "moradias", "luz_medicoes", "luz_despertadores", "tuya_aberturas", "tuya_clima", "tuya_vent", "automacao_regras", "automacao_ordens",
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py:766:                             ("automacao_ordem", getattr(store, "automacao_ordens", {})),  # v1.0.283
+/opt/PMS-Banana-AI/SISTEMA/api/app/channel/intents.py:156:    automacao_ordens: dict[str, dict] = field(default_factory=dict)  # v1.0.283: ordem do anfitriao por aparelho (manda no quarto)
+== worker loop
+2464:                          since: datetime, at: datetime | None = None, env: Mapping[str, str] = os.environ) -> list[str]:
+2485:    records = [r for r in list_records(entry_lock, int(since.timestamp() * 1000), int(at.timestamp() * 1000))
+2520:                    since: datetime, at: datetime | None = None, env: Mapping[str, str] = os.environ) -> str:
+2534:    records = list_records(entry_lock, int(since.timestamp() * 1000), int(at.timestamp() * 1000))
+2572:                    since: datetime, at: datetime | None = None, env: Mapping[str, str] = os.environ) -> str:
+2597:        # desde o pedido mais antigo (o toque das 23h50 e lido depois da meia-noite), nunca depois de `since`
+2598:        desde = min([since] + [datetime.fromisoformat(o["at"]) - timedelta(minutes=1) for o in por_fechadura[lock]])
+2638:                    since: datetime, at: datetime | None = None,
+2670:    for r in list_records(entry_lock, int(since.timestamp() * 1000), int(at.timestamp() * 1000)):
+3333:def main() -> None:  # pragma: no cover -- laco de servico
+3335:    from app.main import build_state
+3337:    state = build_state()
+3435:    while True:
+3929:                since = datetime.combine(datetime.now(tz).date(), datetime.min.time().replace(hour=5), tzinfo=tz)
+3933:                    lidos = lock_client.list_records(entry_lock, int(since.timestamp() * 1000), agora_ms)
+3944:                avisos = notify_early_arrivals(state, mesmos, entry_lock, since=since)
+3948:                arrived_now = detect_arrivals(state, mesmos, entry_lock, since=since, times=chegadas)
+3959:                    if feito := reconcile_entry(state, mesmos, entry_lock, since=since):
+3981:                since = datetime.combine(datetime.now(tz).date(), datetime.min.time().replace(hour=5), tzinfo=tz)
+3982:                if feito := reconcile_doors(state, lock_client.list_records, house_locks(state), since=since):
+== store load
+/opt/PMS-Banana-AI/SISTEMA/api/app/main.py:89:def build_state(env: Mapping[str, str] = os.environ) -> AppState:
+/opt/PMS-Banana-AI/SISTEMA/api/app/worker.py:1407:def refresh_listings(state: AppState, list_rentals: Callable[[], list], *, at: datetime | None = None) -> str:
+fim
+[nuvem] fim 2026-11-21 17:23:15 codigo=0 duracao=0s

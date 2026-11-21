@@ -1,0 +1,264 @@
+[nuvem] inicio 2026-11-21 17:08:45 079-anfitriao-automacao-em-massa-codigo-leitura.sh
+versao: 1.0.285
+36:REENVIO_S = 180
+37:SEGUNDOS = 30
+38:DIAS = ("seg", "ter", "qua", "qui", "sex", "sab", "dom")
+46:def _ultimo(state: Any) -> dict:
+51:def catalogo(state: Any, env: Mapping[str, str] = os.environ) -> dict[str, dict]:
+73:def ligado(state: Any, item: Mapping[str, Any], at: datetime) -> bool | None:
+87:def temperatura(state: Any, item: Mapping[str, Any], env: Mapping[str, str] = os.environ) -> float | None:
+99:def ocupado(state: Any, item: Mapping[str, Any], at: datetime) -> bool:
+105:def ordem(store: Any, chave: str, at: datetime) -> dict | None:
+115:def manda(store: Any, chave: str, at: datetime) -> bool:
+120:def painel(state: Any, at: datetime, env: Mapping[str, str] = os.environ) -> dict:
+138:MANDAR = IntentContract(
+141:SOLTAR = IntentContract(
+144:REGRA = IntentContract(
+147:APLICAR = IntentContract(
+152:def _gravar_ordem(ctx: IntentContext, chave: str, novo: dict | None) -> None:
+163:def _mandar(ctx: IntentContext) -> str:
+184:def _soltar(ctx: IntentContext) -> str:
+191:def _hora(txt: Any) -> str:
+199:def _regra(ctx: IntentContext) -> str:
+244:def _aplicar(ctx: IntentContext) -> str:
+252:def register(router: IntentRouter) -> None:
+263:def _na_janela(regra: Mapping[str, Any], agora: datetime) -> bool:
+278:def planejar(state: Any, at: datetime, env: Mapping[str, str] = os.environ) -> list[tuple[str, dict | None]]:
+318:def _enviar(state: Any, chave: str, it: Mapping[str, Any], ligar: bool, o: Mapping[str, Any], at: datetime,
+342:def vigiar(state: Any, *, at: datetime | None = None, env: Mapping[str, str] = os.environ, forcar: bool = False) -> list[str]:
+384:def previa(state: Any, chaves: list[str], at: datetime, env: Mapping[str, str] = os.environ) -> list[dict]:
+"""v1.0.283 -- automacao em massa pelo painel do ANFITRIAO (Dom 20/11/2026: "conseguir ligar todos os ventiladores da
+casa, ou selecionar todos os que eu preciso e ligar ao mesmo tempo ... dentro do horario que for mais adequado para mim,
+ou programar ... que quebram a logica desenhada anteriormente pelos quartos ... no painel do hospede depende de hospede.
+No painel do anfitriao, nao depende mais disso.").
+
+Respostas do Dom (20/11):
+  * quarto com hospede: "o sistema tem que perguntar e eu tenho que dar minha resposta individualmente para o momento" --
+    o "agora" devolve a lista dos ocupados e o painel pergunta quarto a quarto; a regra programada guarda a escolha
+    feita na hora de criar (pular ou incluir os quartos com hospede);
+  * "Eu quero temperatura sim ... selecionar um conjunto de ar-condicionado e acionar ele para ligar e ficar ligado
+    enquanto tiver determinada temperatura".
+
+Tres tipos de aparelho, cada um pelo caminho que ja existe (nada novo chega na Tuya):
+  "ar:<espaco>"   o ar da regra de clima (PMS_TUYA_CLIMA) -> `luz.tuya_clima` (infravermelho/comandos proprios)
+  "vent:<Qnn>"    o ventilador do quarto privativo         -> `luz.tuya_vent_aplicar` (3 reles: um de cada vez)
+  "tuya:<id>"     luz/tomada/ventilador/ar/outro do cadastro -> `luz.tuya_ligar`
+
+A ORDEM do anfitriao (`automacao_ordens`, uma por aparelho) manda por cima da logica do quarto: enquanto vale, o vigia do
+ar e o do ventilador nao mexem naquele aparelho, e o worker reenvia se alguem mudou (no maximo a cada 3 min). Ela vence
+na hora marcada (ou fica ate o anfitriao soltar). As REGRAS (`automacao_regras`) criam e soltam ordens sozinhas:
+  horario      liga dentro da janela (dias da semana), desliga e solta ao sair dela;
+  temperatura  liga quando o aparelho passa de X graus e desliga/solta quando cai a Y (folga; Y < X). Pode ter janela.
+"""
+from __future__ import annotations
+
+import hashlib
+import os
+import time
+from datetime import datetime, time as dtime, timedelta, timezone
+from typing import Any, Mapping
+from zoneinfo import ZoneInfo
+
+from app.core.event import Role
+from app.core.intent import IntentContext, IntentContract, IntentRouter, Reversibility
+
+REENVIO_S = 180
+SEGUNDOS = 30
+DIAS = ("seg", "ter", "qua", "qui", "sex", "sab", "dom")
+_ULTIMA: dict[str, float] = {}
+
+
+# ---------------------------------------------------------------------------
+# os aparelhos que o anfitriao comanda
+# ---------------------------------------------------------------------------
+
+def _ultimo(state: Any) -> dict:
+    from app.tuya_casa.service import ultimo
+    return ultimo(state)
+
+
+def catalogo(state: Any, env: Mapping[str, str] = os.environ) -> dict[str, dict]:
+    """chave -> {tipo, nome, espaco, regra|ap|aparelho}. Um aparelho aparece uma vez so."""
+    from app.tuya_casa import ventilador as V
+    from app.tuya_casa.config import casa
+    c = casa(env)
+    out: dict[str, dict] = {}
+    usados = set()
+    for regra in c.clima:
+        k = regra.espaco or regra.aparelho
+        out[f"ar:{k}"] = {"tipo": "ar", "nome": f"Ar {k}", "espaco": regra.espaco, "regra": regra}
+        usados.add(regra.aparelho)
+    for q, ap in sorted(V.aparelhos(env).items()):
+        if ap.get("device") in usados:
+            continue                                   # o mesmo aparelho ja e o "ar" da regra de clima
+        out[f"vent:{q}"] = {"tipo": "ventilador", "nome": f"Ventilador {q}", "espaco": q, "ap": ap}
+        usados.add(ap.get("device"))
+    for ap in sorted(c.aparelhos.values(), key=lambda a: (a.papel, a.espaco, a.nome)):
+        if ap.liga and ap.id not in usados:
+            out[f"tuya:{ap.id}"] = {"tipo": ap.papel, "nome": ap.nome, "espaco": ap.espaco, "aparelho": ap}
+    return out
+
+
+def ligado(state: Any, item: Mapping[str, Any], at: datetime) -> bool | None:
+    from app.tuya_casa import service as S
+    from app.tuya_casa import ventilador as V
+    if item["tipo"] == "ar":
+        regra = item["regra"]
+        row = (getattr(state.store, "tuya_clima", {}) or {}).get(regra.espaco or regra.aparelho) or {}
+        return S.ar_ligado(state, regra, row, at)
+    if "ap" in item:
+        return V.estado_real(state, item["ap"])
+    ap = item["aparelho"]
+    st = (_ultimo(state).get(ap.id) or {}).get("status") or {}
+    return S._on(st[ap.code]) if ap.code in st else None
+
+
+def temperatura(state: Any, item: Mapping[str, Any], env: Mapping[str, str] = os.environ) -> float | None:
+    from app.tuya_casa import service as S
+    from app.tuya_casa import ventilador as V
+    if item["tipo"] == "ar":
+        r = item["regra"]
+        t = S.temperatura((_ultimo(state).get(r.sensor) or {}).get("status") or {}, r.codigo_temp, r.escala)
+        return None if t is None else round(t, 1)
+    if "ap" in item:
+        return V.temperatura(state, item["ap"], env)
+    return None
+
+
+def ocupado(state: Any, item: Mapping[str, Any], at: datetime) -> bool:
+    from app.tuya_casa.service import _ocupado
+    esp = str(item.get("espaco") or "")
+    return bool(esp) and _ocupado(state, esp, at)
+
+
+def ordem(store: Any, chave: str, at: datetime) -> dict | None:
+    """A ordem do anfitriao que vale agora para este aparelho (ou None)."""
+    o = (getattr(store, "automacao_ordens", {}) or {}).get(chave)
+    if not o or o.get("solta"):
+        return None
+    if o.get("ate") and str(o["ate"]) <= at.isoformat():
+        return None
+    return o
+
+
+def manda(store: Any, chave: str, at: datetime) -> bool:
+    """O vigia do quarto (ar/ventilador) pergunta: o anfitriao esta mandando neste aparelho agora?"""
+    return ordem(store, chave, at) is not None
+
+
+def painel(state: Any, at: datetime, env: Mapping[str, str] = os.environ) -> dict:
+    tz = ZoneInfo(state.store.timezone)
+    itens = []
+    for chave, it in catalogo(state, env).items():
+        o = ordem(state.store, chave, at)
+        itens.append({"chave": chave, "tipo": it["tipo"], "nome": it["nome"], "espaco": it["espaco"],
+                      "ligado": ligado(state, it, at), "temp": temperatura(state, it, env),
+                      "ocupado": ocupado(state, it, at),
+                      "ordem": None if o is None else {"ligar": o["ligar"], "origem": o.get("origem", ""),
+                                                        "ate": datetime.fromisoformat(o["ate"]).astimezone(tz).strftime("%d/%m %H:%M") if o.get("ate") else ""}})
+    regras = sorted((getattr(state.store, "automacao_regras", {}) or {}).values(), key=lambda r: r.get("nome", ""))
+    return {"aparelhos": itens, "regras": [r for r in regras if not r.get("removida")]}
+
+
+# ---------------------------------------------------------------------------
+# as intencoes: ordem agora, soltar, regra
+# ---------------------------------------------------------------------------
+
+MANDAR = IntentContract(
+    name="automacao.mandar", description="o anfitriao liga ou desliga varios aparelhos de uma vez (ordem por cima do quarto)",
+    module="luz", required_role=Role.HOST, reversibility=Reversibility.REVERSIBLE)
+SOLTAR = IntentContract(
+    name="automacao.soltar", description="o anfitriao devolve os aparelhos a logica do quarto",
+    module="luz", required_role=Role.HOST, reversibility=Reversibility.REVERSIBLE)
+REGRA = IntentContract(
+    name="automacao.regra", description="o anfitriao cria, muda, pausa ou apaga uma programacao (horario ou temperatura)",
+    module="luz", required_role=Role.HOST, reversibility=Reversibility.REVERSIBLE)
+APLICAR = IntentContract(
+    name="automacao.aplicar", description="o sistema grava as ordens das programacoes do anfitriao",
+    module="luz", required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE)
+
+
+def _gravar_ordem(ctx: IntentContext, chave: str, novo: dict | None) -> None:
+    store = ctx.params["store"]
+    antes = (getattr(store, "automacao_ordens", {}) or {}).get(chave)
+    if novo is None:
+        if not antes or antes.get("solta"):
+            return
+        novo = {**antes, "solta": ctx.at.isoformat()}
+    ctx.change("automacao_ordem", chave, antes, novo)
+    ctx.transaction.after_commit(lambda: store.automacao_ordens.__setitem__(chave, novo))
+
+
+def _mandar(ctx: IntentContext) -> str:
+    chaves = [str(c) for c in ctx.params.get("chaves") or () if str(c)]
+    if not chaves:
+        raise ValueError("Escolha pelo menos um aparelho.")
+    ligar = bool(ctx.params.get("ligar"))
+    horas = ctx.params.get("horas")
+    ate = ""
+    if horas not in (None, "", 0, "0"):
+        try:
+            h = float(horas)
+        except (TypeError, ValueError):
+            raise ValueError("Horas inválidas.") from None
+        if not 0 < h <= 72:
+            raise ValueError("De 0 a 72 horas.")
+        ate = (ctx.at + timedelta(hours=h)).isoformat()
+    for c in chaves:
+        _gravar_ordem(ctx, c, {"ligar": ligar, "ate": ate, "por": ctx.caller.actor.id, "at": ctx.at.isoformat(),
+                               "origem": "agora"})
+    return f"{len(chaves)} aparelho(s): {'ligando' if ligar else 'desligando'}" + (f" por {horas} h." if ate else " até você soltar.")
+
+
+def _soltar(ctx: IntentContext) -> str:
+    chaves = [str(c) for c in ctx.params.get("chaves") or () if str(c)]
+    for c in chaves:
+        _gravar_ordem(ctx, c, None)
+    return f"{len(chaves)} aparelho(s) de volta à regra do quarto."
+
+
+def _hora(txt: Any) -> str:
+    try:
+        h, m = str(txt or "").strip().replace("h", ":").split(":")[:2]
+        return dtime(int(h), int(m or 0)).strftime("%H:%M")
+    except (TypeError, ValueError):
+        return ""
+
+
+def _regra(ctx: IntentContext) -> str:
+    store = ctx.params["store"]
+== intents/rotas que chamam anfitriao
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/link_inteiro.py:8:com `texto_com_link_quebrado` e aparece na fila para o anfitriao. O certo e o link inteiro: https://www.dombanana.tech/<codigo>.
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/entrega_ota.py:17:o texto final (com a marca de origem do link) e o endereco da reserva na caixa do anfitriao. Nunca telefone, e-mail
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/inteligencia.py:466:    # a entrada dela so abre as 6h. Entrar antes disso: so com o anfitriao.
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/email_ia.py:13:               anfitriao. O remetente de e-mail pode ser falsificado -- por isso a IA aqui NUNCA recebe a identidade da
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/perguntas.py:129:    """Abre (ou soma a) pergunta ao anfitriao. Devolve (linha, nova) -- `nova` diz se quem perguntou ainda precisa do
+/opt/PMS-Banana-AI/SISTEMA/api/app/alerts.py:6:ninguem na casa -- quem decide e o anfitriao.
+/opt/PMS-Banana-AI/SISTEMA/api/app/occurrences.py:96:#: Resposta da IA nao conta (foi ela que pediu gente); @banana, seguranca, menor etc. continuam so com o anfitriao.
+/opt/PMS-Banana-AI/SISTEMA/api/app/laundry/intents.py:215:    """Reservas ativas (ainda por usar) em equipamento desligado: viram pendencia do anfitriao."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/laundry/intents.py:638:    """Dom, 24/09: equipamento parado pela casa -> o hospede escolhe o valor de volta sem esperar o anfitriao."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/confere_documento.py:5:avisa o hospede para corrigir e alerta o anfitriao.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/nao_veio.py:13:  * Nada de dinheiro muda aqui: reembolso de OTA segue a regra da plataforma, decisao do anfitriao.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/espelho_portas.py:1:"""v1.0.203 (Dom 06/11/2026): as portas ESPELHAM o painel do anfitriao.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/espelho_portas.py:4:anfitriao." / "O painel do anfitriao e soberano a qualquer outra coisa." -- caso do David (06/11): o painel trocou a
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fnrh_fila.py:232:    O adaptador recusa o mesmo comando se alguem o devolver a fila -- nada sai sem o anfitriao."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:63:    """Papel >= anfitriao. Mesma regra usada em `person` para o mesmo fim:
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:986:        # Estadia que ja acabou nao vai a FNRH por rotina; e caso para o anfitriao.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:988:                         "ficha atrasada nao sai por rotina; fale com o anfitriao.")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1576:# nunca toca documento (dita de 20/09): so o proprio hospede ou o anfitriao.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/editar_estadia.py:613:    ctx.transaction.after_commit(lambda: store.datas_anfitriao.__setitem__(rid, row))
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/editar_estadia.py:656:        ctx.transaction.after_commit(lambda: store.datas_anfitriao.__setitem__(rid, novo))
+cache 51 invertidos ['TODOS']
+Q02 ocupado=1 ligado=True vel=1 fora=0 modo_hospede=temperatura
+Q03 ocupado=1 ligado=True vel=2 fora=0 modo_hospede=manual
+Q04 ocupado=1 ligado=True vel=3 fora=0 modo_hospede=manual
+Q05 ocupado=1 ligado=True vel=2 fora=0 modo_hospede=manual
+Q06 ocupado=0 ligado=True vel=2 fora=0 modo_hospede=-
+Q07 ocupado=1 ligado=True vel=3 fora=0 modo_hospede=manual
+Q08 ocupado=1 ligado=False vel=None fora=0 modo_hospede=manual
+Q09 ocupado=1 ligado=False vel=None fora=0 modo_hospede=manual
+Q10 ocupado=1 ligado=True vel=3 fora=0 modo_hospede=manual
+Q11 ocupado=0 ligado=False vel=None fora=0 modo_hospede=-
+ordens do anfitriao: campo?
+fim
+[nuvem] fim 2026-11-21 17:08:47 codigo=0 duracao=2s

@@ -1,0 +1,110 @@
+[nuvem] inicio 2026-11-21 12:03:06 064-airbnb-email-planos-para-sombra-catalogo-leitura.sh
+versao: 1.0.285
+entradas: 3188
+airbnb: 102 {'reserva_nova': 22, 'outro': 45, 'avaliacao': 7, 'mensagem': 12, 'cancelamento': 3, 'pagamento': 7, 'alteracao': 6}
+campos linha: ['assinatura', 'autoria', 'caixa', 'codigo', 'conteudo_hash', 'dominio', 'entrada_id', 'estado', 'fonte', 'id_na_fonte', 'leitura', 'modo', 'ota', 'plano', 'propriedade', 'quando_no_aviso', 'recebido_em', 'reservation_id', 'status_na_chegada', 'tamanho', 'tipo']
+== LINHA;recebido;tipo;acao;anuncio;unidade_anuncio;unidade;versao;categoria;motivo
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;pagamento;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;pagamento;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;avaliacao;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;alteracao;;;;;;;
+LINHA;2026-11-19T05:58;alteracao;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;pagamento;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;avaliacao;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;avaliacao;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;cancelamento;;;;;;;
+LINHA;2026-11-19T05:58;pagamento;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;cancelamento;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;mensagem;;;;;;;
+LINHA;2026-11-19T05:58;reserva_nova;;;;;;;
+LINHA;2026-11-19T05:58;avaliacao;;;;;;;
+LINHA;2026-11-19T05:58;outro;;;;;;;
+LINHA;2026-11-19T05:58;avaliacao;;;;;;;
+LINHA;2026-11-19T11:10;outro;;;;;;;
+LINHA;2026-11-19T11:16;avaliacao;;;;;;;
+LINHA;2026-11-19T11:42;reserva_nova;criar;1293619007830537700;Q12B;Q12B;smart;capsula-12;reserva nova do Airbnb
+LINHA;2026-11-19T16:23;outro;;;;;;;
+LINHA;2026-11-19T16:23;alteracao;alarme;;;;;;o Airbnb alterou uma reserva (o e-mail não traz o código), o e-mail não traz as datas novas -- confira o itinerário no Airbnb e ajuste no painel
+LINHA;2026-11-19T16:23;alteracao;alarme;;;;;;o Airbnb alterou uma reserva (o e-mail não traz o código), o e-mail não traz as datas novas -- confira o itinerário no Airbnb e ajuste no painel
+LINHA;2026-11-19T16:23;outro;;;;;;;
+LINHA;2026-11-19T16:23;outro;;;;;;;
+LINHA;2026-11-19T16:23;pagamento;;;;;;;
+LINHA;2026-11-19T16:23;reserva_nova;criar;1315433374850323180;Q12C;Q12C;smart;capsula-12;reserva nova do Airbnb
+LINHA;2026-11-19T16:23;outro;;;;;;;
+LINHA;2026-11-19T16:23;outro;;;;;;;
+LINHA;2026-11-19T23:01;alteracao;alarme;;;;;;o Airbnb alterou a reserva HM******, o e-mail não traz as datas novas -- confira o itinerário no Airbnb e ajuste no painel
+LINHA;2026-11-20T00:25;outro;;;;;;;
+LINHA;2026-11-20T01:15;reserva_nova;criar;1803447447547629794;Q05;Q11;economico;privativo-solteiro;reserva nova do Airbnb (a unidade do anúncio estava ocupada: Q11)
+LINHA;2026-11-20T01:19;outro;;;;;;;
+LINHA;2026-11-20T12:38;outro;;;;;;;
+LINHA;2026-11-20T13:04;outro;;;;;;;
+LINHA;2026-11-20T14:10;alteracao;alarme;;;;;;o Airbnb alterou uma reserva (o e-mail não traz o código), o e-mail não traz as datas novas -- confira o itinerário no Airbnb e ajuste no painel
+LINHA;2026-11-20T14:14;outro;;;;;;;
+LINHA;2026-11-20T14:25;cancelamento;cancelar;;;;;;cancelada no Airbnb
+LINHA;2026-11-20T14:32;outro;;;;;;;
+LINHA;2026-11-20T15:02;pagamento;;;;;;;
+LINHA;2026-11-20T16:31;avaliacao;;;;;;;
+LINHA;2026-11-20T19:35;outro;;;;;;;
+LINHA;2026-11-20T19:36;reserva_nova;criar;1803458500036229139;Q12C;Q12C;economico;capsula-12;reserva nova do Airbnb
+LINHA;2026-11-20T20:12;outro;;;;;;;
+LINHA;2026-11-20T20:15;outro;;;;;;;
+LINHA;2026-11-20T20:22;reserva_nova;criar;1803460809881519834;Q12E;Q12E;economico;capsula-12;reserva nova do Airbnb
+LINHA;2026-11-20T21:32;outro;;;;;;;
+LINHA;2026-11-20T22:46;mensagem;;;;;;;
+LINHA;2026-11-20T23:08;outro;;;;;;;
+LINHA;2026-11-21T01:32;mensagem;;;;;;;
+LINHA;2026-11-21T01:40;outro;;;;;;;
+LINHA;2026-11-21T01:40;reserva_nova;criar;1803461973947947345;Q12F;Q12F;economico;capsula-12;reserva nova do Airbnb
+LINHA;2026-11-21T02:05;outro;;;;;;;
+LINHA;2026-11-21T09:02;pagamento;;;;;;;
+fim
+[nuvem] fim 2026-11-21 12:03:08 codigo=0 duracao=2s

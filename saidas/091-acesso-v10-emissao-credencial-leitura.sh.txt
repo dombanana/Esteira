@@ -1,0 +1,526 @@
+[nuvem] inicio 2026-11-21 21:44:18 091-acesso-v10-emissao-credencial-leitura.sh
+===== adapters.py 1135-1240
+class TtlockClient:
+    def __init__(self, base_url: str, client_id: str, client_secret: str, username: str, password_md5: str, timeout: int = 30):
+        if not all(str(v).strip() for v in (client_id, client_secret, username, password_md5)):
+            raise ValueError("ttlock_credentials_required")
+        self.base_url = base_url.rstrip("/")
+        self.client_id, self.client_secret = client_id, client_secret
+        self.username, self.password_md5 = username, password_md5
+        self.timeout = timeout
+        self._access_token: str | None = None
+
+    @classmethod
+    def from_environment(cls) -> "TtlockClient":
+        import os
+        return cls(
+            os.environ.get("TTLOCK_API_BASE_URL", "https://api.sciener.com"),
+            os.environ["TTLOCK_CLIENT_ID"], os.environ["TTLOCK_CLIENT_SECRET"],
+            os.environ["TTLOCK_USERNAME"], os.environ["TTLOCK_PASSWORD_MD5"],
+        )
+
+    def _post(self, path: str, data: Mapping[str, Any]) -> Mapping[str, Any]:
+        request = urllib.request.Request(
+            self.base_url + path, method="POST",
+            data=urllib.parse.urlencode({k: str(v) for k, v in data.items()}).encode("ascii"),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                payload = json.loads(response.read().decode("utf-8") or "{}")
+        except urllib.error.HTTPError as exc:
+            raise RuntimeError(f"ttlock_http_{exc.code}") from None
+        except (urllib.error.URLError, OSError):
+            raise RuntimeError("ttlock_transport") from None
+        code = payload.get("errcode") if isinstance(payload, Mapping) else None
+        if code not in (None, 0, "0"):
+            text = re.sub(r"[^A-Za-z0-9 _.,:-]", "", str(payload.get("errmsg") or ""))[:80]
+            raise RuntimeError(f"ttlock_provider_{code}" + (f":{text}" if text else ""))
+        return payload
+
+    def authenticate(self) -> str:
+        payload = self._post("/oauth2/token", {
+            "client_id": self.client_id, "client_secret": self.client_secret,
+            "username": self.username, "password": self.password_md5,
+        })
+        token = str(payload.get("access_token") or "")
+        if not token:
+            raise RuntimeError("ttlock_token_missing")
+        self._access_token = token
+        return token
+
+    def _authorized(self, path: str, data: Mapping[str, Any]) -> Mapping[str, Any]:
+        token = self._access_token or self.authenticate()
+        return self._post(path, {"clientId": self.client_id, "accessToken": token,
+                                 "date": int(time.time() * 1000), **data})
+
+    def add_custom_passcode(self, lock_id: int, pin: str, name: str, starts_at: datetime, ends_at: datetime) -> str:
+        if ends_at <= starts_at:
+            raise ValueError("ttlock_window_invalid")
+        payload = self._authorized("/v3/keyboardPwd/add", {
+            "lockId": lock_id, "keyboardPwd": pin, "keyboardPwdName": name[:40],
+            "startDate": int(starts_at.timestamp() * 1000), "endDate": int(ends_at.timestamp() * 1000),
+            "addType": 2,
+        })
+        return str(payload.get("keyboardPwdId") or "")
+
+    def delete_passcode(self, lock_id: int, keyboard_pwd_id: str) -> None:
+        self._authorized("/v3/keyboardPwd/delete", {"lockId": lock_id, "keyboardPwdId": keyboard_pwd_id, "deleteType": 2})
+
+    def get_offline_passcode(self, lock_id: int, name: str, starts_at: datetime, ends_at: datetime) -> dict:
+        """v1.0.242 (Dom 14/11, senha de contingencia): `/v3/keyboardPwd/get` -- a nuvem GERA um codigo (7 a 9 digitos)
+        que a fechadura reconhece SOZINHA, sem gateway (algoritmo da propria TTLock). Tipo 3 = por periodo (hora
+        cheia). Regra da TTLock: precisa ser usado a 1a vez em ate 24 h depois do inicio."""
+        if ends_at <= starts_at:
+            raise ValueError("ttlock_window_invalid")
+        payload = self._authorized("/v3/keyboardPwd/get", {
+            "lockId": lock_id, "keyboardPwdVersion": 4, "keyboardPwdType": 3, "keyboardPwdName": name[:40],
+            "startDate": int(starts_at.timestamp() * 1000), "endDate": int(ends_at.timestamp() * 1000),
+        })
+        return {"keyboardPwd": str(payload.get("keyboardPwd") or ""), "keyboardPwdId": str(payload.get("keyboardPwdId") or "")}
+
+    def senha_na_fechadura(self, lock_id: int, pin: str) -> bool:
+        """v1.0.242 (Dom 14/11: "so pode mandar a senha quando a gente tem certeza que a fechadura capta"): relê a
+        lista da fechadura na TTLock depois de gravar."""
+        return self.find_passcode(lock_id, pin) is not None
+
+    def change_passcode_period(self, lock_id: int, keyboard_pwd_id: str, starts_at: datetime, ends_at: datetime) -> None:
+        """Muda so a validade de uma senha ja gravada (Dom 03/10, "mais uma horinha"): `/v3/keyboardPwd/change`,
+        `changeType=2` = pelo gateway (a fechadura recebe sem ninguem ao lado). A senha em si nao muda."""
+        if ends_at <= starts_at:
+            raise ValueError("ttlock_window_invalid")
+        self._authorized("/v3/keyboardPwd/change", {
+            "lockId": lock_id, "keyboardPwdId": keyboard_pwd_id,
+            "startDate": int(starts_at.timestamp() * 1000), "endDate": int(ends_at.timestamp() * 1000),
+            "changeType": 2,
+        })
+
+    def list_locks(self) -> list:
+        """Todas as fechaduras da conta (varredura do cadastro da casa; so leitura)."""
+        out, page = [], 1
+        while page <= 20:
+            payload = self._authorized("/v3/lock/list", {"pageNo": page, "pageSize": 100})
+            items = list(payload.get("list") or [])
+            out += items
+            if page >= int(payload.get("pages") or 1) or not items:
+                break
+            page += 1
+        return out
+===== adapters.py 1380-1500
+def _cred_row(room_lock: int, done: Mapping[str, str], pin: str, *, complete: bool) -> dict[str, str]:
+    extra = ";".join(f"{lock}:{pwd}" for lock, pwd in done.items() if lock != str(room_lock))
+    return {"lock_id": str(room_lock), "keyboard_pwd_id": done.get(str(room_lock), ""),
+            "fingerprint": credential_fingerprint(pin), "extra": extra, "complete": "1" if complete else "0"}
+
+
+@dataclass
+class CredentialStore:
+    """Credenciais emitidas, por Evento, em memoria (testes). O PIN em claro
+    NUNCA fica aqui -- so o id no TTLock e uma impressao digital."""
+
+    by_event: dict[str, dict[str, str]] = field(default_factory=dict)
+
+    def get(self, event_id: str) -> dict[str, str] | None:
+        return self.by_event.get(event_id)
+
+    def set(self, event_id: str, data: dict[str, str]) -> None:
+        self.by_event[event_id] = data
+
+    def clear(self, event_id: str) -> None:
+        self.by_event.pop(event_id, None)
+
+
+class VaultCredentials:
+    """As mesmas credenciais, no cofre (A13): sobrevivem ao reinicio do worker,
+    entao uma senha nunca e emitida duas vezes nem esquecida na revogacao.
+    Cada leitura fica registrada como acesso ao cofre."""
+
+    def __init__(self, vault: Vault) -> None:
+        self.vault = vault
+
+    def get(self, event_id: str) -> dict[str, str] | None:
+        try:
+            data = dict(self.vault.open(f"cred:{event_id}", actor="adapter:ttlock", purpose="credential"))
+        except VaultMiss:
+            return None
+        return None if data.get("revoked") else data
+
+    def set(self, event_id: str, data: dict[str, str]) -> None:
+        self.vault.put(f"cred:{event_id}", data)
+
+    def clear(self, event_id: str) -> None:
+        self.vault.put(f"cred:{event_id}", {"revoked": True})
+
+
+def make_ttlock_adapter(
+    gateway: LockGateway,
+    vault: Vault,
+    outbox: Outbox,
+    *,
+    locks_by_space: Mapping[str, int],
+    event_lookup: Callable[[str], Mapping[str, Any]],
+    credentials: CredentialStore | VaultCredentials | None = None,
+    common_locks: Mapping[str, int] | None = None,
+    lock_for: Callable[[str], int | None] | None = None,
+    armarios_by_space: Mapping[str, int] | None = None,
+    armario_for: Callable[[str], int | None] | None = None,
+    guest_accounts: Any = None,
+) -> Callable[[OutboxCommand], None]:
+    """`event_lookup(event_id)` devolve {person_ref, checkin, checkout, space,
+    liberties} -- o que o Evento sabe; a memoria e do modulo, nao do adaptador.
+
+    Portas e horarios: `reservation.doors` (regra do Dom, 23/09). A mesma senha
+    vai a todas as portas do hospede, cada uma com a sua janela; porta sem
+    fechadura instalada fica registrada como "nao instalada" e nao trava as
+    outras. A senha e os 2 digitos do quarto/cama + os 4 que o hospede
+    escolheu no cadastro (`digitos:<pessoa>` no cofre) -- sem eles, nao sai.
+
+    Emissao parcial e retomada: o PIN vai ao cofre antes da primeira porta, e
+    cada porta feita fica em `cred:<evento>`; se a rede cai na terceira porta,
+    a nova tentativa continua dali, com o mesmo PIN, sem duplicar as outras.
+    Retirada: `revoke_credential` com `roles` tira so aquelas portas (o
+    quarto as 11h15, a entrada as 18h15, a saida as 22h15); sem `roles`, todas.
+    """
+    from app.reservation.doors import ALIASES, ARMARIO, QUARTO, door_plan, guest_pin
+
+    credentials = credentials if credentials is not None else VaultCredentials(vault)
+    common = {ALIASES.get(k.upper(), k.upper()): v for k, v in (common_locks or {}).items()}
+    armarios = dict(armarios_by_space or {})
+
+    def room_lock(room: str) -> int | None:
+        return locks_by_space.get(room) or (lock_for(room) if lock_for else None)
+
+    def armario_lock(room: str) -> int | None:
+        return armarios.get(room) or (armario_for(room) if armario_for else None)
+
+    def doors_done(cred: Mapping[str, str]) -> dict[str, tuple[str, str]]:
+        """papel -> (fechadura, id da senha na TTLock)."""
+        out = {}
+        for item in str(cred.get("doors", "")).split(";"):
+            if item.count(":") == 2:
+                role, lock, pwd = item.split(":")
+                out[role] = (lock, pwd)
+        return out
+
+    def row(done: Mapping[str, tuple[str, str]], pin: str, missing: list[str], complete: bool) -> dict[str, str]:
+        room = done.get(QUARTO, ("", ""))
+        return {"doors": ";".join(f"{r}:{l}:{p}" for r, (l, p) in done.items()),
+                "lock_id": room[0], "keyboard_pwd_id": room[1],
+                "fingerprint": credential_fingerprint(pin), "missing": ",".join(missing),
+                "complete": "1" if complete else "0"}
+
+    def _ref_divisao(lock: Any, pwd: Any) -> str:
+        return f"pindiv:{lock}:{pwd}"
+
+    def _passar_adiante(event_id: str, role: str, lock: Any, pwd: Any, fp: str = "") -> bool:
+        """v1.0.16 (revisao): a senha desta porta e dividida com outra estadia da mesma pessoa que ainda vale (ela
+        guarda "existente"). Na retirada, a senha NAO sai: volta para a janela da outra estadia e passa a ser dela."""
+        from app.reservation.doors import programada
+        ref = _ref_divisao(lock, pwd)
+        try:
+            donos = [str(x) for x in vault.open(ref, actor="adapter:ttlock", purpose="senha dividida").get("donos") or ()]
+        except (VaultMiss, KeyError):
+            return False
+        agora = datetime.now(timezone.utc)
+        for outra in donos:
+            if outra == event_id:
+                continue
+            c = credentials.get(outra) or {}
+            if doors_done(c).get(role) != (str(lock), "existente"):
+                continue
+===== adapters.py 1640-1900
+    def _sem_gateway(erro: Exception) -> bool:
+        """A TTLock nao alcancou a fechadura: sem gateway (-2012/-3003) ou o gateway nao entregou ("failed or means
+        no", codigo 1 -- caso da entrada em 14/11)."""
+        t = str(erro)
+        return "-2012" in t or "-3003" in t or "not connected to any Gateway" in t or "failed or means no" in t
+
+    def _contingencia(event_id: str, door: Any, info: Mapping[str, Any], nome: str) -> str | None:
+        """v1.0.242: conta a falha desta porta e, na 3a (ou faltando 30 min para a hora de entrar), gera o codigo de
+        contingencia da TTLock (funciona sem gateway), confere que a nuvem registrou para ESTA fechadura e guarda no
+        cofre (`contingencia:<evento>:<porta>`) -- quem avisa o hospede e o anfitriao e `contingencia_offline`."""
+        from datetime import time as _hora
+        ref = f"contfalhas:{event_id}:{door.role}"
+        try:
+            reg = dict(vault.open(ref, actor="adapter:ttlock", purpose="contar falha sem gateway"))
+        except (VaultMiss, KeyError):
+            reg = {}
+        n = int(reg.get("falhas") or 0) + 1
+        agora = datetime.now(timezone.utc)
+        vault.put(ref, {"falhas": n, "primeira": reg.get("primeira") or agora.isoformat(), "ultima": agora.isoformat()})
+        chegada = datetime.combine(date.fromisoformat(str(info["checkin"])), _hora(14, 0), tzinfo=SAO_PAULO)
+        alvo = max(door.starts, chegada)
+        if n < CONTINGENCIA_FALHAS and agora < alvo - CONTINGENCIA_ANTES:
+            return None
+        gerar = getattr(gateway, "get_offline_passcode", None)
+        if gerar is None or not str(door.lock_id).isdigit():
+            return None
+        ini = door.starts.replace(minute=0, second=0, microsecond=0)
+        fim = door.ends.replace(minute=0, second=0, microsecond=0)
+        if fim <= ini:
+            fim = ini + timedelta(hours=1)
+        try:
+            got = gerar(int(door.lock_id), f"CONT {nome}"[:40], ini, fim)
+        except (RuntimeError, ValueError) as erro:
+            raise AdapterError(f"ttlock: contingencia recusada: {erro}") from None
+        codigo, pid = str(got.get("keyboardPwd") or ""), str(got.get("keyboardPwdId") or "")
+        if not codigo.isdigit():
+            raise AdapterError("ttlock: a contingencia veio sem codigo")
+        confere = getattr(gateway, "senha_na_fechadura", None)
+        if confere is not None and not confere(int(door.lock_id), codigo):
+            raise AdapterError("ttlock: a contingencia nao apareceu na fechadura -- tenta de novo")
+        vault.put(f"contingencia:{event_id}:{door.role}", {
+            "code": codigo, "pwd_id": pid, "lock": str(door.lock_id), "porta": door.role,
+            "inicio": ini.isoformat(), "fim": fim.isoformat(), "event_id": event_id, "avisado": ""})
+        return f"offline{pid or 'x'}"
+
+    def issue(command: OutboxCommand) -> None:
+        room = str(command.payload["room"])
+        if room_lock(room) is None:
+            raise AdapterError(f"ttlock: espaco {room} sem fechadura cadastrada")
+        skip = set(command.payload.get("skip_roles") or ())      # portas comuns primeiro (Dom 30/09)
+        # 03/10 (`reservation.liberar_acesso`): as portas tiradas na suspensao voltam com a MESMA senha -- a
+        # credencial "completa" (so com a SAIDA) e refeita nas portas que faltam; as que ficaram nao se repetem
+        refazer = bool(command.payload.get("refazer"))
+        for event_id in command.payload["event_ids"]:
+            cred = credentials.get(event_id) or {}
+            if cred.get("complete") == "1" and not refazer:
+                continue    # ja emitida por inteiro: reexecutar e inofensivo
+            info = event_lookup(event_id)
+            space = str(info.get("space") or room)
+            doors = door_plan(space, date.fromisoformat(info["checkin"]), date.fromisoformat(info["checkout"]),
+                              info.get("liberties") or (), room_lock=room_lock, armario_lock=armario_lock,
+                              common=common, extra_roles=info.get("extra_roles") or ())
+            doors = _ajustar_portas(doors, info)          # v1.0.143: portas tiradas / horario do anfitriao
+            doors = doors + _armarios_do_quarto_inteiro(doors, info)   # v1.0.176: quarto coletivo alugado inteiro
+            done = doors_done(cred)
+            try:
+                pin = str(vault.open(f"pin:{event_id}", actor="adapter:ttlock", purpose="retomar emissao")["pin"])
+            except (VaultMiss, KeyError):
+                try:
+                    digits = str(vault.open(f"digitos:{info['person_ref']}", actor="adapter:ttlock",
+                                            purpose="montar a senha do hospede")["digitos"])
+                except (VaultMiss, KeyError):
+                    raise AdapterError("ttlock: hospede ainda nao escolheu os 4 digitos da senha") from None
+                try:
+                    pin = guest_pin(space, digits, str(info.get("instance") or ""))
+                except ValueError:
+                    raise AdapterError("ttlock: os 4 digitos do hospede nao servem") from None
+            # A mesma senha nao pode estar viva para duas pessoas numa porta
+            # comum (so acontece no mesmo quarto/cama: o prefixo e o quarto).
+            use_ref = f"pinuso:{credential_fingerprint(pin)}"
+            marca = {"event_id": event_id, "until": max(d.ends for d in doors).isoformat()}
+            if use_ref in vault:
+                other = vault.open(use_ref, actor="adapter:ttlock", purpose="conferir senha repetida")
+                anterior = str(other.get("event_id") or "")
+                if anterior != event_id and str(other.get("until", "")) > doors[0].starts.isoformat():
+                    if not _mesma_pessoa(anterior, info):
+                        raise AdapterError("ttlock: senha igual a de outro hospede com estadia valendo -- "
+                                           "o hospede escolhe outros 4 numeros (4 digitos repetidos)")
+                    # v1.0.16 (Agata 04/10): a "outra" estadia era ela mesma (renovou / ja tinha a proxima no quarto)
+                    done, marca = _dividir_portas(anterior, event_id, doors, done, info, other)
+            pin_ref = vault.put(f"pin:{event_id}", {"pin": pin})
+            vault.put(use_ref, marca)
+            missing = [d.role for d in doors if d.lock_id is None]
+            # Dom 29/09: na fechadura a senha leva o nome "quarto + pessoa" (a senha e so de 4 digitos)
+            try:
+                quem = str(vault.open(str(info["person_ref"]), actor="adapter:ttlock", purpose="nome da senha")
+                           .get("name") or "").split(" ")[0]
+            except (VaultMiss, KeyError):
+                quem = ""
+            nome_senha = (f"{space} {quem}".strip() if quem else f"{space} {event_id[-8:]}")[:40]
+            sem_gateway: list[str] = []
+            for door in doors:
+                if door.lock_id is None or door.role in done or door.role in skip:
+                    continue
+                try:
+                    pwd = gateway.add_custom_passcode(door.lock_id, pin, nome_senha, door.starts, door.ends)
+                    done[door.role] = (str(door.lock_id), str(pwd))
+                except RuntimeError as erro:
+                    if _sem_gateway(erro):
+                        # v1.0.242 (Dom 14/11): fechadura sem gateway -- conta a falha; na 3a (ou a 30 min da hora de
+                        # entrar) gera a senha de contingencia SO desta porta; as outras portas seguem
+                        marca_cont = _contingencia(event_id, door, info, nome_senha)
+                        if marca_cont:
+                            done[door.role] = (str(door.lock_id), marca_cont)
+                        else:
+                            sem_gateway.append(door.role)
+                        continue
+                    if "-3007" in str(erro):
+                        # v1.0.189: a senha igual VENCIDA de quem ja saiu (fica ate a faxina) sai e a nova entra
+                        velha = _vencida_de_outro(door.lock_id, pin, datetime.now(timezone.utc))
+                        if velha is not None:
+                            try:
+                                gateway.delete_passcode(door.lock_id, velha)
+                                pwd = gateway.add_custom_passcode(door.lock_id, pin, nome_senha, door.starts, door.ends)
+                                done[door.role] = (str(door.lock_id), str(pwd))
+                                continue
+                            except RuntimeError as erro2:
+                                raise AdapterError(str(erro2)) from None
+                        # Dom 30/09: senha igual ja na fechadura e contingencia dele -- conta como feita, nunca apaga
+                        done[door.role] = (str(door.lock_id), "existente")
+                        continue
+                    raise AdapterError(str(erro)) from None
+                finally:
+                    credentials.set(event_id, row(done, pin, missing, complete=False))
+            if sem_gateway:
+                raise AdapterError(f"ttlock: fechadura sem gateway ({', '.join(sem_gateway)}) -- tenta de novo; na 3a "
+                                   "falha sai a senha de contingencia desta porta")
+            # v1.0.242 (Dom 14/11: "a gente nao manda senha antes de ter certeza que ela entrou na fechadura"): relê
+            # cada porta na TTLock antes de mandar a senha ao hospede; a que nao aparece faz tentar de novo
+            confere = getattr(gateway, "senha_na_fechadura", None)
+            if confere is not None:
+                faltou = [r for r, (l, p) in done.items() if (str(p).isdigit() or p == "existente")
+                          and str(l).isdigit() and not confere(int(l), pin)]
+                if faltou:
+                    raise AdapterError(f"ttlock: a senha nao apareceu na releitura de {', '.join(faltou)} -- tenta de novo")
+            credentials.set(event_id, row(done, pin, missing, complete=not skip))
+            if refazer and command.payload.get("estender"):
+                # 03/10 (revisao): liberar com acesso estendido -- a validade muda AQUI, depois de as senhas
+                # existirem nas portas refeitas (nunca um comando separado correndo na fila antes delas)
+                ext = command.payload["estender"]
+                mudar_periodo(event_id, str(ext["ate"]), list(ext.get("roles") or ()))
+            # A senha vai ao hospede por e-mail -- outro comando, outra
+            # idempotencia. O PIN em claro entra no cofre por referencia
+            # (`pin_ref`) e so o adaptador de e-mail o abre; a outbox nunca
+            # carrega a senha (regra 2, secao 3).
+            outbox.enqueue(OutboxCommand(
+                idempotency_key=f"senha:email:{event_id}", module="messaging", adapter="email",
+                command_type="send_template",
+                payload={"template": "senha_de_entrada", "person_ref": info["person_ref"], "pin_ref": pin_ref,
+                         "room": space, "checkin": info["checkin"], "checkout": info["checkout"]},
+            ))
+            # v1.0.201 (Dom 05/11): a mesma senha tambem na conversa do Airbnb (so o titular; texto no cofre)
+            from app.reservation import senha_chat
+            if senha_chat.deve_mandar(info.get("chat")) and outbox.get(senha_chat.chave(event_id)) is None:
+                vault.put(senha_chat.ref_texto(event_id), {"text": senha_chat.texto(
+                    quem, pin, space, str(info["checkin"]), str(info["checkout"]))})
+                outbox.enqueue(OutboxCommand(
+                    idempotency_key=senha_chat.chave(event_id), module="messaging", adapter="nobeds",
+                    command_type="send_message",
+                    payload={"referral_order_id": str(info["chat"]["referral_order_id"]),
+                             "referral": str(info["chat"].get("referral") or ""), "person_ref": info["person_ref"],
+                             "event_id": event_id, "text_ref": senha_chat.ref_texto(event_id)},
+                ))
+
+    def revoke(command: OutboxCommand) -> None:
+        roles = command.payload.get("roles")
+        for event_id in command.payload["event_ids"]:
+            cred = credentials.get(event_id)
+            if cred is None:
+                continue
+            done = doors_done(cred)
+            if not done and cred.get("keyboard_pwd_id"):            # credencial do formato antigo
+                done = {QUARTO: (cred["lock_id"], cred["keyboard_pwd_id"])}
+                done.update({f"EXTRA{i}": tuple(item.split(":", 1)) for i, item in
+                             enumerate(x for x in cred.get("extra", "").split(";") if x)})
+            targets = [r for r in done if roles is None or r in roles or r.split("+", 1)[0] in roles]
+            for role in targets:
+                lock, pwd = done[role]
+                if not str(pwd).isdigit():          # "existente": a senha ja estava la (contingencia) -- nao e nossa
+                    done.pop(role)
+                    continue
+                if event_id.startswith("equipe-") and _substituida(lock, pwd):
+                    done.pop(role)                  # v1.0.5: a senha velha ja saiu (trocada por outra chave)
+                    if done:
+                        credentials.set(event_id, {**cred, "doors": ";".join(f"{r}:{l}:{p}" for r, (l, p) in done.items())})
+                    continue
+                if not event_id.startswith("equipe-") and hasattr(gateway, "change_passcode_period") \
+                        and _passar_adiante(event_id, role, lock, pwd, str(cred.get("fingerprint") or "")):
+                    done.pop(role)                  # v1.0.16: a senha segue com a outra estadia da pessoa
+                    if done:
+                        credentials.set(event_id, {**cred, "doors": ";".join(f"{r}:{l}:{p}" for r, (l, p) in done.items())})
+                    continue
+                donos = _donos(lock, pwd) if event_id.startswith("equipe-") else {}
+                if event_id not in donos:
+                    donos.pop("_anterior", None)    # quem sai sem estar anotado E o dono de antes da v1.0.5
+                outros = _vivos(donos, sem=event_id)
+                u = _uniao(outros.values()) if outros else None
+                if outros and not (u is not None and u[1] <= datetime.now(timezone.utc)):
+                    # v1.0.5: a mesma senha da equipe ainda serve outra chave -- volta ao horario de quem ainda usa
+                    # (se o horario de quem fica ja acabou, a senha simplesmente sai)
+                    if u is not None:
+                        try:
+                            gateway.change_passcode_period(int(lock), pwd, u[0], u[1])
+                        except (RuntimeError, ValueError) as erro:
+                            raise AdapterError(str(erro)) from None
+                    vault.put(_ref_senha(lock, pwd), {"chaves": outros})
+                    done.pop(role)
+                    if done:
+                        credentials.set(event_id, {**cred, "doors": ";".join(f"{r}:{l}:{p}" for r, (l, p) in done.items())})
+                    continue
+                try:
+                    gateway.delete_passcode(int(lock), pwd)
+                except RuntimeError as erro:
+                    raise AdapterError(str(erro)) from None
+                if event_id.startswith("equipe-"):
+                    vault.purge(_ref_senha(lock, pwd))
+                done.pop(role)
+                if done:
+                    credentials.set(event_id, {**cred, "doors": ";".join(f"{r}:{l}:{p}" for r, (l, p) in done.items())})
+            if not done and guest_accounts is not None:
+                try:                                   # opcao B: a conta pseudonima sai junto com a senha
+                    guest_accounts.cleanup(event_id)
+                except Exception:  # noqa: BLE001
+                    pass
+            if not done:
+                credentials.clear(event_id)
+                # A senha em claro nao tem por que sobreviver a saida do hospede
+                # -- expurgo do cofre (Biblia 14.5). Idempotente.
+                vault.purge(f"pin:{event_id}")
+                if cred.get("fingerprint"):
+                    # v1.0.16: so a marca DESTA estadia -- a senha dividida com a proxima estadia da pessoa segue marcada
+                    uso_ref = f"pinuso:{cred['fingerprint']}"
+                    try:
+                        dono = str(vault.open(uso_ref, actor="adapter:ttlock", purpose="retirar marca").get("event_id") or "")
+                    except (VaultMiss, KeyError):
+                        dono = event_id
+                    if dono in ("", event_id):
+                        vault.purge(uso_ref)
+
+    _SP = ZoneInfo("America/Sao_Paulo")
+
+    def _ref_senha(lock: Any, pwd: Any) -> str:
+        return f"equipe-senha:{lock}:{pwd}"
+
+    def _donos(lock: Any, pwd: Any) -> dict:
+        """Quem usa esta senha da equipe nesta fechadura: {chave: [inicio, fim]} (v1.0.5; lista antiga = sem janela)."""
+        try:
+            ch = vault.open(_ref_senha(lock, pwd), actor="adapter:ttlock", purpose="senha da equipe dividida").get("chaves")
+        except (VaultMiss, KeyError):
+            return {}
+        if isinstance(ch, Mapping):
+===== house_locks
+124:def house_locks(state: AppState, env: Mapping[str, str] = os.environ):
+125-    """Fechaduras da casa (`reservation.doors.LockMap`): `PMS_TTLOCK_LOCKS=
+126-    "Q06:15638346,ARMARIO_Q06:...,ENTRADA:...,SAIDA:...,PANELAS:...,QUINTAL:..."`
+127-    no secrets.env; sem ele, no Ipiranga, os ids herdados da V3.4. Porta sem
+128-    id = fechadura ainda nao instalada (contemplada, nao trava as outras)."""
+129-    from app.reservation.doors import LockMap
+130-    raw = env.get("PMS_TTLOCK_LOCKS", "").strip()
+131-    if raw:
+132-        return LockMap.parse(raw)
+133-    if state.house == "house-ipiranga":
+134-        from app.inventory import ipiranga
+135-        return LockMap.of(ipiranga.LOCKS, ipiranga.COMMON_LOCKS, ipiranga.ARMARIOS)
+136-    return LockMap()
+137-
+138-
+139-def build_adapters(state: AppState, vault: Vault, *, locks_by_space: Mapping[str, int] | None = None,
+140-                   env: Mapping[str, str] = os.environ) -> dict[str, Adapter]:
+141-    """So monta o adaptador cujas credenciais existem. Nunca le segredo de
+142-    arquivo do repositorio: e o ambiente do servico (regra 2)."""
+143-    adapters: dict[str, Adapter] = {}
+144-    if "SMTP_HOST" in env:
+145-        adapters["email"] = make_email_adapter(vault)
+146-    if all(k in env for k in ("FNRH_USERNAME", "FNRH_PASSWORD", "FNRH_REQUESTER_CPF")):
+147-        # 01/10: fluxo canonico da V3.4 (reserva -> pessoa -> hospede no check-in), nunca /hospedagem/registrar
+148-        try:
+149-            delay = max(0.0, min(30.0, float(env.get("FNRH_INTER_COMMAND_DELAY_SECONDS") or 0)))
+150-        except ValueError:
+151-            delay = 0.0
+152-        adapters["fnrh"] = make_fnrh_adapter(vault, FnrhV2Client.from_environment(), stay_info=_stay_info(state),
+153-                                             inter_command_delay=delay,
+154-                                             # Dom 01/10: pessoa nova sem endereco na ficha vai com o endereco da casa
+fim
+[nuvem] fim 2026-11-21 21:44:18 codigo=0 duracao=0s

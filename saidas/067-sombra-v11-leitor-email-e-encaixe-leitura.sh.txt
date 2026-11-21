@@ -1,0 +1,18 @@
+[nuvem] inicio 2026-11-21 12:21:45 067-sombra-v11-leitor-email-e-encaixe-leitura.sh
+versao: 1.0.285
+caixa configurada: sim
+(1) e-mails do Airbnb em 150 dias: 721
+    classificacao: {'tipo igual': 721}
+    reservas novas, campo a campo: {'anuncio_id igual': 185, 'aviso igual': 185, 'checkin igual': 185, 'checkout igual': 185, 'codigo igual': 185, 'completa igual': 185, 'hospedes igual': 185, 'noites igual': 185}
+    V1.1 converter: {'vira reserva': 183, 'vai para o alarme': 2}
+(2) ENCAIXE;anuncio;hospedes;v10_unidade_anuncio;v10_escolheu;v11_codigo;v11_escolhe;v11_candidatas
+ENCAIXE;1293619007830537700;1;Q12B;Q12B;IPI-CAP-1-S-V2;Q13A;Q12B|Q12A|Q12C|Q12D|Q12E|Q12F|Q14A|Q14B|Q14C|Q14D|Q13A|Q13B|Q13C|Q13D|Q13E|Q13F
+ENCAIXE;1315433374850323180;1;Q12C;Q12C;IPI-CAP-1-S-V3;Q12C;Q12C|Q12A|Q12B|Q12D|Q12E|Q12F|Q14A|Q14B|Q14C|Q14D|Q13A|Q13B|Q13C|Q13D|Q13E|Q13F
+ENCAIXE;1803447447547629794;1;Q05;Q11;IPI-SOL-1-E-V1;Q11;Q05|Q11|Q04
+ENCAIXE;1803458500036229139;1;Q12C;Q12C;IPI-CAP-1-E-V3;SEM VAGA;Q12C|Q12A|Q12B|Q12D|Q12E|Q12F|Q14A|Q14B|Q14C|Q14D|Q13A|Q13B|Q13C|Q13D|Q13E|Q13F
+ENCAIXE;1803460809881519834;1;Q12E;Q12E;IPI-CAP-1-E-V5;SEM VAGA;Q12E|Q12A|Q12B|Q12C|Q12D|Q12F|Q14A|Q14B|Q14C|Q14D|Q13A|Q13B|Q13C|Q13D|Q13E|Q13F
+ENCAIXE;1803461973947947345;1;Q12F;Q12F;IPI-CAP-1-E-V6;SEM VAGA;Q12F|Q12A|Q12B|Q12C|Q12D|Q12E|Q14A|Q14B|Q14C|Q14D|Q13A|Q13B|Q13C|Q13D|Q13E|Q13F
+    encaixe: 2 iguais, 4 diferentes
+(3) candidatas por anuncio (1 hospede): 8 iguais, 44 mesma lista em outra ordem, 0 com alcance diferente
+fim
+[nuvem] fim 2026-11-21 12:26:00 codigo=0 duracao=255s

@@ -1,0 +1,97 @@
+[nuvem] inicio 2026-11-21 23:55:35 112-escrita-de-estado-leitura.sh
+75:class Database:
+162:    def upsert(self, table: str, keys: Sequence[str], row: Mapping[str, Any]) -> None:
+200:class SqlLedger:
+359:class StateRepo:
+365:    def items(self, entity: str) -> list[tuple[str, dict]]:
+372:    def all(self, entity: str) -> list[dict]:
+398:class SqlVault:
+413:    def put(self, ref: str, data: Mapping[str, Any]) -> str:
+489:class SqlOutbox:
+577:class SqlInbox:
+        # 01/10: a ponta e lida ANTES da corrente. Com o worker gravando a cada poucos segundos (a governanca abre o
+        # cofre e cada abertura vira Registro), ler as ~185 mil linhas e so depois a ponta dava "ponta != ultimo" a
+        # toa: o alerta de saude acusava DIARIO de forma intermitente desde 29/09 com a corrente inteira (esteiras
+        # 620-622: 0 quebras, 0 garfos). Agora: a corrente inteira tem de encadear e passar pela ponta lida; o que
+        # entrou depois da leitura da ponta tambem precisa encadear. Ponta que nao existe na corrente = alerta.
+        head = self.db.one("SELECT head_hash FROM record_heads WHERE house_key=%s", [self.house])
+        target = head["head_hash"] if head else GENESIS_HASH
+        previous = GENESIS_HASH
+        found = target == GENESIS_HASH
+        for record in self:
+            if record.previous_hash != previous or record.hash != record.recompute_hash():
+                return False
+            previous = record.hash
+            found = found or previous == target
+        return found
+
+    def __len__(self) -> int:
+        row = self.db.one("SELECT COUNT(*) AS n FROM records WHERE house_key=%s", [self.house])
+        return int(row["n"])
+
+    def __iter__(self) -> Iterator[Record]:
+        return (self._record(r) for r in self._rows())
+
+    def __getitem__(self, index: int) -> Record:
+        return list(self)[index]
+
+
+def ensure_chain_head(db: Database, house: str) -> None:
+    """Cria a linha da ponta da corrente (no genesis) se ainda nao existe."""
+    if db.one("SELECT 1 AS x FROM record_heads WHERE house_key=%s", [house]) is None:
+        db.execute("INSERT INTO record_heads (house_key,head_hash,updated_at) VALUES (%s,%s,%s)",
+                   [house, GENESIS_HASH, _now()])
+
+
+class StateRepo:
+    """Leitura da projecao: a ultima versao de cada entidade."""
+
+    def __init__(self, db: Database, house: str) -> None:
+        self.db, self.house = db, house
+
+    def items(self, entity: str) -> list[tuple[str, dict]]:
+        """(entity_id, payload) -- para o que se indexa pelo id do Registro."""
+        rows = self.db.query(
+            "SELECT entity_id, payload_json FROM entity_state WHERE house_key=%s AND entity=%s "
+            "AND payload_json IS NOT NULL ORDER BY entity_id", [self.house, entity])
+        return [(r["entity_id"], json.loads(r["payload_json"])) for r in rows]
+
+    def all(self, entity: str) -> list[dict]:
+        rows = self.db.query(
+            "SELECT payload_json FROM entity_state WHERE house_key=%s AND entity=%s AND payload_json IS NOT NULL "
+            "ORDER BY entity_id", [self.house, entity])
+        return [json.loads(r["payload_json"]) for r in rows]
+
+               "idade": _age_at_checkin(store, event, data.get("birth_date", ""))}
+        # 03/10: o bloqueio desfeito (erro de digitacao) da lugar a um novo -- a data de novo e de menor
+        ctx.change("minor_block", event.event_id, store.minor_blocks.get(event.event_id), row)
+        _after(ctx, store.minor_blocks, event.event_id, row)
+        raise_alert(ctx, store, "menor", where="Agora (reserva " + event.event_id + ")", ref=event.event_id)
+        return MINOR_REFUSAL
+    _pets_check(ctx, store, event, ficha)
+    if getattr(store, "guest_blocks", None):
+        from app.marketing.blocks import check_ficha
+        from app.reservation.remote import rid_of
+        check_ficha(ctx, store, person.person_id, rid_of(store, event), data.get("document_number", ""))
+    ref = f"ficha:{person.person_id}"
+    updated = dc_replace(person, document_ref=ref)
+    if updated != person:
+        ctx.change("person", person.person_id, person.as_payload(), updated.as_payload(), evidence=(ref,))
+        _after(ctx, store.persons, person.person_id, updated)
+    row = {"event_id": event.event_id, "person_id": person.person_id, "state": "complete", "ficha_ref": ref}
+    if store.prechecks.get(event.event_id) == row:
+        # 01/10: a ficha ja feita, regravada (o endereco que faltou para a FNRH): o Registro diz quando -- o dado
+        # continua so no cofre
+        ctx.change("ficha_atualizada", event.event_id, None,
+                   {"event_id": event.event_id, "person_id": person.person_id, "ficha_ref": ref,
+                    "at": ctx.at.isoformat()}, evidence=(ref,))
+    else:
+        ctx.change("precheckin", event.event_id, store.prechecks.get(event.event_id), row, evidence=(ref,))
+    ctx.transaction.after_commit(lambda: store.prechecks.__setitem__(event.event_id, row))
+    ctx.transaction.after_commit(lambda: store.vault.put(ref, data))
+    # v1.0.233 (Dom 12/11): o tipo de quarto preferido (capsulas) fica FORA da ficha, numa referencia so desta estadia
+    # -- so organiza os quartos, nunca vai para a FNRH e sai do cofre depois da saida (`capsulas.limpar_preferencias`)
+    pref = str(ficha.get("quarto_pref") or "").strip().upper()
+    if pref in ("M", "F", "L", "S"):
+fim
+[nuvem] fim 2026-11-21 23:55:35 codigo=0 duracao=0s

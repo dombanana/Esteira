@@ -1,0 +1,812 @@
+[nuvem] inicio 2026-11-21 21:42:05 089-acesso-v10-doors-access-routes-leitura.sh
+===== reservation/doors.py
+"""Portas do hospede, horarios e a senha (regra do Dom, 23/09/2026).
+
+Quem tem direito a qual porta:
+  * todo hospede (Hostel e Smart): ENTRADA e SAIDA da casa, o QUARTO (a cama
+    acha a porta do quarto subindo a arvore) e o ARMARIO da cozinha
+    referente ao quarto (ou a cama);
+  * Smart, alem disso: a porta da COZINHA e o armario de PANELAS (liberdade
+    `kitchen`) e o QUINTAL (liberdade `yard`).
+  (Dom, 29/09: rota canonica -- toda reserva passa pelas fechaduras do quarto/cama
+  e do armario/gaveta dela; Smart tambem pela fechadura da COZINHA.)
+Fechadura ainda nao instalada e contemplada: a porta existe no plano, fica
+marcada "nao instalada" e nao trava a emissao das outras.
+
+Quando cada porta vale (hora de Sao Paulo):
+  * ENTRADA  06h do check-in  -> 18h do checkout
+  * SAIDA    06h do check-in  -> 22h do checkout
+  * QUARTO   14h do check-in  -> 11h do checkout
+  * ARMARIO  06h do check-in  -> 18h do checkout (v1.0.159, Dom 25/10: "a senha do proximo com o anterior, os dois
+             redundantes ... no mesmo jeito que a senha fica redundante no portao da entrada e da saida" -- quem
+             chega e quem sai usam o armario da cozinha juntos das 6h as 18h do dia da troca; antes: 14h -> 14h)
+  * COZINHA, PANELAS e QUINTAL: areas comuns -> o horario da ENTRADA (06h -> 18h).
+    (O Dom nao fixou estes dois; ficam iguais a entrada ate ele decidir.)
+A fechadura ja para sozinha no fim da janela; 15 minutos depois o sistema
+tira a senha da fechadura (rotina "pratica" do checkout: quarto as 11h15, armario e entrada as 18h15).
+
+A senha (Dom, 29/09 -- substitui "2 digitos do quarto + 4"): so os 4 digitos, iguais em todas as portas e
+em qualquer quarto. O hospede escolhe no cadastro entre: os 4 primeiros do CPF, o dia e o mes do nascimento
+(DDMM), os 4 ultimos do telefone ou 4 numeros que ele mesmo escolher. Nunca sequencia (1234, 9876...) nem
+repeticao (1111), nunca os 4 de alguem da equipe e nunca os 4 de outro hospede com estadia valendo (a propria
+TTLock recusa senha repetida na mesma fechadura): repetiu, ele escolhe outra opcao (ou fica com uma sugestao
+aleatoria valida). Na fechadura, a senha leva o nome "quarto + pessoa". Senhas de 6 digitos ja emitidas
+continuam valendo ate o checkout.
+"""
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+from datetime import date, datetime, time, timedelta, timezone
+from typing import Any, Callable, Iterable, Mapping
+from zoneinfo import ZoneInfo
+
+SAO_PAULO = ZoneInfo("America/Sao_Paulo")
+
+QUARTO, ENTRADA, SAIDA, ARMARIO, PANELAS, QUINTAL = "QUARTO", "ENTRADA", "SAIDA", "ARMARIO", "PANELAS", "QUINTAL"
+COZINHA = "COZINHA"      # a porta da cozinha (Dom, 29/09: "cozinha e cozinha" -- nao e o armario de panelas)
+#: ordem de emissao: o quarto primeiro (e o que o hospede mais precisa)
+ROLES = (QUARTO, ENTRADA, SAIDA, ARMARIO, COZINHA, PANELAS, QUINTAL)
+#: papel -> ((dia, hora, minuto) de inicio, (dia, hora, minuto) de fim); dia "in" = check-in, "out" = checkout
+WINDOWS: dict[str, tuple[tuple[str, int, int], tuple[str, int, int]]] = {
+    ENTRADA: (("in", 6, 0), ("out", 18, 0)),
+    SAIDA: (("in", 6, 0), ("out", 22, 0)),
+    QUARTO: (("in", 14, 0), ("out", 11, 0)),
+    ARMARIO: (("in", 6, 0), ("out", 18, 0)),         # v1.0.159 (Dom 25/10): como a entrada -- quem chega e quem sai juntos
+    COZINHA: (("in", 6, 0), ("out", 18, 0)),
+    PANELAS: (("in", 6, 0), ("out", 18, 0)),
+    QUINTAL: (("in", 6, 0), ("out", 18, 0)),
+}
+#: a senha sai da fechadura 15 min depois de parar de valer (11h15 no quarto)
+REVOKE_AFTER = timedelta(minutes=15)
+#: nomes antigos (V3.4 / secrets.env de 23/09) -> papel
+#: (KITCHEN da V3.4 = o armario de PANELAS; COZINHA e a porta da cozinha, papel proprio desde 29/09)
+ALIASES = {"ENTRY": ENTRADA, "EXIT": SAIDA, "KITCHEN": PANELAS, "YARD": QUINTAL}
+COMMON_ROLES = (ENTRADA, SAIDA, COZINHA, PANELAS, QUINTAL)
+
+
+def roles_for(liberties: Iterable[str]) -> tuple[str, ...]:
+    libs = set(liberties or ())
+    out = [QUARTO, ENTRADA, SAIDA, ARMARIO]
+    if "kitchen" in libs:
+        out += [COZINHA, PANELAS]
+    if "yard" in libs:
+        out.append(QUINTAL)
+    return tuple(out)
+
+
+def base_role(role: str) -> str:
+    """v1.0.176: "ARMARIO+Q12B" (armario de outra cama do quarto alugado inteiro) -> "ARMARIO"."""
+    return str(role).split("+", 1)[0]
+
+
+def window(role: str, checkin: date, checkout: date, tz: ZoneInfo = SAO_PAULO) -> tuple[datetime, datetime]:
+    (d0, h0, m0), (d1, h1, m1) = WINDOWS[base_role(role)]
+    start = datetime.combine(checkin if d0 == "in" else checkout, time(h0, m0), tzinfo=tz)
+    end = datetime.combine(checkin if d1 == "in" else checkout, time(h1, m1), tzinfo=tz)
+    if end <= start:
+        raise ValueError("reservation_window_invalid")
+    return start.astimezone(timezone.utc), end.astimezone(timezone.utc)
+
+
+def programada(role: str, checkin: date, checkout: date, tz: ZoneInfo = SAO_PAULO,
+               env: Mapping[str, str] | None = None) -> tuple[datetime, datetime]:
+    """A janela GRAVADA na fechadura. Igual a `window`, menos o inicio do QUARTO:
+    `PMS_QUARTO_DESDE` ("11:30", Dom 30/09 -- contingencia) programa a senha antes; para o hospede o quarto
+    continua sendo "a partir das 14h" (textos, botoes, luz). v1.0.159: o ARMARIO ja vale das 6h as 18h (como a entrada)."""
+    import os
+    starts, ends = window(role, checkin, checkout, tz)
+    if base_role(role) != QUARTO:
+        return starts, ends
+    raw = str((os.environ if env is None else env).get("PMS_QUARTO_DESDE") or "").strip()
+    m = re.fullmatch(r"(\d{1,2}):(\d{2})", raw)
+    if not m or not (6 <= int(m.group(1)) < 14 and int(m.group(2)) < 60):
+        return starts, ends
+    cedo = datetime.combine(checkin, time(int(m.group(1)), int(m.group(2))), tzinfo=tz).astimezone(timezone.utc)
+    return min(starts, cedo), ends
+
+
+def revoke_groups() -> dict[tuple[int, int], tuple[str, ...]]:
+    """Portas que param juntas (mesmo horario de fim) -> um comando de retirada."""
+    groups: dict[tuple[int, int], list[str]] = {}
+    for role in ROLES:
+        _, (_, h, m) = WINDOWS[role]
+        groups.setdefault((h, m), []).append(role)
+    return {k: tuple(v) for k, v in sorted(groups.items())}
+
+
+@dataclass
+class LockMap:
+    """Fechaduras da casa por papel. Quarto e armario por espaco (a cama sobe
+    a arvore ate achar); as comuns, uma por casa."""
+
+    rooms: dict[str, int] = field(default_factory=dict)
+    armarios: dict[str, int] = field(default_factory=dict)
+    common: dict[str, int] = field(default_factory=dict)
+
+    @classmethod
+    def parse(cls, raw: str) -> "LockMap":
+        """`PMS_TTLOCK_LOCKS="Q06:15638346,ARMARIO_Q06:123,ENTRADA:16190236,SAIDA:...,PANELAS:...,QUINTAL:..."`."""
+        out = cls()
+        for item in (raw or "").split(","):
+            if ":" not in item:
+                continue
+            key, value = (p.strip() for p in item.split(":", 1))
+            if not key or not value.isdigit():
+                continue
+            key = key.upper()
+            if key.startswith("ARMARIO_"):
+                out.armarios[key[len("ARMARIO_"):]] = int(value)
+            elif ALIASES.get(key, key) in COMMON_ROLES:
+                out.common[ALIASES.get(key, key)] = int(value)
+            else:
+                out.rooms[key] = int(value)
+        return out
+
+    @classmethod
+    def of(cls, rooms: Mapping[str, int] | None = None, common: Mapping[str, int] | None = None,
+           armarios: Mapping[str, int] | None = None) -> "LockMap":
+        return cls(dict(rooms or {}), dict(armarios or {}),
+                   {ALIASES.get(k.upper(), k.upper()): int(v) for k, v in (common or {}).items()})
+
+
+@dataclass(frozen=True, slots=True)
+class Door:
+    role: str
+    lock_id: int | None          # None = fechadura ainda nao instalada
+    starts: datetime
+    ends: datetime
+
+
+def door_plan(space: str, checkin: date, checkout: date, liberties: Iterable[str], *,
+              room_lock: Callable[[str], int | None], armario_lock: Callable[[str], int | None],
+              common: Mapping[str, int], tz: ZoneInfo = SAO_PAULO, extra_roles: Iterable[str] = ()) -> list[Door]:
+    doors = []
+    roles = list(roles_for(liberties))
+    # porta comprada como adicional (ex.: cozinha completa do Hostel -> PANELAS), no horario da area comum
+    roles += [r for r in extra_roles if r in COMMON_ROLES and r not in roles]
+    for role in roles:
+        if role == QUARTO:
+            lock = room_lock(space)
+        elif role == ARMARIO:
+            lock = armario_lock(space)
+        else:
+            lock = common.get(role)
+        starts, ends = programada(role, checkin, checkout, tz)
+        doors.append(Door(role, lock, starts, ends))
+    return doors
+
+
+# -- a senha --------------------------------------------------------------------
+
+def room_prefix(space: str) -> str:
+    """"06" -> "06"; "Q06" -> "06"; "Q06-B" ou "Q06B" (cama B do 06) -> "62" (regra da V3.4)."""
+    match = re.fullmatch(r"Q?(\d{2})(?:-?([A-F]))?", space.strip().upper())
+    if not match:
+        raise ValueError("space_code_invalid")
+    room, bed = int(match.group(1)), match.group(2)
+    return f"{room % 10}{ord(bed) - 64}" if bed else f"{room:02d}"
+
+
+def digits_problem(value: str) -> str | None:
+    """None se os 4 digitos servem; senao, a frase para o hospede."""
+    d = str(value or "").strip()
+    if not re.fullmatch(r"\d{4}", d):
+        return "A senha pessoal tem exatamente 4 numeros."
+    if len(set(d)) == 1:
+        return "Escolha 4 numeros que nao sejam todos iguais (como 1111)."
+    steps = {int(d[i + 1]) - int(d[i]) for i in range(3)}
+    if steps in ({1}, {-1}):
+        return "Escolha 4 numeros que nao sejam uma sequencia (como 1234 ou 4321)."
+    return None
+
+
+def suggestions(phone: str | None, document: str | None) -> list[str]:
+    """Os 4 ultimos do telefone e os 4 primeiros do documento -- so os que servem."""
+    out = []
+    p = re.sub(r"\D", "", str(phone or ""))
+    n = re.sub(r"\D", "", str(document or ""))
+    for cand in ((p[-4:] if len(p) >= 4 else ""), (n[:4] if len(n) >= 4 else "")):
+        if cand and digits_problem(cand) is None and cand not in out:
+            out.append(cand)
+    return out
+
+
+#: Quem nao dorme num quarto (regra do Dom, 24/09): equipe comeca com 00,
+#: coworking com 88, House Pass com 99 -- e os mesmos 4 digitos pessoais no fim.
+STAFF_PREFIX, COWORKING_PREFIX, HOUSE_PASS_PREFIX = "00", "88", "99"
+COWORKING_KEYS = frozenset({"coworking", "cowork", "cw"})
+HOUSE_PASS_KEYS = frozenset({"house_pass", "house-pass", "housepass", "hp"})
+
+
+def access_prefix(space: str, instance: str = "") -> str:
+    """Os 2 primeiros digitos da senha: o quarto/cama, ou 88 (coworking) / 99 (House Pass).
+    A equipe (00) nao tem Evento de estadia: a senha dela sai da governanca."""
+    for key in (str(instance or ""), str(space or "")):
+        k = key.strip().lower()
+        if k in COWORKING_KEYS:
+            return COWORKING_PREFIX
+        if k in HOUSE_PASS_KEYS:
+            return HOUSE_PASS_PREFIX
+    return room_prefix(space)
+
+
+#: Senha da equipe na fechadura = so os 4 numeros (Dom, 26/09: "nao precisa digitar o 00 em lugar nenhum").
+#: O 00 continua como marca interna (registro da entrada, Wi-Fi) para saber que foi alguem da equipe.
+def staff_lock_code(digits: str) -> str:
+    return str(digits)
+
+
+def all_prefixes(spaces: Any = ()) -> set[str]:
+    """Todos os prefixos de senha de hospede da casa (quartos, camas, coworking, House Pass)."""
+    out = {COWORKING_PREFIX, HOUSE_PASS_PREFIX}
+    for s in spaces:
+        try:
+            out.add(room_prefix(str(s)))
+        except ValueError:
+            continue
+    return out
+
+
+def contains_staff_code(guest_digits: str, staff_codes: Any, prefixes: Any) -> bool:
+    """A fechadura aceita a senha certa no meio de outros numeros. Se a senha de um hospede (prefixo + 4
+    digitos) tiver, em sequencia, os 4 numeros de alguem da equipe, ela abriria as portas da equipe."""
+    codes = [str(c) for c in staff_codes if c]
+    return any(c in (p + str(guest_digits)) for p in prefixes for c in codes)
+
+
+def guest_pin(space: str, digits: str, instance: str = "") -> str:
+    """A senha do hospede na fechadura: so os 4 digitos (Dom, 29/09). `space`/`instance` ficam na assinatura
+    para quem ainda chama como antes; o quarto vai no NOME da senha na fechadura, nao nos numeros."""
+    problem = digits_problem(digits)
+    if problem:
+        raise ValueError(problem)
+    return str(digits) if senha_de_4() else access_prefix(space, instance) + digits
+
+
+def senha_de_4(env: Any = None) -> bool:
+    """`PMS_SENHA_4=on`: a senha do hospede e so os 4 digitos (Dom, 29/09 -- a rota da casa). Desligado, o formato
+    antigo (2 do quarto + 4) continua; as duas convivem: senha ja emitida vale ate o checkout."""
+    import os
+    return str((env or os.environ).get("PMS_SENHA_4", "off")).strip().lower() == "on"
+
+
+#: as opcoes que o hospede ve no cadastro (Dom, 29/09), nesta ordem
+PIN_KINDS = ("cpf", "nascimento", "telefone", "propria")
+
+
+def pin_options(*, cpf: str | None = None, birth_date: str | None = None, phone: str | None = None) -> list[dict]:
+    """As opcoes de senha que servem para esta pessoa: 4 primeiros do CPF, dia e mes do nascimento (DDMM), 4
+    ultimos do telefone. So entram as que passam na regra (sem sequencia, sem repeticao)."""
+    out: list[dict] = []
+    c = re.sub(r"\D", "", str(cpf or ""))
+    if len(c) == 11:
+        out.append({"kind": "cpf", "digits": c[:4]})
+    m = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})", str(birth_date or "")[:10])
+    if m:
+        out.append({"kind": "nascimento", "digits": m.group(3) + m.group(2)})
+    p = re.sub(r"\D", "", str(phone or ""))
+    if len(p) >= 8:
+        out.append({"kind": "telefone", "digits": p[-4:]})
+    return [o for o in out if digits_problem(o["digits"]) is None]
+
+
+def so_1a5(space: str, env: Any = None) -> bool:
+    """Dom 30/09: nos quartos 12, 13 e 14 a senha de 4 digitos usa so 1, 2, 3, 4 e 5 -- as teclas do locker do piso
+    superior (MicroIQ). `PMS_SENHA_1A5_QUARTOS=Q12,Q13,Q14` (prefixos do espaco; cada casa escolhe)."""
+    import os
+    env = os.environ if env is None else env
+    prefixos = [p.strip().upper() for p in str(env.get("PMS_SENHA_1A5_QUARTOS") or "").split(",") if p.strip()]
+    return any(str(space or "").upper().startswith(p) for p in prefixos)
+
+
+def random_digits(taken: Any = (), rng: Any = None, alfabeto: str = "0123456789") -> str:
+    """4 numeros aleatorios validos, fora dos ja usados (sugestao quando a opcao escolhida repete)."""
+    import secrets as _s
+    if alfabeto != "0123456789":
+        pick = (lambda: "".join(rng.choice(alfabeto) for _ in range(4))) if rng is not None else \
+               (lambda: "".join(_s.choice(alfabeto) for _ in range(4)))
+    else:
+        pick = (lambda: f"{rng.randrange(10000):04d}") if rng is not None else (lambda: f"{_s.randbelow(10000):04d}")
+    used = set(taken or ())
+    for _ in range(500):
+        d = pick()
+        if digits_problem(d) is None and d not in used:
+            return d
+    raise ValueError("sem 4 digitos livres")
+===== reservation/access.py
+"""Plano de acesso: quais quartos ja podem receber a senha, e por que os
+outros ainda nao (V1.0, item 3).
+
+Uma senha sai para o QUARTO INTEIRO (D29, spec secao 7), so quando:
+  * todos os hospedes que entram naquele quarto naquele dia tem a FNRH
+    enviada e aceita, quando a instancia exige FNRH (D16);
+  * cada hospede ja escolheu os 4 digitos da senha (cadastro);
+  * a estadia esta confirmada e comeca hoje ou amanha (senha nao fica
+    esperando dias no cofre -- a janela de cada fechadura ja limita o uso).
+A limpeza NAO trava (Dom, 23/09): o quarto libera as 14h por obrigacao da
+casa; a fechadura do quarto so aceita a senha a partir das 14h.
+  * a senha deste grupo ainda nao foi pedida;
+  * a reserva direta (site) esta paga -- sem pagamento conferido nao ha
+    senha, como numa OTA (pedido do Dom, 23/09).
+
+Funcao pura: le a memoria da casa e a outbox, nao grava nada. Quem emite e
+`reservation.issue_credential`; o worker so chama a intencao para os
+quartos prontos quando `PMS_AUTO_CREDENTIALS=on` (decisao do Dom).
+"""
+from __future__ import annotations
+
+import hashlib
+from dataclasses import dataclass, field
+from datetime import date, datetime, timedelta
+from typing import Any
+from zoneinfo import ZoneInfo
+
+from app.core.event import EventState
+from app.core.outbox import CommandStatus
+from app.reservation.intents import OPERATIONAL_INSTANCES
+
+
+@dataclass(frozen=True, slots=True)
+class RoomPlan:
+    room: str
+    checkin: date
+    event_ids: tuple[str, ...]
+    ready: bool
+    reasons: tuple[str, ...] = field(default=())
+
+
+def issue_key(room: str, event_ids) -> str:
+    """A mesma chave que `reservation.issue_credential` usa na outbox."""
+    ids = sorted(event_ids)
+    return "ttlock:issue:" + room + ":" + hashlib.sha256(",".join(ids).encode()).hexdigest()[:16]
+
+
+def _fnrh_required(store: Any, instance_id: str) -> bool | None:
+    instance = store.inventory.instance(instance_id)
+    return None if instance is None else instance.fnrh_required
+
+
+def _unpaid(store: Any, event: Any) -> bool:
+    from app.finance.direct import payment_pending, reservation_for_event
+    return payment_pending(store, reservation_for_event(store, event))
+
+
+def _direta_sem_pagar(store: Any, event: Any) -> bool:
+    from app.finance.direct import is_direct, reservation_for_event
+    r = reservation_for_event(store, event)
+    return r is not None and is_direct(r, store)
+
+
+def janela_dias(env: Any = None) -> int:
+    """Quantos dias antes da chegada a senha ja vai as fechaduras (`PMS_SENHA_DIAS`, padrao 1 = hoje ou amanha).
+    Dom 30/09: "a senha deve ser enviada para as fechaduras" logo depois do cadastro -- a janela de cada
+    fechadura continua limitando o uso ao periodo da estadia."""
+    import os
+    env = os.environ if env is None else env
+    try:
+        return max(1, min(60, int(str(env.get("PMS_SENHA_DIAS") or 1))))
+    except ValueError:
+        return 1
+
+
+PORTAS_DO_QUARTO = ("QUARTO", "ARMARIO")
+
+
+def quarto_espera_todos(env: Any = None) -> bool:
+    """Dom 30/09: o quarto so saia com a ficha de TODOS da reserva. v1.0.67 (Dom 08/10, Maycon no Q06: reservou para 2,
+    veio sozinho e ficou sem o quarto): o quarto sai com a ficha de QUEM CHEGOU; a vaga de quem falta fica fechada (no
+    compartilhado, a cama e o armario dele nao abrem) e o titular e cobrado ate fazer a ficha do outro ou dizer "nao
+    veio" (`reservation/nao_veio.py`). `PMS_QUARTO_ESPERA_TODOS=on` volta ao jeito antigo."""
+    import os
+    env = os.environ if env is None else env
+    return str(env.get("PMS_QUARTO_ESPERA_TODOS") or "").strip().lower() in ("on", "1", "sim", "true")
+
+
+def comum_key(event_id: str) -> str:
+    return "ttlock:comum:" + event_id
+
+
+def _rid_of_key(key: str) -> str:
+    return key.rsplit(":P", 1)[0] if ":P" in key else key
+
+
+def acompanhantes_pendentes(store: Any, rid: str) -> list[int]:
+    """Os numeros (2, 3...) dos acompanhantes pagos que ainda nao fizeram a ficha -- menos os que o titular (ou o
+    anfitriao) marcou como "nao veio" (v1.0.67)."""
+    from app.reservation.companions import slot_key
+    from app.reservation.guest import ficha_done
+    reserva = next((r for r in store.reservations.values() if r.reservation_id == rid), None)
+    total = int(getattr(reserva, "paid_occupancy", 1) or 1) if reserva is not None else 1
+    out = []
+    for n in range(2, min(total, 9) + 1):
+        e = store.events.get(slot_key(rid, n))
+        if e is None or not ficha_done(store, e):
+            from app.reservation.continuacao import vaga_herdada
+            from app.reservation.nao_veio import nao_veio
+            if not vaga_herdada(store, rid, n) and not nao_veio(store, rid, n):   # 03/10: quem segue nao refaz
+                out.append(n)
+    return out
+
+
+def _fnrh_aceita(outbox: Any, event_id: str) -> bool:
+    """v1.0.205: a FNRH desta estadia foi aceita pelo governo (o envio saiu sem erro)."""
+    try:
+        cmd = outbox.get(f"fnrh:submit:{event_id}") if outbox is not None else None
+    except Exception:  # noqa: BLE001
+        return False
+    return cmd is not None and cmd.status is CommandStatus.SENT
+
+
+def _fnrh_segura_o_quarto() -> bool:
+    """v1.0.16 (Dom 04/10, Agata: "o processo da senha nao passou pela FNRH... isso e muito serio"): a FNRH continua
+    saindo sozinha (e o anfitriao e avisado se falhar), mas NAO segura mais a senha do quarto -- um problema nosso ou do
+    governo nunca deixa o hospede pago e com ficha feita sem porta. `PMS_SENHA_ESPERA_FNRH=on` volta ao jeito antigo."""
+    import os
+    return str(os.environ.get("PMS_SENHA_ESPERA_FNRH") or "").strip().lower() in ("on", "1", "sim", "true")
+
+
+def _motivos_da_pessoa(store: Any, outbox: Any, e: Any, *, portas_da_casa: bool = False,
+                       now: datetime | None = None) -> list[str]:
+    """O que falta para a senha desta pessoa. `portas_da_casa` (Dom 03/10, depois do Noah: "minimamente tem que
+    funcionar na fechadura da entrada e da saida... nao posso deixar o hospede preso na rua"): para as portas da casa
+    (entrada, saida, cozinha...) bastam a ficha e os 4 digitos -- pagamento em aberto e FNRH que nao saiu (problema
+    nosso ou do governo) seguram so o QUARTO e o armario, nunca a entrada."""
+    reasons: list[str] = []
+    from app.reservation.guest import ficha_done
+    if portas_da_casa:
+        # Dom 07/10: o hospede RECORRENTE (FNRH ja enviada aqui, ficha e 4 digitos guardados) entra pelo portao com a
+        # senha de sempre no dia da chegada; ao digitar, a ficha guardada vira a desta estadia (reservation/recorrente.py)
+        from app.reservation.recorrente import apto
+        if not ficha_done(store, e) and not (now is not None and apto(store, outbox, e, now) == ""):
+            reasons.append(f"{e.event_id}: ficha ainda nao feita")
+    elif not _fnrh_segura_o_quarto():
+        # v1.0.16 (revisao): sem a trava da FNRH, a ficha DESTA estadia continua obrigatoria para o quarto -- os 4
+        # digitos sao para sempre, a ficha e por estadia (a FNRH enviada ja prova a ficha)
+        enviada = outbox.get(f"fnrh:submit:{e.event_id}")
+        if not ficha_done(store, e) and not (enviada is not None and enviada.status is CommandStatus.SENT):
+            reasons.append(f"{e.event_id}: ficha ainda nao feita")
+    if _unpaid(store, e) and (not portas_da_casa or _direta_sem_pagar(store, e)):
+        # a reserva do SITE sem pagamento ainda nao e reserva (nem a entrada abre); o saldo da Hostelworld (deposito
+        # ja pago la) segura so o quarto
+        reasons.append(f"{e.event_id}: pagamento da reserva direta pendente")
+    required = _fnrh_required(store, e.instance)
+    if required is None:
+        reasons.append(f"{e.event_id}: instancia {e.instance} nao definida -- nao sei se exige FNRH")
+    elif required and not portas_da_casa and _fnrh_segura_o_quarto():
+        cmd = outbox.get(f"fnrh:submit:{e.event_id}")
+        if cmd is None:
+            reasons.append(f"{e.event_id}: FNRH ainda nao enviada")
+        elif cmd.status is not CommandStatus.SENT:
+            from app.reservation.fnrh_fila import MOTIVO_ENDERECO, falta_endereco
+            if cmd.status is CommandStatus.EXHAUSTED and falta_endereco(cmd.last_error):
+                reasons.append(f"{e.event_id}: {MOTIVO_ENDERECO}")      # 01/10: a FNRH pede pais de residencia/CEP
+            else:
+                reasons.append(f"{e.event_id}: FNRH {cmd.status.value}")
+    from app.reservation.intents import bloqueio_de_menor
+    mb = bloqueio_de_menor(store, e.event_id)            # 03/10: o desfeito (erro de digitacao) nao conta
+    if mb and not mb.get("senha"):
+        # Dom 29/09: menor de 18 -- senha da porta so com o ok do anfitriao (reservation.liberar_menor senha)
+        reasons.append(f"{e.event_id}: menor de 18 -- senha so com o ok do anfitriao")
+    if not portas_da_casa:
+        # v1.0.156 (Dom 24/10): com PMS_SENHA_ESPERA_DOC=on o QUARTO espera o documento conferido com a ficha (a porta
+        # da rua nunca: ninguem preso do lado de fora)
+        from app.reservation.confere_documento import segura_o_quarto
+        motivo_doc = segura_o_quarto(store, e.event_id)
+        if motivo_doc and not _fnrh_aceita(outbox, e.event_id):
+            # v1.0.205 (Dom 06/11, Adielison: "tentou cadastrar o CPF na FNRH? Deu erro? Se nao der erro la, libere
+            # sempre"): a FNRH aceita pelo governo vale mais que a leitura da foto pela IA -- o documento so segura o
+            # quarto enquanto a FNRH nao foi aceita (o alerta ao anfitriao continua)
+            reasons.append(f"{e.event_id}: {motivo_doc}")
+    if f"digitos:{e.who.person}" not in store.vault:
+        reasons.append(f"{e.event_id}: hospede ainda nao escolheu os 4 digitos da senha")
+    return reasons
+
+
+def common_plan(store: Any, outbox: Any, *, now: datetime) -> list[tuple[str, str]]:
+    """Dom 30/09: a senha vai as portas da casa (entrada, saida, cozinha...) assim que a PESSOA termina o cadastro,
+    sem esperar os acompanhantes. (quarto, evento) de quem ja pode receber as portas comuns."""
+    tz = ZoneInfo(store.timezone)
+    today = now.astimezone(tz).date()
+    candidatos = []
+    from app.reservation.acesso_hospede import fim_do_acesso
+    emitidas = None
+    for key, e in list(store.events.items()):
+        if e.instance in OPERATIONAL_INSTANCES or e.state not in (EventState.CONFIRMED, EventState.IN_PROGRESS):
+            continue
+        # Dom 03/10: tambem quem JA esta na casa (entrou antes de hoje) e ficou sem a entrada -- nunca preso na rua
+        if e.when.start.astimezone(tz).date() > today + timedelta(days=janela_dias()) or now >= fim_do_acesso(store, e):
+            continue
+        if outbox.get(comum_key(e.event_id)) is not None or outbox.get(f"senha:email:{e.event_id}") is not None:
+            continue
+        if e.event_id in (getattr(store, "access_suspensions", {}) or {}):
+            continue                     # acesso suspenso pelo anfitriao
+        if _motivos_da_pessoa(store, outbox, e, portas_da_casa=True, now=now):
+            continue
+        if emitidas is None:             # quem ja tem pedido de senha (quarto ou casa) nunca ganha outro
+            emitidas = {eid for c in outbox if c.adapter == "ttlock" and c.command_type == "issue_credential"
+                        and c.status not in (CommandStatus.EXHAUSTED, CommandStatus.CANCELLED)
+                        for eid in (c.payload.get("event_ids") or ())}
+        if e.event_id in emitidas:
+            continue
+        from app.reservation.continuacao import coberta_pela_anterior
+        if coberta_pela_anterior(store, outbox, e):
+            continue                     # Dom 03/10: quem segue na casa fica com a senha que ja tem
+        candidatos.append(e)
+    if not candidatos:
+        return []
+    ja_no_quarto: set[str] = set()                # quem ja recebeu o quarto (com todas as portas) nao repete
+    for plan in access_plan(store, outbox, now=now):
+        if outbox.get(issue_key(plan.room, plan.event_ids)) is not None:
+            ja_no_quarto.update(plan.event_ids)
+    return [(e.where[0], e.event_id) for e in candidatos if e.event_id not in ja_no_quarto]
+
+
+def access_plan(store: Any, outbox: Any, *, now: datetime) -> list[RoomPlan]:
+    tz = ZoneInfo(store.timezone)
+    today = now.astimezone(tz).date()
+    groups: dict[tuple[str, date], list] = {}
+    keys: dict[str, str] = {}
+    for key, event in list(store.events.items()):
+        if event.instance in OPERATIONAL_INSTANCES or event.state is not EventState.CONFIRMED:
+            continue
+        checkin = event.when.start.astimezone(tz).date()
+        if not today <= checkin <= today + timedelta(days=janela_dias()):
+            continue
+        from app.reservation.continuacao import coberta_pela_anterior
+        if coberta_pela_anterior(store, outbox, event):
+            continue                     # Dom 03/10: a estadia emendada usa a senha da anterior, esticada
+        groups.setdefault((event.where[0], checkin), []).append(event)
+        keys[event.event_id] = key
+
+    plans: list[RoomPlan] = []
+    quartos_emitidos = None
+    for (room, checkin), events in sorted(groups.items()):
+        ids = tuple(sorted(e.event_id for e in events))
+        if not quarto_espera_todos() and len(events) > 1 and outbox.get(issue_key(room, ids)) is None:
+            # v1.0.67: quem ja recebeu o quarto (o titular, antes do acompanhante chegar) nao entra de novo no pedido --
+            # o acompanhante que fez a ficha depois recebe so a senha DELE
+            if quartos_emitidos is None:
+                quartos_emitidos = {eid for c in outbox if c.adapter == "ttlock" and c.command_type == "issue_credential"
+                                    and c.idempotency_key.startswith("ttlock:issue:")
+                                    and c.status not in (CommandStatus.EXHAUSTED, CommandStatus.CANCELLED)
+                                    for eid in (c.payload.get("event_ids") or ())}
+            novos = [e for e in events if e.event_id not in quartos_emitidos]
+            if not novos:                 # todos ja receberam o quarto (cada um no seu pedido): nada de novo
+                plans.append(RoomPlan(room, checkin, ids, ready=False, reasons=("senha ja pedida para este grupo",)))
+                continue
+            if len(novos) < len(events):
+                events = novos
+                ids = tuple(sorted(e.event_id for e in events))
+        reasons: list[str] = []
+        vistas: set[str] = set()
+        for e in events:
+            reasons += _motivos_da_pessoa(store, outbox, e)
+            rid = _rid_of_key(keys.get(e.event_id, e.event_id))
+            if rid not in vistas:
+                vistas.add(rid)
+                falta = acompanhantes_pendentes(store, rid) if quarto_espera_todos() else []
+                if falta:          # Dom 30/09 (so com PMS_QUARTO_ESPERA_TODOS=on desde a v1.0.67)
+                    reasons.append(f"{e.event_id}: acompanhante(s) {', '.join(map(str, falta))} sem ficha")
+        if outbox.get(issue_key(room, ids)) is not None:
+            reasons.append("senha ja pedida para este grupo")
+        plans.append(RoomPlan(room, checkin, ids, ready=not reasons, reasons=tuple(reasons)))
+    return plans
+
+
+def _sem_prefixo(reason: str, event_id: str) -> str:
+    """"event-r1: FNRH ainda nao enviada" -> "FNRH ainda nao enviada" (o plano de uma pessoa so)."""
+    head, sep, tail = reason.partition(": ")
+    return tail if sep and head == event_id else reason
+
+
+def plano_do_evento(store: Any, outbox: Any, key: str, event: Any, *, now: datetime) -> RoomPlan:
+    """Dom 03/10 ("Emitir senha agora"): a senha de UMA estadia, pelo cartao do hospede -- o caso de quem ja esta na
+    casa e o botao do Agora nao alcanca (ele so cobre chegadas de hoje e amanha). As MESMAS regras do `access_plan`
+    (pagamento, FNRH, menor, 4 digitos, acompanhantes com ficha), menos a janela da chegada; a estadia tem de estar
+    valendo (confirmada ou em andamento, antes do fim) e sem suspensao. Funcao pura, como o resto deste arquivo."""
+    from app.reservation.acesso_hospede import fim_do_acesso
+    reasons: list[str] = []
+    if event.instance in OPERATIONAL_INSTANCES:
+        reasons.append("nao e estadia de hospede")
+    if event.state not in (EventState.CONFIRMED, EventState.IN_PROGRESS):
+        reasons.append(f"estadia {event.state.value}: so confirmada ou em andamento recebe senha")
+    elif now >= fim_do_acesso(store, event):
+        reasons.append("a estadia ja terminou")
+    if event.event_id in (getattr(store, "access_suspensions", {}) or {}):
+        reasons.append("acesso suspenso pelo anfitriao: use Liberar acesso")
+    reasons += [_sem_prefixo(r, event.event_id) for r in _motivos_da_pessoa(store, outbox, event)]
+    falta = acompanhantes_pendentes(store, _rid_of_key(key)) if quarto_espera_todos() else []
+    if falta:
+        reasons.append(f"acompanhante(s) {', '.join(map(str, falta))} sem ficha")
+    from app.reservation.continuacao import coberta_pela_anterior
+    if coberta_pela_anterior(store, outbox, event):
+        reasons.append("a senha da estadia anterior continua valendo (o hospede segue na casa)")
+    if outbox.get(f"senha:email:{event.event_id}") is not None:
+        reasons.append("a senha deste hospede ja saiu")
+    elif outbox.get(issue_key(event.where[0], (event.event_id,))) is not None:
+        reasons.append("senha ja pedida para este hospede")
+    tz = ZoneInfo(store.timezone)
+    return RoomPlan(event.where[0], event.when.start.astimezone(tz).date(), (event.event_id,), ready=not reasons,
+                    reasons=tuple(reasons))
+===== luz/routes.py
+"""Rota do aviso da fechadura: `POST /api/ttlock/aviso/{token}`.
+
+O endereco com o token e o que se cadastra como "callback URL" na conta de
+desenvolvedor da fechadura. Sem `PMS_TTLOCK_CALLBACK_TOKEN` no secrets.env a
+rota nao existe para ninguem (404). Responde "success" rapido: a luz e
+despachada logo depois, fora da transacao do aviso.
+"""
+from __future__ import annotations
+
+import hmac
+import logging
+import os
+import re
+
+from app.luz import service
+
+_TOKEN_IN_PATH = re.compile(r"(/api/ttlock/aviso/)[^/?\s]+")
+
+
+class _HideToken(logging.Filter):
+    """O token do aviso vai no endereco (a fechadura nao manda cabecalho): o log de acesso mostra '***'."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if isinstance(record.args, tuple) and any("/api/ttlock/aviso/" in str(a) for a in record.args):
+            record.args = tuple(_TOKEN_IN_PATH.sub(r"\1***", a) if isinstance(a, str) else a for a in record.args)
+        elif isinstance(record.msg, str) and "/api/ttlock/aviso/" in record.msg:
+            record.msg = _TOKEN_IN_PATH.sub(r"\1***", record.msg)
+        return True
+
+
+logging.getLogger("uvicorn.access").addFilter(_HideToken())
+
+try:
+    from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
+    from fastapi.responses import PlainTextResponse
+except ImportError:  # pragma: no cover
+    APIRouter = None
+
+
+def token_ok(token: str, env=os.environ) -> bool:
+    expected = (env.get("PMS_TTLOCK_CALLBACK_TOKEN") or "").strip()
+    return len(expected) >= 16 and hmac.compare_digest(expected.encode(), str(token or "").encode())
+
+
+if APIRouter is not None:
+    router = APIRouter(tags=["luz"])
+
+    @router.post("/api/ttlock/aviso/{token}")
+    async def ttlock_aviso(token: str, request: Request, tasks: BackgroundTasks):
+        from starlette.concurrency import run_in_threadpool
+        if not token_ok(token):
+            raise HTTPException(status_code=404)
+        ctype = request.headers.get("content-type", "")
+        if "json" in ctype:
+            payload = await request.json()
+        else:
+            payload = dict(await request.form())
+        if not isinstance(payload, (dict, list)):
+            return PlainTextResponse("success")
+        state = request.app.state.pms
+        out = await run_in_threadpool(service.receive, state, payload)
+        if out["commands"]:
+            tasks.add_task(service.dispatch_now, state, out["commands"])
+        return PlainTextResponse("success")
+    @router.post("/api/tuya/evento")
+    async def tuya_evento(request: Request):
+        """v1.0.250: a ponte da Tuya (127.0.0.1) conta o que os aparelhos mudaram. Sem o token certo: 404."""
+        from starlette.concurrency import run_in_threadpool
+
+        from app.luz.service import dispatch_now
+        from app.tuya_casa import ponte as tuya_ponte
+        from app.tuya_casa import service as tuya_service
+        esperado = tuya_ponte.token()
+        recebido = request.headers.get("x-ponte-token", "")
+        if not esperado or not hmac.compare_digest(esperado.encode(), recebido.encode()):
+            raise HTTPException(status_code=404)
+        evento = await request.json()
+        if not isinstance(evento, dict):
+            return {"ok": False}
+        state = request.app.state.pms
+        out = await run_in_threadpool(tuya_service.receber, state, evento)
+        if out["comandos"]:
+            await run_in_threadpool(dispatch_now, state, out["comandos"])
+        return {"ok": True, "feito": out["feito"]}
+else:  # pragma: no cover
+    router = None
+===== luz/service.py 240-330
+            continue
+        bed = _is_bed(store, space)
+        params = {"store": store, "space_key": space_key(space), "space": space, "device": light.device,
+                  "code": light.code, "event_id": event.event_id, "door": door,
+                  "opening_key": found.short,
+                  "off_min": cfg.off_bed_min if bed else cfg.off_room_min, "debounce_s": cfg.debounce_s}
+        if getattr(event, "instance", "") == "morador":
+            params["by"] = event.who.person            # o comando e da pessoa (escopo de teste por quem)
+        result = state.router.call("luz.acender", caller=caller, house=state.house, params=params,
+                                   ledger=state.ledger, outbox=state.outbox, switches=state.switches, at=at)
+        keys += [c.idempotency_key for c in result.commands]
+    return keys
+
+
+def receive(state: Any, payload: Any, *, env: Mapping[str, str] = os.environ, at: datetime | None = None,
+            locks: Any = None, via: str = "aviso") -> dict:
+    """O aviso da fechadura (callback) ou uma leitura de registros: cada
+    abertura entra UMA vez (inbox) e, se casar com uma estadia, acende."""
+    at = at or datetime.now(timezone.utc)
+    cfg = LightConfig.from_env(env)
+    if locks is None:
+        from app.worker import house_locks
+        locks = house_locks(state, env)
+    lit, seen, matched, keys = 0, 0, 0, []
+    medidas: list[dict] = []
+    chegou = False
+    for op in openings(payload):
+        if _door_of(locks, op.lock_id) not in cfg.doors:
+            continue                                  # fechadura que nao acende nada (armario, saida, entrada...)
+        chegou = True
+        if state.inbox.seen(op.key):
+            seen += 1                                 # releitura/repeticao: nem abre o cofre de novo
+            continue
+        with state.unit_of_work():
+            found = match(state.store, locks, op, cfg, at=at) if cfg.lights else None
+            event_ok = state.inbox.accept(InboxEvent(
+                idempotency_key=op.key, partner="ttlock", event_type="abertura_com_senha",
+                payload={"lock_id": op.lock_id, "at": op.at.isoformat(),
+                         "event_id": found[0].event_id if found else None}))
+            if not event_ok:
+                seen += 1
+                continue
+            if found:
+                matched += 1
+                new = light_up(state, op, found[0], found[1], cfg, at=at, env=env)
+                keys += new
+                lit += 1 if new else 0
+                medidas.append({"key": f"ab-{op.short}", "tipo": "abertura", "via": via,
+                                "space": ",".join(found[0].where), "morador": getattr(found[0], "instance", "") == "morador",
+                                "digitou": op.at.isoformat(), "recebido": at.isoformat(), "comandos": list(new)})
+    if cfg.lights and (medidas or (chegou and via == "aviso")):
+        measure(state, aberturas=medidas, aviso_at=at if via == "aviso" and chegou else None, at=at)
+    # cameras (27/09; fotos 04/10): QUALQUER abertura de porta vigiada vira pedido de fotos -- depois da luz, para nao
+    # atrasar o interruptor. So porta, hora e tipo: a senha nao sai daqui. Nunca levanta erro.
+    from app.cameras.service import registrar_aberturas
+    registrar_aberturas(state, payload, locks=locks, via=via, env=env, at=at)
+    # contingencia (28/09): a data de nascimento RECUSADA pela fechadura pode abrir a porta. Nunca levanta erro.
+    from app.reservation.contingencia import processar as contingencia
+    contingencia(state, payload, locks=locks, env=env, at=at)
+    return {"matched": matched, "lit": lit, "duplicate": seen, "commands": keys}
+
+
+MEASURE_ACTOR = Actor(ActorKind.AI, "luz-medicao")
+
+
+def measure(state: Any, *, aberturas: list | None = None, aviso_at: datetime | None = None,
+            enviados: list | None = None, apagou: list | None = None, at: datetime | None = None) -> None:
+    """Teste de campo (Dom, 24/09): o sistema anota sozinho quando a senha foi digitada, quando o
+    aviso chegou e quando o interruptor aceitou -- a tela do anfitriao monta o roteiro com isso.
+    Medir nunca derruba a luz: erro aqui so vira log."""
+    from app.core.event import Role
+    from app.core.intent import Caller, Surface
+    try:
+        caller = Caller(actor=MEASURE_ACTOR, role=Role.STAFF, house=state.house, surface=Surface.WORKER)
+        with state.unit_of_work():
+            state.router.call("luz.medir", caller=caller, house=state.house, ledger=state.ledger,
+                              outbox=state.outbox, switches=state.switches, at=at or datetime.now(timezone.utc),
+                              params={"store": state.store, "aberturas": list(aberturas or ()),
+                                      "aviso_at": aviso_at.isoformat() if aviso_at else "",
+                                      "enviados": list(enviados or ()), "apagou": list(apagou or ())})
+    except Exception as erro:  # noqa: BLE001
+        log.warning("luz: medicao nao gravada (%s)", type(erro).__name__)
+
+
+def turn_off_due(state: Any, *, at: datetime | None = None) -> list[str]:
+    """Rotina do worker: luz de cama com o tempo vencido -> `luz.apagar`. Em sombra nao faz nada
+    (a luz nao acendeu de verdade e cada volta viraria um Registro)."""
+    from app.core.event import Role
+    from app.core.intent import Caller, Surface
+    at = at or datetime.now(timezone.utc)
+    switch = (state.switches or {}).get("luz")
+fim
+[nuvem] fim 2026-11-21 21:42:05 codigo=0 duracao=0s

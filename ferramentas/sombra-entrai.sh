@@ -39,7 +39,15 @@ for k, v in sorted(locks.rooms.items()): print(f"MAPA;quartos;{k};{v}")
 for k, v in sorted(locks.armarios.items()): print(f"MAPA;armarios;{k};{v}")
 for k, v in sorted(locks.common.items()): print(f"MAPA;comuns;{k};{v}")
 lookup = W._event_lookup(st)
-room_lock, arm_lock = W.climbing(locks.rooms), W.climbing(locks.armarios)
+def climbing(table):                      # copia de worker.build_adapters.climbing (a cama sobe a arvore)
+    def find(space):
+        for sid in s.inventory.lineage(space):
+            if sid in table:
+                return table[sid]
+        return None
+    return find
+room_lock = lambda sp: locks.rooms.get(sp) or climbing(locks.rooms)(sp)
+arm_lock = lambda sp: locks.armarios.get(sp) or climbing(locks.armarios)(sp)
 common = {k: v for k, v in locks.common.items() if k.upper() not in sem_gw}
 vault = s.vault
 suspensos = getattr(s, "access_suspensions", {}) or {}

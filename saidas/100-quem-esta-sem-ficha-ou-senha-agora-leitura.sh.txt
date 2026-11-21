@@ -1,0 +1,28 @@
+[nuvem] inicio 2026-11-21 23:29:05 100-quem-esta-sem-ficha-ou-senha-agora-leitura.sh
+agora: 21/11 20:29
+Q10    08/11->04/12 E.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q04    11/11->01/12 Á.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+QUARTO+ARMARIO completa=1 falta=- fnrh=sent motivos=-
+Q07    18/11->01/12 T.  in_progress ficha=S digitos=S portas=QUARTO+ENTRADA+SAIDA+ARMARIO completa=0 falta=- fnrh=- motivos=-
+Q13B   19/11->22/11 D.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q13C   19/11->22/11 V.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q13D   19/11->22/11 R.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q13E   19/11->22/11 M.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q03    20/11->23/11 A.  in_progress ficha=S digitos=S portas=QUARTO+ENTRADA+SAIDA+ARMARIO+COZINHA completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q02    20/11->22/11 L.  in_progress ficha=S digitos=S portas=QUARTO+ENTRADA+SAIDA+ARMARIO+COZINHA completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q14B   20/11->23/11 L.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=exhausted motivos=-
+Q13F   20/11->27/11 A.  confirmed   ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q08    20/11->22/11 G.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=- fnrh=sent motivos=-
+Q13A   20/11->22/11 J.  in_progress ficha=S digitos=S portas=QUARTO+ENTRADA+SAIDA+ARMARIO completa=1 falta=- fnrh=sent motivos=-
+Q12F   20/11->22/11 G.  in_progress ficha=S digitos=S portas=QUARTO+ENTRADA+SAIDA completa=1 falta=ARMARIO fnrh=sent motivos=-
+Q02    20/11->22/11 J.  in_progress ficha=S digitos=S portas=QUARTO+ENTRADA+SAIDA+ARMARIO+COZINHA completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q14C   20/11->23/11 A.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+QUARTO+ARMARIO completa=1 falta=PANELAS,QUINTAL fnrh=exhausted motivos=-
+Q14D   20/11->23/11 C.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+QUARTO+ARMARIO completa=1 falta=PANELAS,QUINTAL fnrh=exhausted motivos=-
+Q05    21/11->24/11 L.  in_progress ficha=S digitos=S portas=SAIDA+COZINHA+ENTRADA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q12E   21/11->22/11 V.  confirmed   ficha=S digitos=S portas=QUARTO+ENTRADA+SAIDA+COZINHA completa=1 falta=ARMARIO,PANELAS,QUINTAL fnrh=sent motivos=-
+Q09    21/11->23/11 I.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q06    21/11->22/11 K.  confirmed   ficha=N digitos=N portas=- completa=- falta=- fnrh=- motivos=ficha ainda nao feita; hospede ainda nao escolheu os 4 digitos da senha
+Q09    21/11->23/11 O.  in_progress ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+Q02    22/11->23/11 L.  confirmed   ficha=S digitos=S portas=ENTRADA+SAIDA+COZINHA+ARMARIO+QUARTO completa=1 falta=PANELAS,QUINTAL fnrh=sent motivos=-
+== recusas/tentativas de hoje (cameras)
+fim
+[nuvem] fim 2026-11-21 23:29:07 codigo=0 duracao=2s

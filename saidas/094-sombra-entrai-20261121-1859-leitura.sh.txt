@@ -1,0 +1,49 @@
+[nuvem] inicio 2026-11-21 22:00:15 094-sombra-entrai-20261121-1859-leitura.sh
+versao: 1.0.285
+AGORA;2026-11-21T22:00:17.087117+00:00
+CFG;quarto_desde;11:30
+CFG;sem_gateway;PANELAS
+CFG;senha_dias;7
+MAPA;quartos;Q02;15672794
+MAPA;quartos;Q03;15672838
+MAPA;quartos;Q04;15673120
+MAPA;quartos;Q05;15572854
+MAPA;quartos;Q06;15638346
+MAPA;quartos;Q07;15572412
+MAPA;quartos;Q08;16581872
+MAPA;quartos;Q09;15635192
+MAPA;quartos;Q10;15635170
+MAPA;quartos;Q11;15635196
+MAPA;quartos;Q12;15690636
+MAPA;quartos;Q13;16581848
+MAPA;quartos;Q14;16005244
+MAPA;armarios;Q02;35502154
+MAPA;armarios;Q03;35502214
+MAPA;armarios;Q04;35593454
+MAPA;armarios;Q05;35501148
+MAPA;armarios;Q06;35470816
+MAPA;armarios;Q07;35470912
+MAPA;armarios;Q08;33415241
+MAPA;armarios;Q09;34960342
+MAPA;armarios;Q10;34959798
+MAPA;armarios;Q11;34960586
+MAPA;armarios;Q12A;35712808
+MAPA;armarios;Q12B;35668588
+MAPA;armarios;Q12C;35712812
+MAPA;armarios;Q12D;35668596
+MAPA;armarios;Q13A;34483410
+MAPA;armarios;Q13B;34485052
+MAPA;armarios;Q13C;34485540
+MAPA;armarios;Q13D;35668602
+MAPA;armarios;Q14A;33999008
+MAPA;armarios;Q14B;35668528
+MAPA;armarios;Q14C;35668522
+MAPA;armarios;Q14D;35668516
+MAPA;comuns;COZINHA;34679130
+MAPA;comuns;ENTRADA;16190236
+MAPA;comuns;SAIDA;16190206
+Traceback (most recent call last):
+  File "<stdin>", line 22, in <module>
+AttributeError: module 'app.worker' has no attribute 'climbing'
+fim
+[nuvem] fim 2026-11-21 22:00:17 codigo=0 duracao=2s

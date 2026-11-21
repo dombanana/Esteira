@@ -1,0 +1,234 @@
+[nuvem] inicio 2026-11-21 17:09:55 080-anfitriao-enviar-e-vigiar-codigo-leitura.sh
+def _regra(ctx: IntentContext) -> str:
+    store = ctx.params["store"]
+    r = dict(ctx.params.get("regra") or {})
+    rid = str(r.get("id") or "") or "regra-" + hashlib.sha256(f"{ctx.caller.actor.id}|{ctx.at.isoformat()}".encode()).hexdigest()[:10]
+    antes = (getattr(store, "automacao_regras", {}) or {}).get(rid)
+    if r.get("remover"):
+        if not antes:
+            raise ValueError("Programação não encontrada.")
+        novo = {**antes, "removida": ctx.at.isoformat(), "ativa": False}
+    else:
+        tipo = str(r.get("tipo") or "")
+        if tipo not in ("horario", "temperatura"):
+            raise ValueError("Escolha: por horário ou por temperatura.")
+        chaves = [str(c) for c in r.get("chaves") or () if str(c)]
+        if not chaves:
+            raise ValueError("Escolha os aparelhos.")
+        liga, desliga = _hora(r.get("liga")), _hora(r.get("desliga"))
+        dias = [d for d in (r.get("dias") or DIAS) if d in DIAS] or list(DIAS)
+        novo = {"id": rid, "nome": str(r.get("nome") or "Programação")[:40], "tipo": tipo, "chaves": chaves,
+                "liga": liga, "desliga": desliga, "dias": dias,
+                "ocupados": "incluir" if r.get("ocupados") == "incluir" else "pular",
+                "ativa": r.get("ativa", True) is not False, "por": ctx.caller.actor.id, "at": ctx.at.isoformat()}
+        if tipo == "horario":
+            if not (liga and desliga) or liga == desliga:
+                raise ValueError("Escolha a hora de ligar e a de desligar (diferentes).")
+        else:
+            try:
+                acima = float(str(r.get("acima")).replace(",", "."))
+                abaixo = float(str(r.get("abaixo") if r.get("abaixo") not in (None, "") else acima - 1).replace(",", "."))
+            except (TypeError, ValueError):
+                raise ValueError("Temperatura inválida.") from None
+            if not (10 <= abaixo < acima <= 45):
+                raise ValueError("Desliga abaixo de quanto? Tem que ser menor que o liga (ex.: liga 28°, desliga 26°).")
+            novo.update({"acima": acima, "abaixo": abaixo})
+            if bool(liga) != bool(desliga):
+                raise ValueError("Horário da temperatura: preencha os dois ou nenhum.")
+    ctx.change("automacao_regra", rid, antes, novo)
+    ctx.transaction.after_commit(lambda: store.automacao_regras.__setitem__(rid, novo))
+    if novo.get("removida") or not novo.get("ativa"):   # a regra que sai solta o que ela mesma mandou
+        for c, o in list((getattr(store, "automacao_ordens", {}) or {}).items()):
+            if o.get("origem") == rid and not o.get("solta"):
+                _gravar_ordem(ctx, c, None)
+    return f"Programação {'apagada' if novo.get('removida') else 'guardada'}: {novo.get('nome')}."
+
+
+def _aplicar(ctx: IntentContext) -> str:
+    feitos = 0
+    for c, novo in ctx.params.get("ordens") or ():
+        _gravar_ordem(ctx, c, novo)
+        feitos += 1
+    return f"{feitos} ordem(ns) das programações."
+
+
+def register(router: IntentRouter) -> None:
+    router.register(MANDAR, _mandar)
+    router.register(SOLTAR, _soltar)
+    router.register(REGRA, _regra)
+    router.register(APLICAR, _aplicar)
+
+
+# ---------------------------------------------------------------------------
+# o worker: regras -> ordens -> comandos
+# ---------------------------------------------------------------------------
+
+def _na_janela(regra: Mapping[str, Any], agora: datetime) -> bool:
+    liga, desliga = regra.get("liga"), regra.get("desliga")
+    if not liga or not desliga:
+        return DIAS[agora.weekday()] in regra.get("dias", DIAS)
+    t = agora.strftime("%H:%M")
+    if liga < desliga:
+        return liga <= t < desliga and DIAS[agora.weekday()] in regra.get("dias", DIAS)
+    # atravessa a meia-noite: o dia que vale e o do comeco
+    if t >= liga:
+        return DIAS[agora.weekday()] in regra.get("dias", DIAS)
+    if t < desliga:
+        return DIAS[(agora - timedelta(days=1)).weekday()] in regra.get("dias", DIAS)
+    return False
+
+
+def planejar(state: Any, at: datetime, env: Mapping[str, str] = os.environ) -> list[tuple[str, dict | None]]:
+    """As ordens que as regras pedem agora: [(chave, ordem nova | None = soltar)]. Puro (le, nao grava)."""
+    store = state.store
+    agora = at.astimezone(ZoneInfo(store.timezone))
+    cat = catalogo(state, env)
+    ordens = getattr(store, "automacao_ordens", {}) or {}
+    out: list[tuple[str, dict | None]] = []
+    for r in (getattr(store, "automacao_regras", {}) or {}).values():
+        if not r.get("ativa") or r.get("removida"):
+            continue
+        janela = _na_janela(r, agora)
+        for c in r.get("chaves") or ():
+            it = cat.get(c)
+            if it is None:
+                continue
+            atual = ordens.get(c) or {}
+            minha = atual.get("origem") == r["id"] and not atual.get("solta")
+            if atual and not atual.get("solta") and not minha and ordem(store, c, at):
+                continue                               # outra ordem (do anfitriao ou de outra regra) manda
+            if r.get("ocupados") != "incluir" and ocupado(state, it, at):
+                if minha:
+                    out.append((c, None))              # o quarto ficou ocupado: devolve ao hospede
+                continue
+            base = {"por": r.get("por", ""), "at": at.isoformat(), "origem": r["id"], "ate": ""}
+            if r["tipo"] == "horario":
+                if janela and not (minha and atual.get("ligar")):
+                    out.append((c, {**base, "ligar": True}))
+                elif not janela and minha and atual.get("ligar"):
+                    out.append((c, {**base, "ligar": False, "ate": (at + timedelta(minutes=3)).isoformat()}))
+            else:
+                t = temperatura(state, it, env)
+                if t is None:
+                    continue
+                if janela and t >= r["acima"] and not (minha and atual.get("ligar")):
+                    out.append((c, {**base, "ligar": True}))
+                elif minha and atual.get("ligar") and (t <= r["abaixo"] or not janela):
+                    out.append((c, {**base, "ligar": False, "ate": (at + timedelta(minutes=3)).isoformat()}))
+    return out
+
+
+def _enviar(state: Any, chave: str, it: Mapping[str, Any], ligar: bool, o: Mapping[str, Any], at: datetime,
+            env: Mapping[str, str]) -> str:
+    from app.core.intent import Caller, Surface
+    from app.core.record import Actor, ActorKind
+    from app.tuya_casa import service as S
+    from app.tuya_casa import ventilador as V
+    from app.tuya_casa.config import casa
+    motivo = "anfitrião" if o.get("origem") == "agora" else "programação do anfitrião"
+    if it["tipo"] == "ar":
+        out = S._chamar(state, "luz.tuya_clima", {"store": state.store, "casa": casa(env), "regra": it["regra"],
+                                                  "ligar": ligar, "temperatura": temperatura(state, it, env),
+                                                  "motivo": motivo}, at)
+        return str(out.answer)
+    if "ap" in it:
+        return V._chamar(state, it["espaco"], it["ap"], ligar, 2 if (ligar and V.tem_vel(it["ap"])) else None, motivo, at)
+    caller = Caller(actor=Actor(ActorKind.PERSON, str(o.get("por") or "anfitriao")), role=Role.HOST, house=state.house,
+                    surface=Surface.WORKER)
+    with state.unit_of_work():
+        out = state.router.call("luz.tuya_ligar", caller=caller, house=state.house,
+                                params={"store": state.store, "casa": casa(env), "aparelho": it["aparelho"].id, "ligar": ligar},
+                                ledger=state.ledger, outbox=state.outbox, switches=state.switches, at=at)
+    return str(out.answer)
+
+
+def vigiar(state: Any, *, at: datetime | None = None, env: Mapping[str, str] = os.environ, forcar: bool = False) -> list[str]:
+    agora_m = time.monotonic()
+    if not forcar and agora_m - _ULTIMA.get("volta", -1e9) < SEGUNDOS:
+        return []
+    _ULTIMA["volta"] = agora_m
+    at = at or datetime.now(timezone.utc)
+    store = state.store
+    if not (getattr(store, "automacao_regras", None) or getattr(store, "automacao_ordens", None)):
+        return []
+    feitos = []
+    plano = planejar(state, at, env)
+    if plano:
+        from app.core.intent import Caller, Surface
+        from app.core.record import Actor, ActorKind
+        caller = Caller(actor=Actor(ActorKind.AI, "worker:automacao"), role=Role.STAFF, house=state.house,
+                        surface=Surface.WORKER)
+        with state.unit_of_work():
+            state.router.call("automacao.aplicar", caller=caller, house=state.house,
+                              params={"store": store, "ordens": plano}, ledger=state.ledger, outbox=state.outbox,
+                              switches=state.switches, at=at)
+    cat = catalogo(state, env)
+    for c, o in list((getattr(store, "automacao_ordens", {}) or {}).items()):
+        if ordem(store, c, at) is None or c not in cat:
+            continue
+        it = cat[c]
+        agora_ligado = ligado(state, it, at)
+        if agora_ligado is not None and agora_ligado == bool(o["ligar"]):
+            continue
+        enviado = _ENVIADO.get(c)
+        if enviado and enviado[0] == bool(o["ligar"]) and agora_m - enviado[1] < REENVIO_S:
+            continue                                   # acabou de sair: espera a Tuya contar
+        try:
+            feitos.append(_enviar(state, c, it, bool(o["ligar"]), o, at, env))
+            _ENVIADO[c] = (bool(o["ligar"]), agora_m)
+        except Exception as erro:  # noqa: BLE001 -- um aparelho nao derruba os outros
+            feitos.append(f"{it['nome']}: não foi ({type(erro).__name__})")
+    return feitos
+
+
+_ENVIADO: dict[str, tuple[bool, float]] = {}
+
+
+def previa(state: Any, chaves: list[str], at: datetime, env: Mapping[str, str] = os.environ) -> list[dict]:
+    """Antes do "agora": os aparelhos escolhidos que estao em quarto com hospede (o painel pergunta um a um)."""
+    cat = catalogo(state, env)
+    return [{"chave": c, "nome": cat[c]["nome"], "espaco": cat[c]["espaco"]} for c in chaves
+            if c in cat and ocupado(state, cat[c], at)]
+== quem chama automacao.mandar
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/anfitriao.py:139:    name="automacao.mandar", description="o anfitriao liga ou desliga varios aparelhos de uma vez (ordem por cima do quarto)",
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/service.py:923:    "automacao.mandar": _only("chaves", "ligar", "horas"),        # v1.0.283: aparelhos em massa (ordem agora)
+== aparelhos/invertidos
+def aparelhos(env: Mapping[str, str] = os.environ) -> dict[str, dict]:
+    """Quarto ("Q02") -> {device, switch, vel_code?, vel_vals?, termometro?}. Pelo nome na Tuya (mapa do worker) e,
+    se o anfitriao cadastrou a mao, pelo PMS_TUYA_CASA (papel "ventilador", espaco "Q02")."""
+    from app.luz import auto
+    from app.tuya_casa.config import casa
+    tudo = auto.ler_tudo(env)
+    out = {k: dict(v) for k, v in (tudo.get("ventiladores") or {}).items() if isinstance(v, dict)}
+    for ap in casa(env).de_papel("ventilador"):
+        q = _quarto(ap.espaco)
+        if q and q not in out:
+            out[q] = {"device": ap.id, "switch": ap.code, "nome": ap.nome}
+    for q, t in (tudo.get("termometros") or {}).items():
+        if q in out and isinstance(t, dict) and t.get("device"):
+            out[q]["termometro"] = t["device"]
+    inv = invertidos(env)
+    for q, ap in out.items():                 # v1.0.267: a chave 1 e o forte e a 3 e o fraco (ligacao do quarto)
+        if ap.get("reles") and (q in inv or "TODOS" in inv):
+            ap["reles"] = list(reversed(ap["reles"]))
+    return out
+
+
+def invertidos(env: Mapping[str, str] = os.environ) -> set[str]:
+    """v1.0.267 (Dom 18/11: "Ta invertido ... Voce ligou o fraco no lugar do forte e o forte no lugar do fraco. Inverte
+    so, por favor. Em ambos os quartos, no 8 e no 9"): PMS_VENT_INVERTIDO="Q08,Q09" -> nesses quartos a chave 1 e o
+    FORTE e a chave 3 e o FRACO (o medio continua na 2). "todos" vale para todos os quartos."""
+    out = set()
+    for x in str(env.get("PMS_VENT_INVERTIDO") or "").replace(";", ",").split(","):
+        x = x.strip().upper()
+        if x == "TODOS":
+            out.add("TODOS")
+        elif x:
+            out.add(_quarto(x))
+    return out
+
+
+def _quarto(espaco: str) -> str:
+    s = str(espaco or "").strip().upper()
+fim
+[nuvem] fim 2026-11-21 17:09:55 codigo=0 duracao=0s

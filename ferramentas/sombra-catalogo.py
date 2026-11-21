@@ -41,20 +41,34 @@ from app.main import build_state
 from app.entrada import imap_reservas as I, airbnb_email as A10, airbnb_reservas as R10
 from app.entrada.intents import classificar as classificar10, ota_do_dominio, casar
 st = build_state(); s = st.store; agora = datetime.now(timezone.utc); desde = agora - timedelta(hours=%(HORAS)s)
-cfg = I.config(os.environ)
-M = imaplib.IMAP4_SSL(cfg["servidor"], 993, timeout=30); M.login(cfg["usuario"], cfg["senha"])
-typ, _ = M.select('"INBOX.03_Reservas"', readonly=True)
-typ, d = M.search(None, f"(SINCE {(desde - timedelta(days=1)).strftime('%%d-%%b-%%Y')})")
-nums = (d[0] or b"").split() if typ == "OK" else []
+# v1.0.278: a V1.0 le DUAS caixas (a .tech antiga e a contato@dombanana.com.br, para onde o Airbnb manda desde 19/11)
+contas = I.contas(os.environ) if hasattr(I, "contas") else [I.config(os.environ)]
+contas = [c for c in contas if c]
+print("caixas lidas:", len(contas))
+def emails():
+    vistos = set()
+    for cfg in contas:
+        M = imaplib.IMAP4_SSL(cfg["servidor"], 993, timeout=30); M.login(cfg["usuario"], cfg["senha"])
+        for pasta in cfg["pastas"]:
+            typ, _ = M.select(f'"{pasta}"', readonly=True)
+            if typ != "OK": continue
+            typ, d = M.search(None, f"(SINCE {(desde - timedelta(days=1)).strftime('%%d-%%b-%%Y')})")
+            for num in ((d[0] or b"").split() if typ == "OK" else []):
+                t, c = M.fetch(num, "(BODY.PEEK[HEADER.FIELDS (FROM DATE MESSAGE-ID)])")
+                h = email.message_from_bytes(c[0][1])
+                mid = str(h.get("Message-ID") or "").strip()
+                if mid in vistos: continue
+                if ota_do_dominio(parseaddr(I._dec(h.get("From")))[1].lower().rsplit("@", 1)[-1]) != "Airbnb": continue
+                try: q = parsedate_to_datetime(str(h.get("Date") or ""))
+                except Exception: q = None
+                if q is None or q < desde: continue
+                vistos.add(mid)
+                t, c = M.fetch(num, "(BODY.PEEK[])")
+                yield q, I.para_porta(c[0][1])
+        M.logout()
 n = 0
-for num in nums:
-    t, c = M.fetch(num, "(BODY.PEEK[HEADER.FIELDS (FROM DATE)])")
-    h = email.message_from_bytes(c[0][1])
-    if ota_do_dominio(parseaddr(I._dec(h.get("From")))[1].lower().rsplit("@", 1)[-1]) != "Airbnb": continue
-    try: q = parsedate_to_datetime(str(h.get("Date") or ""))
-    except Exception: q = None
-    if q is None or q < desde: continue
-    t, c = M.fetch(num, "(BODY.PEEK[])"); em = I.para_porta(c[0][1]); n += 1
+for q, em in emails():
+    n += 1
     t10 = classificar10(em["dominio"], em["assunto"], em["texto"]).get("tipo") or "outro"
     t11 = A11.classificar(em["assunto"], em["texto"])
     difs = []
@@ -64,7 +78,6 @@ for num in nums:
     r = A11.converter({"dominio": em["dominio"], "assunto": em["assunto"], "texto": em["texto"], "quando": em["quando"]})
     dec = ("reserva" if r.get("reserva", {}).get("estado") != "cancelada" else "cancelamento") if "reserva" in r else ("alarme" if "alarme" in r else "ignora")
     print(f"LEITOR;{q.astimezone(timezone(timedelta(hours=-3))).strftime('%%Y-%%m-%%d %%H:%%M')};{t10};{t11};{'|'.join(difs) or '-'};{dec}")
-M.logout()
 print(f"emails do Airbnb na janela: {n}")
 for row in sorted((getattr(s, "entradas", {}) or {}).values(), key=lambda r: str(r.get("recebido_em") or "")):
     p = row.get("plano") or {}

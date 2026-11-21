@@ -1,0 +1,19 @@
+[nuvem] inicio 2026-11-21 12:31:26 070-sombra-catalogo-depurar-janela-leitura.sh
+pasta INBOX.03_Reservas OK [b'1005']
+  SINCE 3 dias: 37
+   Airbnb | Wed, 18 Nov 2026 22:35:24 +0000 (UTC)
+   Airbnb | Thu, 19 Nov 2026 01:24:02 +0000 (UTC)
+   Airbnb | Thu, 19 Nov 2026 11:08:57 +0000 (UTC)
+   Airbnb | Thu, 19 Nov 2026 11:15:43 +0000 (UTC)
+   Airbnb | Thu, 19 Nov 2026 11:41:59 +0000 (UTC)
+   outro | Thu, 19 Nov 2026 12:01:08 +0000 (UTC)
+   outro | Thu, 19 Nov 2026 16:19:10 +0000
+   outro | Thu, 19 Nov 2026 17:00:15 +0000 (UTC)
+   Hostelworld | Fri, 20 Nov 2026 08:26:23 +0000 (UTC)
+   outro | Fri, 20 Nov 2026 11:01:46 +0000 (UTC)
+   outro | Fri, 20 Nov 2026 15:36:40 +0000
+   outro | Fri, 20 Nov 2026 17:01:07 +0000 (UTC)
+pasta INBOX OK [b'0']
+  SINCE 3 dias: 0
+fim
+[nuvem] fim 2026-11-21 12:31:29 codigo=0 duracao=3s

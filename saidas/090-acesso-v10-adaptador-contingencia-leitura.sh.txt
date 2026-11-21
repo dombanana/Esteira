@@ -1,0 +1,596 @@
+[nuvem] inicio 2026-11-21 21:43:15 090-acesso-v10-adaptador-contingencia-leitura.sh
+===== chamadas a API TTLock (caminhos)
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/gateway/list"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/gateway/listByLock"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/identityCard/add"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/identityCard/changePeriod"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/identityCard/delete"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/identityCard/list"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/key/delete"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/key/send"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/keyboardPwd/add"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/keyboardPwd/change"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/keyboardPwd/delete"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/keyboardPwd/get"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/lock/list"
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/lock/listKeyboardPwd"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/lock/unlock"
+      2 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/lockRecord/list"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/user/delete"
+      1 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/adapters.py: "/v3/user/register"
+===== class TtlockClient (defs)
+1135:class TtlockClient:
+1136:    def __init__(self, base_url: str, client_id: str, client_secret: str, username: str, password_md5: str, timeout: int = 30):
+1146:    def from_environment(cls) -> "TtlockClient":
+1154:    def _post(self, path: str, data: Mapping[str, Any]) -> Mapping[str, Any]:
+1173:    def authenticate(self) -> str:
+1184:    def _authorized(self, path: str, data: Mapping[str, Any]) -> Mapping[str, Any]:
+1189:    def add_custom_passcode(self, lock_id: int, pin: str, name: str, starts_at: datetime, ends_at: datetime) -> str:
+1199:    def delete_passcode(self, lock_id: int, keyboard_pwd_id: str) -> None:
+1202:    def get_offline_passcode(self, lock_id: int, name: str, starts_at: datetime, ends_at: datetime) -> dict:
+1214:    def senha_na_fechadura(self, lock_id: int, pin: str) -> bool:
+1219:    def change_passcode_period(self, lock_id: int, keyboard_pwd_id: str, starts_at: datetime, ends_at: datetime) -> None:
+1230:    def list_locks(self) -> list:
+1242:    def list_gateways(self) -> list:
+1254:    def gateways_of_lock(self, lock_id: int) -> list:
+1259:    def find_passcode(self, lock_id: int, pin: str) -> Mapping[str, Any] | None:
+1274:    def unlock(self, lock_id: int) -> None:
+1283:    def register_user(self, username: str, password_md5: str) -> str:
+1292:    def delete_user(self, username: str) -> None:
+1296:    def send_ekey(self, lock_id: int, receiver: str, name: str, starts_at: datetime, ends_at: datetime) -> str:
+1303:    def delete_key(self, key_id: str) -> None:
+1306:    def as_user(self, username: str, password_md5: str) -> "TtlockClient":
+1310:    def list_passcodes(self, lock_id: int) -> list:
+1322:    def list_records_pages(self, lock_id: int, start_ms: int, end_ms: int, max_pages: int = 30) -> list:
+1335:    def list_records(self, lock_id: int, start_ms: int, end_ms: int) -> list[Mapping[str, Any]]:
+1344:    def list_cards(self, lock_id: int) -> list:
+1355:    def add_card(self, lock_id: int, numero: str, nome: str, inicio_ms: int, fim_ms: int) -> str:
+1361:    def change_card_period(self, lock_id: int, card_id: str, inicio_ms: int, fim_ms: int) -> None:
+1366:    def delete_card(self, lock_id: int, card_id: str) -> None:
+1374:    def add_custom_passcode(self, lock_id: int, pin: str, name: str, starts_at: datetime, ends_at: datetime) -> str: ...
+1375:    def delete_passcode(self, lock_id: int, keyboard_pwd_id: str) -> None: ...
+1376:    def change_passcode_period(self, lock_id: int, keyboard_pwd_id: str, starts_at: datetime,
+1393:    def get(self, event_id: str) -> dict[str, str] | None:
+1396:    def set(self, event_id: str, data: dict[str, str]) -> None:
+1399:    def clear(self, event_id: str) -> None:
+1408:    def __init__(self, vault: Vault) -> None:
+1411:    def get(self, event_id: str) -> dict[str, str] | None:
+1418:    def set(self, event_id: str, data: dict[str, str]) -> None:
+1421:    def clear(self, event_id: str) -> None:
+1460:    def room_lock(room: str) -> int | None:
+1463:    def armario_lock(room: str) -> int | None:
+1466:    def doors_done(cred: Mapping[str, str]) -> dict[str, tuple[str, str]]:
+1475:    def row(done: Mapping[str, tuple[str, str]], pin: str, missing: list[str], complete: bool) -> dict[str, str]:
+1482:    def _ref_divisao(lock: Any, pwd: Any) -> str:
+1485:    def _passar_adiante(event_id: str, role: str, lock: Any, pwd: Any, fp: str = "") -> bool:
+1531:    def _mesma_pessoa(outro: str, info: Mapping[str, Any]) -> bool:
+1540:    def _dividir_portas(outro: str, event_id: str, doors: list, done: dict, info: Mapping[str, Any],
+1600:    def _janela(info: Mapping[str, Any], role: str, starts: datetime, ends: datetime) -> tuple[datetime, datetime]:
+1610:    def _ajustar_portas(doors: list, info: Mapping[str, Any]) -> list:
+1621:    def _armarios_do_quarto_inteiro(doors: list, info: Mapping[str, Any]) -> list:
+1640:    def _sem_gateway(erro: Exception) -> bool:
+1646:    def _contingencia(event_id: str, door: Any, info: Mapping[str, Any], nome: str) -> str | None:
+1685:    def issue(command: OutboxCommand) -> None:
+1814:    def revoke(command: OutboxCommand) -> None:
+1891:    def _ref_senha(lock: Any, pwd: Any) -> str:
+1894:    def _donos(lock: Any, pwd: Any) -> dict:
+1904:    def _substituida(lock: Any, pwd: Any) -> bool:
+1910:    def _casa_passada(key: str) -> bool:
+1918:    def _vivos(donos: Mapping, sem: str) -> dict:
+1926:    def _anterior_valendo(k: str, janela: Any, agora: datetime) -> bool:
+1934:    def _uniao(janelas: Any) -> tuple | None:
+===== openings()
+47:def openings(payload: Mapping[str, Any] | Iterable[Mapping[str, Any]]) -> list[Opening]:
+48-    """Aceita o callback da nuvem da fechadura (form ou JSON: `records` como
+49-    lista ou texto JSON; ou um registro solto) e a lista de `lockRecord/list`.
+50-    So abertura por senha que deu certo."""
+51-    if isinstance(payload, Mapping):
+52-        raw = payload.get("records")
+53-        if isinstance(raw, str):
+54-            try:
+55-                raw = json.loads(raw)
+56-            except ValueError:
+57-                raw = []
+58-        if raw is None:
+59-            raw = [payload]
+60-        top_lock = payload.get("lockId")
+61-    else:
+62-        raw, top_lock = list(payload), None
+63-    out = []
+64-    for r in raw if isinstance(raw, list) else []:
+65-        if not isinstance(r, Mapping):
+66-            continue
+67-        pwd = str(r.get("keyboardPwd") or "").strip()
+68-        if not pwd.isdigit() or len(pwd) < 4 or r.get("success", 1) not in _OK:
+69-            continue
+70-        kind = r.get("recordType")
+71-        if kind not in (None, "") and str(kind) != str(UNLOCK_BY_PASSCODE):
+72-            continue
+73-        try:
+74-            lock = int(r.get("lockId") or top_lock)
+75-            ms = int(r.get("lockDate") or r.get("serverDate"))
+76-        except (TypeError, ValueError):
+77-            continue
+78-        out.append(Opening(lock, datetime.fromtimestamp(ms / 1000, timezone.utc), pwd))
+79-    return out
+80-
+81-
+82-def _door_of(locks: Any, lock_id: int) -> str | None:
+83-    from app.reservation.doors import ENTRADA
+84-    if locks.common.get(ENTRADA) == lock_id:
+85-        return "entrada"
+86-    if lock_id in locks.rooms.values():
+87-        return "quarto"
+88-    return None
+89-
+90-
+91-def _room_lock(store: Any, locks: Any, space: str) -> int | None:
+92-    for sid in store.inventory.lineage(space):
+===== contingencia (docstring + defs)
+Contingencia pela fechadura: a data de nascimento no teclado abre a porta (Dom, 27/09/2026; regras fechadas no
+documento `central-de-voz-ura-e-contingencia-fechadura`, secao "Contingencia pela fechadura").
+
+A ideia: hospede sem celular e sem a senha digita a DATA DE NASCIMENTO (DDMMAA) no teclado da fechadura. Nao e
+senha -- a fechadura recusa. Mas a recusa chega ao sistema (registro da TTLock: tipo 4, `success = 0`, os digitos
+em `keyboardPwd`; teste real nas esteiras 257/258). O sistema confere contra a FNRH de quem tem estadia ativa
+naquela porta e, se bater, abre a distancia pelo gateway (o mesmo comando do botao "Abrir a entrada").
+
+Regras (todas do Dom):
+  * portas: ENTRADA, SAIDA e QUARTO (a do quarto so para quem dorme nele); QUINTAL assim que a fechadura dele
+    entrar no cadastro (`QUINTAL:<id>` em PMS_TTLOCK_LOCKS), so para quem tem o quintal (liberdade `yard`, Smart).
+    Armario e panelas: nao.
+  * so depois da FNRH preenchida -- o numero ja bateu com a reserva; a data e o SEGUNDO fator, nunca prova sozinha.
+  * so dentro da janela da porta (a mesma da senha: entrada 6h da chegada -> 18h da saida; quarto 14h -> 11h).
+  * ate 3 aberturas por diaria, por estadia, somando todas as portas. Passou disso: nao abre, avisa hospede e
+    anfitriao (o caminho vira URA/WhatsApp/anfitriao).
+  * trava de abuso, OUTRO contador: 3 datas erradas na mesma fechadura em 10 minutos -> avisa o anfitriao e desliga
+    a contingencia naquela fechadura por 1 hora.
+  * cada abertura por este caminho avisa o hospede (WhatsApp) e o anfitriao, com etiqueta propria
+    ("contingencia por data"), separada da abertura normal.
+  * a data digitada NUNCA e guardada: compara e descarta. Nem a chave do registro usa os digitos.
+
+O que NAO conta como tentativa: codigo que nem parece data (senha errada comum, dedo escorregou). So "parece data e
+nao bate" entra na trava de abuso. Tentativa com mais de 3 minutos (o worker estava parado, por exemplo) nao abre
+mais nada -- porta aberta minutos depois, sem ninguem na frente, e risco.
+
+Desligado por padrao: `PMS_CONTINGENCIA_DATA=on` e a abertura a distancia ligada (`PMS_REMOTE_OPEN=on`).
+
+v1.0.194 -- SENHA CONFERIDA (Dom 03/11: "a possibilidade do sistema mesmo reconhecer a senha digitada e abrir para a
+pessoa, ja que a senha digitada confere"; analise aprovada com "Alta"). A mesma leitura das recusas, a mesma janela da
+porta, o mesmo limite de 3 por diaria e a mesma etiqueta no registro da entrada: se os numeros digitados CONTEM a sen
+  def ligado: 
+  def modo_senha: v1.0.194/195: ligado, desligado ou sombra. Vale o botao do anfitriao (Servicos > Portas, `portas_cfg`); sem ele,
+  def pode_abrir: v1.0.196: a casa abre porta a distancia -- a abertura de entregas (`PMS_REMOTE_OPEN`) OU os botoes "Abrir o
+  def ativo: Ha alguma coisa a fazer com as recusas: a contingencia por data ou a senha conferida.
+  def confere: Os numeros digitados contem a senha (a TTLock aceita a senha no meio de outros numeros). Menos de 4 digitos
+  def Tentativa: 
+  def tentativas: Recusas de senha (4 a 16 digitos; v1.0.194 -- a data de nascimento continua so a de 6) no aviso da nuvem
+  def ddmmaa: 
+  def parece_data: 
+  def porta: 
+  def _quarto: 
+  def _datas: 
+  def candidatos: (estadia, DDMMAA) de quem pode abrir esta porta agora: estadia ativa, porta dela, dentro da janela, FNRH
+  def _janela_senha: A janela da porta para esta estadia: a da casa, mais o horario escolhido pelo anfitriao (late checkout) e a
+  def donos_da_senha: v1.0.194: estadias cuja PROPRIA senha esta contida nos numeros digitados e que podem abrir esta porta agora.
+  def _dia: 
+  def _usadas: 
+  def decidir: O que fazer com uma recusa (funcao pura, exceto a leitura do cofre). None = nao interessa (porta fora da
+  def _avisar_hospede: 
+  def _contingencia: 
+  def _portas_ver: 
+  def _varredura_painel: 
+  def _sim: 
+  def _portas_set: 
+  def register: 
+  def processar: Cada recusa nova vira uma decisao registrada. Nunca levanta erro (roda dentro do aviso da fechadura).
+  def portas_para_ler: Fechaduras que valem a pena ler agora: entrada e saida, e o quarto de quem tem FNRH completa e estadia hoje.
+  def rotina: Plano B sem aviso da nuvem: le as recusas dos ultimos minutos. A entrada reaproveita a leitura que o worker
+===== contingencia_offline (docstring + defs)
+v1.0.242 -- a senha de contingencia quando a fechadura esta sem gateway (Dom, 14/11/2026).
+
+Dom: "Para o caso da fechadura ficar sem gateway, a gente tem que ter uma senha de contingencia (...) a gente aciona essa
+senha toda vez que o gateway nao conseguir enviar por estar offline. (...) enviar uma mensagem para o hospede, cancelando
+a senha que ele cadastrou e validando a senha de contingencia. (...) A gente so pode mandar a senha quando a gente tem
+certeza que a fechadura capta." / "a gente esta desligando a NoBeds. Precisamos fazer esse processo independente da
+Nobeds."
+
+Escolhas do Dom (14/11): so na porta sem gateway; a regra "so manda depois de conferida" vale para todas as senhas;
+gatilho = 3 falhas seguidas sem gateway na mesma porta OU 30 min antes da hora de entrar.
+
+Quem faz o que:
+  * o adaptador da TTLock (`adapters.make_ttlock_adapter`, emissao) conta as falhas sem gateway por porta e, no
+    gatilho, pede a TTLock o codigo OFFLINE daquela fechadura (`/v3/keyboardPwd/get`: a fechadura reconhece sozinha, sem
+    gateway), confere que a nuvem registrou o codigo para AQUELA fechadura e guarda no cofre
+    (`contingencia:<evento>:<porta>`). A senha do hospede so e mandada depois de relida em cada porta;
+  * aqui (o worker chama a cada volta): cada contingencia ainda nao avisada vira UMA mensagem ao hospede -- WhatsApp e
+    e-mail, NUNCA pelo chat da plataforma (Nobeds) -- dizendo para, naquela porta, NAO usar a senha dele e usar o
+    codigo de contingencia; e um aviso urgente ao anfitriao. O codigo vai no cofre (a fila leva so a referencia);
+  * a pagina do hospede mostra o codigo junto da senha (mesmo documento para ver).
+Limite da TTLock: o codigo offline e diferente em cada fechadura, tem 7 a 9 digitos e precisa ser usado a 1a vez em
+ate 24 h depois do inicio. `PMS_CONTINGENCIA_OFFLINE=off` desliga o aviso (o adaptador continua so contando falhas).
+
+v1.0.285 (Dom 21/11, Larissa Q05: "ela digitou a senha corretamente e nao passou"): a porta que caiu na contingencia
+ficava PARA SEMPRE so com o codigo offline -- a senha do hospede nunca mais era tentada. Agora `retomar` (o worker chama
+a cada volta) tenta de 10 em 10 min gravar a senha DO HOSPEDE naquela porta, com a janela da porta; quando entra (e e
+relida), a porta passa a valer com a senha de sempre (o codigo offline continua valendo ate vencer), a credencial
+guarda o id novo (a retirada apaga na saida), a pagina do hospede para de mostrar o codigo e o aviso ao anfitriao vira
+"resolvido". S
+  def ligada: 
+  def _ler: 
+  def pendentes: As referencias de contingencia ainda nao avisadas (so os nomes; o codigo fica no cofre).
+  def do_evento: As contingencias de uma estadia (para a pagina do hospede): porta, codigo e validade.
+  def texto: 
+  def _evento: 
+  def _avisar: 
+  def _retomada: 
+  def register: 
+  def _cred_com_porta: A credencial da estadia passa a ter o id da senha propria nesta porta (a retirada apaga na saida).
+  def retomar: v1.0.285: uma volta. Para cada porta que caiu na contingencia (e a estadia ainda vale), tenta gravar a senha do
+  def rodar: Uma volta (o worker chama a cada volta). Sem contingencia nova, nao grava nada.
+===== espelho_portas (docstring + defs)
+v1.0.203 (Dom 06/11/2026): as portas ESPELHAM o painel do anfitriao.
+
+Dom: "O sistema painel do anfitriao e que manda nas questoes das portas. As portas tem que espelhar o painel do
+anfitriao." / "O painel do anfitriao e soberano a qualquer outra coisa." -- caso do David (06/11): o painel trocou a
+estadia do Q03 para o Q09 e depois ele trocou a senha; a anotacao da estadia ficou sem o QUARTO e o ARMARIO, e a
+troca de senha (que so mexe nas portas anotadas) nunca chegou ao Quarto 9 nem ao Armario 9.
+
+Agora o sistema nao confia so na anotacao: de tempos em tempos (`PMS_ESPELHO_SEGUNDOS`, padrao 10 min) e logo depois de
+cada troca de quarto ou de senha, para cada estadia valendo (com a senha ja emitida), confere NA FECHADURA:
+
+  * as portas que o painel manda -- o lugar de AGORA no painel, o que a pessoa comprou (`extra_roles`), menos as portas
+    tiradas pelo anfitriao (`sem_roles`), no horario de cada porta (o anfitriao pode ter mudado: `janelas`) -- e so
+    as que ainda valem agora ou depois;
+  * em cada uma, se a senha ATUAL da estadia (`pin:<evento>` no cofre) esta la, valendo -- comparando os numeros so
+    em memoria (sha256), nunca escritos em lugar nenhum.
+
+O que encontra:
+  * "anotar": a senha certa esta na porta certa, mas a anotacao nao diz (ou aponta para outra porta) -- a anotacao e
+    corrigida (assim a proxima troca de senha chega nela);
+  * "refazer": falta a senha certa na porta certa -- a fila grava (`add_door` com `refazer`): a MESMA senha, no horario
+    da porta; a que estava anotada noutra fechadura (o quarto antigo) ou com numeros antigos sai, mas so depois.
+
+Nunca mexe em: estadia com a saida confirmada, acesso suspenso pelo anfitriao, senha ainda nao emitida (FNRH de todos,
+quarto ainda nao liberado), porta "existente" (contingencia do Dom) nem porta sem fechadura. `PMS_ESPELHO_PORTAS`:
+`corrigir` (padrao) | `aviso` (so avisa) | `off`. Toda correcao vira aviso (nao urgente) no painel.
+
+v1.0.252 (Dom 16/11, Aline Q13E: a senha venceu na ENTRADA as 18h e na SAIDA ia vencer as 22h, com a estadia indo ate
+17/11): duas falhas que o espelho deixava passar --
+  * SENHA PARADA: a gravacao esgotou (sem gateway, -2012) e a senha ficou marcada "incompleta"; o espelho pulava a
+    estadia para sempre. Agora a estadia incompleta entra quando o pedido de senha dela ESGOTOU e nao ha nada dela
+    na fila -- e a porta que falta e refeita quando o gateway volta (no maximo uma vez por hora por porta). A porta
+    do quarto que espera a conferencia 
+  def modo: 
+  def segundos: 
+  def _h: 
+  def _doors: 
+  def portas_do_painel: papel -> (fechadura, inicio, fim) que o painel manda AGORA para esta estadia (so as que ainda valem).
+  def estadias_a_conferir: 
+  def paradas: v1.0.252: estadias cujo pedido de senha (`issue_credential`) ESGOTOU e que nao tem nada da TTLock na fila.
+  def _quarto_espera: 
+  def planejar: Le as fechaduras e devolve as acoes, SEM numeros: {"acoes": [...], "conferidas": n, "falhas": [lock]}.
+  def _registrar: 
+  def register: 
+  def rotina: Nunca levanta erro (roda no laco do worker).
+  def gatilhos_novos: As estadias cujos pedidos de troca de quarto/senha (e afins) foram ENVIADOS entre `desde` e `ate`.
+===== varredura_portas (docstring + defs)
+v1.0.202 (Dom 05/11/2026): a limpeza das senhas das fechaduras, dentro do sistema e com a regra do Dom.
+
+Dom: "Nao pode apagar senha de hospede, nem de equipe." (depois de uma limpeza feita a mao ter tirado a senha do
+Marcelo -- colaborador e hospede -- e a da equipe dele mesmo, que estavam sem nome). E antes: "apaga todas as senhas
+que ja venceram... e as permanentes que nao sao administrativas. Mantenha so as administrativas, as que estao em
+funcionamento hoje e as que ainda vao ser ativadas."
+
+Uma vez por dia (4h da manha, `PMS_VARREDURA_HORA`) o worker le todas as senhas das fechaduras DESTA casa e separa:
+
+  * MANTER, sempre (nunca apaga, nem vencida):
+      - nome de administrador ou de equipe: ADM / ADMIN / SUPER / YOSHIO / EQUIPE / MANUT (maiuscula ou nao);
+      - os numeros sao os 4 digitos de alguem da EQUIPE (governanca) -- com nome ou sem;
+      - os numeros sao de um HOSPEDE com estadia valendo ou marcada (os 4 digitos dele, ou a senha que o sistema
+        gravou para a estadia); e a senha que o proprio sistema gravou para uma estadia que ainda nao acabou;
+  * MANTER: senha que ainda vale ou que vai comecar (o resto);
+  * APAGAR "vencida": a validade ja acabou (nao abre mais nada; so ocupa a memoria da fechadura);
+  * APAGAR "sem dono, parada": permanente (ou de prazo de mais de 1 ano), de ninguem acima, e que nao abriu porta
+    nenhuma nos ultimos 30 dias;
+  * PERGUNTAR: permanente (ou de prazo longo), de ninguem acima, mas que ABRIU a porta nos ultimos 30 dias -- vai
+    para o anfitriao dizer de quem e (aviso no painel, Servicos > Portas). Nunca e apagada sozinha.
+
+`PMS_VARREDURA_PORTAS` (ou a escolha no painel): `off` | `aviso` (so a lista e o aviso) | `vencidas` (padrao: apaga
+so as vencidas) | `apagar` (apaga as vencidas e as sem dono paradas). A exclusao vai pela fila (`ttlock`
+`delete_passcode_avulsa`), e o adaptador confere de novo, na hora, antes de apagar. Os numeros das senhas nunca saem
+deste modulo: so o sha256 deles e comparado, em memoria.
+  def modo: 
+  def hora: 
+  def _h: 
+  def _ascii: 
+  def protegido_pelo_nome: 
+  def _ms: 
+  def contexto: Quem nao pode perder a senha: hash dos 4 digitos da equipe e dos hospedes com estadia valendo/marcada, e as
+  def classificar: (acao, motivo) -- acao: manter | apagar | perguntar. `usos` = aberturas em 30 dias por hash dos numeros
+  def planejar: Le as senhas (e, so onde precisa, as aberturas de 30 dias) e devolve o plano SEM numeros:
+  def apaga_no_modo: 
+  def _registrar: 
+  def register: 
+  def ja_rodou_hoje: 
+  def na_hora: 
+  def fechaduras_da_casa: 
+  def rotina: Uma vez por dia, a partir da `hora`. Nunca levanta erro (roda no laco do worker).
+  def apagar_avulsa: A fila manda apagar; aqui confere de novo, na fechadura, antes: a fechadura e desta casa, a senha ainda esta
+===== sentinela_senhas (docstring + defs)
+v1.0.237 (Dom 14/11, madrugada: "a senha do Vinicius e a senha do Gabriel do quarto 12, ambos. Nao entrou ...
+revisa todas para nao dar problema"): a sentinela das senhas.
+
+Os dois casos daquela noite:
+  * Vinicius (extensao): na nuvem da TTLock a senha valia ate 15/11, mas a FECHADURA continuou com o prazo antigo e
+    recusou o hospede no quarto e na saida -- a validade nova nao tinha chegado a fechadura;
+  * Gabriel: a gravacao da senha na entrada e na saida esgotou as tentativas (erro da TTLock) e ninguem foi chamado.
+
+A sentinela roda de hora em hora no worker (`PMS_SENTINELA_SENHAS`, padrao ligado) e faz tres coisas:
+  1. RECUSA DENTRO DO PRAZO: le o registro das fechaduras de quem esta na casa (quarto, entrada e saida) e procura
+     tentativas RECUSADAS com a senha de um hospede valendo. Se a nuvem diz que a senha vale naquela hora, a validade
+     e reenviada pelo gateway (`reenviar_periodo`, a MESMA janela; a senha nao muda, nada e apagado) e o anfitriao e
+     chamado (WhatsApp + painel), uma vez por porta por dia;
+  2. SENHA FORA DA FECHADURA: a tentativa recusada e de uma senha que nao esta na fechadura -> chama o anfitriao
+     (nada e gravado sozinho: a porta certa e decisao dele, pelo cartao do hospede);
+  2b. SENHA VENCIDA COM A ESTADIA VALENDO (v1.0.249, caso Marcos): a senha esta na fechadura mas venceu antes da hora
+     da tentativa, e a estadia ainda vale -> chama o anfitriao (nada e gravado sozinho);
+  3. GRAVACAO ESGOTADA: todo pedido de senha (`issue_credential`) que esgotou as tentativas, de estadia valendo e sem
+     pedido mais novo, chama o anfitriao uma vez (antes so o gateway sem resposta, -2012, virava cartao no painel).
+
+A senha digitada nunca e guardada nem mostrada: so a impressao digital (`credential_fingerprint`) para casar.
+  def ligada: 
+  def _recusada: 
+  def _ms: 
+  def _lock_do_quarto: 
+  def estadias_na_casa: 
+  def achados: O que a sentinela achou nas fechaduras (funcao pura sobre as leituras). Cada achado:
+  def esgotados: Pedidos de senha que esgotaram as tentativas, de estadia valendo, sem pedido mais novo.
+  def _nome: 
+  def _onde: 
+  def _sentinela: 
+  def register: 
+  def rodar: Uma volta da sentinela (o worker chama de hora em hora). Sem nada achado, nao grava nada.
+  def _tz: 
+===== entry_log (docstring + defs)
+Registro da entrada: quem abriu a porta, alinhado com o registro da fechadura (Dom, 24/09/2026).
+
+Pergunta do Dom: "como fazer para o sistema entender que a fechadura foi aberta a distancia por
+determinado hospede?". A TTLock nao aceita texto nosso na abertura: `/v3/lock/unlock` so recebe o
+numero da fechadura, e o registro (`/v3/lockRecord/list`) traz hora, tipo e a CONTA que mandou o
+comando -- que e sempre a conta do PMS. Entao o alinhamento e feito aqui, em duas pontas:
+
+  1. o PMS anota ANTES de abrir: quem pediu (hospede ou equipe, com motivo), reserva, porta, hora e
+     um codigo pseudonimo do hospede (`dbq` + 6 letras/numeros -- nunca nome ou documento, LGPD);
+  2. o worker le o registro da fechadura e CASA cada abertura a distancia (tipo 3, "gateway
+     unlock") com o pedido do PMS: mesma fechadura, poucos minutos de diferenca, um para um.
+
+O que sai disso:
+  * "Registro da entrada" no painel: cada abertura com o dono (senha do hospede, senha da equipe,
+    abertura a distancia pedida por X, app);
+  * abertura SEM DONO (alguem abriu direto pelo app TTLock, fora do PMS) vira pendencia do
+    anfitriao, que explica com um toque -- nada fica sem explicacao;
+  * pedido que a fechadura NAO confirmou em 15 min vira "nao confirmada" e nao desconta do contador
+    do hospede (o botao dele volta a valer).
+
+Tipos (documentacao TTLock, lockRecord/list, conferida em 24/09): 1 app, 3 gateway, 4 senha,
+7 cartao, 37 controle remoto. Podem ser trocados por ambiente (PMS_TTLOCK_TIPOS_REMOTO/_APP) se
+a fechadura da casa usar outros codigos. Teste real de 25/09 (Q02, gateway G2): a abertura a distancia
+chega como tipo 12 -- por isso o padrao de remoto e "3,12".
+
+A senha digitada (`keyboardPwd`) NUNCA e guardada: vira so a impressao digital para casar.
+  def efetivo: v1.0.40 (Dom 05/10: "Os acionamentos da porta, quando acontecem pelo app TTLock, fui eu que fiz, o anfitriao ...
+  def _types: 
+  def guest_code: Codigo pseudonimo do hospede (o mesmo em todo lugar). A ligacao codigo -> pessoa so existe
+  def classify: 
+  def record_key: A TTLock nao da id ao registro: a chave e fechadura + hora + tipo + conta (+ impressao da
+  def _when: 
+  def _ok: 
+  def plan: O que o worker vai gravar (funcao pura, facil de testar): (linhas novas do registro,
+  def sem_leitura: Pedidos cuja fechadura nao pode ser lida nesta volta (gateway, internet) ou que nao tem fechadura conhecida:
+  def lock_do_pedido: A fechadura que o pedido abriu, resolvida como o adaptador resolve o `unlock` (`make_ttlock_adapter`): portao =
+  def _gap: Distancia entre o pedido e a abertura. A abertura vem DEPOIS do pedido; antes so por relogio
+  def _fits: O pedido `o` (ja da mesma fechadura -- `plan`) pode ser esta abertura? Dentro da janela de tempo e, com a
+  def _evento: 
+  def _person: 
+  def _reconcile: 
+  def _staff_open: 
+  def _explain: 
+  def _first: 
+  def _room: O quarto do hospede (as reservas ficam guardadas pela chave da reserva, nao pelo id do Evento).
+  def describe: 
+  def view: 
+  def _instante: 
+  def aberturas: As aberturas pedidas a distancia para estas estadias (titular e acompanhantes), da mais nova para a mais velha.
+  def _view: 
+  def register: 
+===== saida_porta (docstring + defs)
+v1.0.222 (Dom 09/11/2026): a saida pela porta -- "0 + a senha + #" na porta de SAIDA da casa = check-out.
+
+Dom: "Na porta de saida da casa, se a pessoa esta dando check-out, ela vai digitar 0, mas a senha completa dela e o
+jogo da velha. Dessa forma, a gente vai entender tambem que a pessoa deu check-out."
+
+As TTLock aceitam numeros a mais antes da senha ("anti-espiao"): a porta abre e o registro da fechadura traz o que
+foi digitado. A cada minuto o worker le o registro da fechadura de SAIDA (ultimos 15 min) e procura uma abertura pelo
+teclado cujo numero digitado e "0" + a senha ATUAL de uma estadia valendo (comparado so por sha256, em memoria).
+
+  * no DIA DA SAIDA da estadia: registra a saida (`reservation.check_out`, fonte "porta:saida", com a hora da porta)
+    -- a saida confirmada pela casa: a senha do quarto sai na hora, a limpeza abre, a FNRH recebe a hora da porta;
+  * em outro dia: nao fecha nada (pode ser engano, ou saida antecipada) -- vira aviso ao anfitriao, que decide.
+
+`PMS_SAIDA_ZERO`: `off` (padrao) | `aviso` (so avisa o anfitriao o que faria) | `on`. Cada abertura e tratada uma vez
+(`saida-zero:<estadia>` no cofre guarda a hora da ultima tratada).
+  def modo: 
+  def _h: 
+  def _digitos: 
+  def achar: [{event_id, key, quando}] -- aberturas com "0 + senha" de estadias valendo (sem numeros na saida).
+  def _aviso: 
+  def register: 
+  def rotina: A cada minuto. Nunca levanta erro.
+===== ficha_na_porta (docstring + defs)
+Ficha de todos na porta (Dom, 21/10/2026, v1.0.130).
+
+Dom: "a gente tem que deixar claro, sem o cadastro, nao entra na casa... quando o hospede principal chega na fechadura
+principal da casa, digita a senha e tenta entrar sem o preenchimento das outras fichas, a gente manda uma mensagem
+explicando" -- "a gente tem que mandar mensagem automatica para o WhatsApp da pessoa cada vez que ela tentar entrar no
+quarto ou digitar a senha em alguma coisa dentro da casa" -- "Voce sabe que essa senha e do cadastro. Mas ela so nao
+entrou no ar porque nao foi enviado o FNRH."
+
+Como funciona (com `PMS_QUARTO_ESPERA_TODOS=on`, o quarto so sai com a ficha de todos da reserva):
+  * a ENTRADA da casa abre com a ficha do titular (ninguem fica preso na rua -- `access.common_plan`);
+  * quando a senha do titular abre a entrada e falta a ficha de alguem da reserva, sai um WhatsApp na hora com os
+    links que faltam (uma vez por entrada lida no registro);
+  * quando a senha do titular e RECUSADA na porta do quarto ou no armario dele (a fechadura registra a recusa com os
+    digitos -- tipo 4, `success = 0`, teste real das esteiras 257/258), sai o mesmo aviso; no maximo um a cada 2 min
+    por pessoa (`INTERVALO`);
+  * 30 min depois da primeira entrada pela porta da rua, se ainda falta ficha (e ninguem tocou "Nao veio"), o
+    anfitriao e avisado (o mesmo alerta das 22h, `reservation.alerta_acompanhante_sem_ficha`, que continua valendo).
+
+O que nunca acontece: a senha digitada nao e guardada (so a impressao digital, para casar com a do cadastro); o aviso
+nao sai para quem nao tem celular no cadastro (o alerta ao anfitriao cobre); nada sai de madrugada repetido.
+
+Chave `PMS_FICHA_NA_PORTA`: `off` | `equipe` (padrao: so para a lista `PMS_FICHA_NA_PORTA_EQUIPE`, no formato de
+`PMS_WHATSAPP_APENAS` -- "tel:55...,tel:55..."; vazia = ninguem) | `on` (todos). Regra do Dom (28/09): automacao nova
+sai primeiro so para a equipe de teste.
+  def modo: 
+  def _para: O aviso vai para esta pessoa? Precisa de celular no cadastro e, no modo `equipe`, estar na lista.
+  def esperando: (reserva, Evento do titular) de quem esta na janela da estadia com ficha feita e alguem da reserva sem ficha.
+  def _pin: 
+  def _fechaduras_do_quarto: Quarto e armario da estadia (a cama sobe a arvore ate achar).
+  def recusas: Senha recusada pela fechadura (tipo 4, `success = 0`, com os digitos).
+  def _quando: 
+  def balde: O "balde" de 2 min: a mesma pessoa, no mesmo balde, recebe um aviso so (a chave da outbox leva o balde).
+  def primeira_entrada: A primeira abertura da ENTRADA pela senha desta estadia, no registro da entrada (`entry_log`).
+  def _entradas: 
+  def texto: O aviso, curto, pt + en, com os links de quem falta e o link do titular (para o "Nao veio").
+  def _aviso: 
+  def register: 
+  def rodar: Uma passada do worker. `list_records(lock, desde_ms, ate_ms)` le o registro de UMA fechadura (None = sem
+===== remote (docstring + defs)
+Abertura a distancia da ENTRADA e suspensao de acesso (Dom, 24/09/2026).
+
+Abertura a distancia (botao "Abrir a entrada" no painel do hospede):
+  * so a porta da ENTRADA, so durante a janela da casa (6h da chegada ate
+    18h da saida), cada abertura registrada (quem, quando, porta);
+  * ate 6 acionamentos por estadia, com o contador no proprio botao; o
+    hospede compra mais (pacote da Biblia 19/09: +6 por R$ 2 -- a confirmar);
+    o pacote so conta depois de pago;
+  * uso tipico: entrega (o entregador entra, guarda no armario com o numero
+    do quarto e o hospede abre de novo para ele sair -- 2 acionamentos);
+  * DESLIGADO ate o gateway TTLock da entrada existir (`PMS_REMOTE_OPEN=on`);
+  * cada pedido e casado com o registro da fechadura (`entry_log`, 24/09): o que a fechadura nao
+    confirmou em 15 min nao desconta.
+
+Suspensao (so o anfitriao decide -- o robo nunca suspende ninguem):
+  * tira todas as portas do hospede MENOS a SAIDA. Ninguem fica preso na casa.
+  def rid_of: A chave da reserva (a mesma de `finance`) para este Evento.
+  def enabled: 
+  def window: 
+  def counts: 
+  def view: 
+  def _own: 
+  def _remote_open: 
+  def _buy_remote: 
+  def _suspend: 
+  def entrega_cfg: {"ligado": bool, "segurar_s": int} -- vale o botao do anfitriao; sem ele, o ambiente.
+  def botoes_ligados: 
+  def _rid: 
+  def _codigo: 
+  def _lockmap: 
+  def tem_fechadura: 
+  def _datas: 
+  def situacao: "ok" ou o motivo (codigo curto que a tela traduz): suspenso, cadastro, acompanhantes, cedo, fim.
+  def botoes_view: Os botoes da tela Estadia (so com a chave ligada para esta reserva).
+  def _abrir: 
+  def register: 
+===== continuacao (docstring + defs)
+Estadia que continua (Dom 03/10, depois do Noah: "Quando um hospede segue na casa, mantemos a pessoa no Casa Viva
+normalmente, sem perguntar. Mantemos tambem a senha e o quarto.").
+
+Uma CONTINUACAO e a estadia B da mesma pessoa que comeca no dia em que a estadia A termina (a reserva nova "emendada" --
+no Nobeds sao duas reservas). Para a casa e uma estadia so. v1.0.91 (Dom 10/10, caso do Marcio: "ele na verdade nao fez
+uma nova reserva e continua na casa... A senha dele pode valer de um quarto para o outro"): vale em QUALQUER cama ou
+quarto -- antes so no mesmo espaco, e quem renovava em outra cama recebia o convite de hospede novo:
+
+  * a ficha de A vale para B (nada de "falta o seu cadastro" de novo), inclusive a dos acompanhantes;
+  * a senha de A continua valendo ate o fim de B, nas mesmas portas (a validade e esticada pelo gateway, a senha nao
+    muda) -- B nao ganha senha nova, que bateria com a dela mesma;
+  * nada de limpeza de troca no dia da emenda quando o espaco e o mesmo (`seguinte_no_mesmo_espaco`); se a cama ou o
+    quarto mudou, o espaco antigo tem a limpeza de sempre;
+  * outra cama/quarto: a mesma senha passa para a fechadura (e o armario) do espaco novo, na janela da estadia nova
+    (`ttlock/change_period` com `novo_espaco`); as portas que sao as mesmas so esticam;
+  * a senha so sai das fechaduras no fim da ULTIMA estadia da sequencia.
+
+Funcoes puras sobre o Registro; quem age e o worker (`continuar_senhas`) pela intencao `reservation.continuar_acesso`.
+  def _dia: 
+  def _hospedagem: 
+  def _chave: 
+  def _titular: 
+  def anterior: A estadia A de que `event` (B) e a continuacao, ou None. Mesma pessoa (em qualquer cama ou quarto -- v1.0.91),
+  def seguinte: A estadia B que continua `event` (A), ou None (em qualquer cama ou quarto; a do mesmo espaco primeiro).
+  def seguinte_no_mesmo_espaco: A continuacao de `event` NO MESMO espaco (a limpeza de troca so e dispensada assim: se a cama ou o quarto mudou,
+  def dona_da_senha: A estadia que guarda a senha (`pin:`/`cred:`) desta: a primeira da sequencia emendada; sem sequencia, ela mesma.
+  def primeira: A primeira estadia da sequencia (a que tem a ficha e a senha).
+  def ultima: A ultima estadia da sequencia (o fim de verdade do acesso).
+  def e_continuacao: 
+  def ficha_herdada: A ficha da primeira estadia da sequencia vale para esta (titular; o acompanhante pelo numero da vaga).
+  def vaga_herdada: O acompanhante n da reserva B fez a ficha na estadia anterior (mesma vaga, mesma sequencia).
+  def checkout_do_acesso: O dia da saida que vale para a senha: o da ultima estadia da sequencia (de um acompanhante: a do titular).
+  def coberta_pela_anterior: B nunca ganha senha propria: a senha e a da PRIMEIRA estadia da sequencia, emitida (ou esticada) ate a ultima
+  def chave: v1.0.249 (caso Marcos Vinicius): a chave leva o espaco de A -- se A ou a emendada mudam de lugar, e outra
+  def ja_mantida: A senha desta estadia ja foi mantida ate `ate`, com A onde esta hoje e a emendada no espaco `novo` ("" = o mesmo):
+  def _continuar: `event`: a estadia (titular ou acompanhante) que JA tem senha; `seguinte`: a estadia emendada do titular.
+  def register: 
+  def a_continuar: (estadia com senha, estadia seguinte do titular, ate) que ainda nao foram esticadas -- o titular e os
+  def chave_aviso: 
+  def avisado: 
+  def senha_de_antes: A senha que o hospede ja usa (sem o #): a emitida para a primeira estadia da sequencia; sem ela, os 4 digitos
+  def texto_aviso: V1.0.177 (Dom 27/10): no chat da plataforma (Airbnb/Booking) a SENHA NAO VAI -- so "continua a mesma (ela esta no
+  def _avisar: Uma mensagem so, pelo canal do convite (chat da plataforma para Airbnb/Booking; WhatsApp e e-mail para os
+===== canceladas (docstring + defs)
+v1.0.205 (Dom 06/11): quem cancelou sai do sistema.
+
+  * "O rapaz cancelou e a gente ainda ta mandando mensagem pra ele... Se o rapaz cancelou, ele nao tem que receber mais
+    nenhuma mensagem... bloqueia a existencia dele para que ele nao tenha acesso de forma alguma."
+  * "a moca do quarto 11, ela cancelou ontem. E ainda marca que ela ta dentro do quarto 11. As pessoas que cancelaram, o
+    sistema tem que dar varredura e tirar essas pessoas do sistema. As datas tem que estar liberado para outra pessoa
+    alugar."
+
+O importador do Nobeds ja cancela a estadia quando o canal cancela -- mas so a que ainda estava viva. A varredura fecha os
+buracos, a cada 10 minutos:
+  1. reserva cancelada (ou no-show) com estadia (ou vaga de acompanhante) ainda viva -> a estadia cai, a senha cai;
+  2. o que ainda esta na FILA para essa estadia (mensagem, e-mail, WhatsApp, chat da OTA) -> cancelado antes de sair.
+     Pela pessoa so quando ela nao tem nenhuma outra estadia valendo;
+  3. o calendario nao mostra estadia de reserva cancelada, nem a que tinha sido ENCERRADA (`panel/views.py`): as noites
+     ficam livres na tela como ja estavam livres para venda.
+O link da estadia ja morre com a estadia cancelada (`guest_service`). `PMS_VARRER_CANCELADAS=off` desliga.
+  def ligado: 
+  def cancelada: 
+  def _rid: 
+  def estadias_vivas: (chave, estadia) ainda viva de reserva cancelada -- o titular e as vagas dos acompanhantes.
+  def da_fila: Comandos de MENSAGEM pendentes para estadias de reservas canceladas (pela estadia/reserva; pela pessoa so quando
+  def _varrer: 
+  def rotina: No laco do worker. Nunca levanta erro.
+  def register: 
+===== worker: chamadas periodicas a TTLock
+1777:def ficha_na_porta(state: AppState, list_records: Callable[[int, int, int], list] | None, *,
+1794:    return F.rodar(state, list_records, locks=house_locks(state, env), at=at, chamar=chamar, env=env)
+2463:def notify_early_arrivals(state: AppState, list_records: Callable[[int, int, int], list], entry_lock: int, *,
+2485:    records = [r for r in list_records(entry_lock, int(since.timestamp() * 1000), int(at.timestamp() * 1000))
+2519:def reconcile_entry(state: AppState, list_records: Callable[[int, int, int], list], entry_lock: int, *,
+2534:    records = list_records(entry_lock, int(since.timestamp() * 1000), int(at.timestamp() * 1000))
+2571:def reconcile_doors(state: AppState, list_records: Callable[[int, int, int], list], locks: Any, *,
+2600:            records = list_records(lock, int(desde.timestamp() * 1000), int(at.timestamp() * 1000))
+2637:def detect_arrivals(state: AppState, list_records: Callable[[int, int, int], list], entry_lock: int, *,
+2670:    for r in list_records(entry_lock, int(since.timestamp() * 1000), int(at.timestamp() * 1000)):
+3394:    records_every = int(os.environ.get("PMS_LOCK_RECORDS_SECONDS", "60"))
+3462:            if now - last_espelho >= espelho_portas.segundos():
+3924:        if lock_client is not None and entry_lock and now - last_records >= records_every:
+3933:                    lidos = lock_client.list_records(entry_lock, int(since.timestamp() * 1000), agora_ms)
+3966:                        if (fp := ficha_na_porta(state, lock_client.list_records)) and any(fp.values()):
+3972:                    if feitos := contingencia.rotina(state, lock_client.list_records, lidos_entrada=lidos,
+3978:        if lock_client is not None and now - last_doors >= records_every:
+3982:                if feito := reconcile_doors(state, lock_client.list_records, house_locks(state), since=since):
+4062:                lidas = luz.poll(state, lock_client.list_records, house_locks(state))
+fim
+[nuvem] fim 2026-11-21 21:43:16 codigo=0 duracao=1s

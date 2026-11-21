@@ -1,0 +1,117 @@
+[nuvem] inicio 2026-11-21 17:11:05 081-ordens-anfitriao-e-como-ops-gravam-leitura.sh
+__pycache__
+abrir_painel.sh
+agenda_eventos_importar.py
+anfitriao_agir.py
+apply_migration.py
+backup.sh
+backup_midia.sh
+chegadas_registrar.py
+comparar_cadastros.py
+conectar_whatsapp.sh
+degustacao.py
+demo_local.py
+deploy.sh
+entregas_ota.py
+equipe_convidar.py
+escopo_teste.sh
+fnrh_reenviar.py
+gerar_base_casa.py
+homologacao_local.py
+instalar_degustacao.sh
+instalar_evolution.sh
+ligar_pagamento.sh
+lojista_convidar.py
+map_units.py
+medir_voz.py
+modulos_v1.py
+new_vault_key.py
+nucleo_ipiranga.py
+placar.py
+prova_estrutura_nucleo.py
+prova_grupo_6.py
+prova_real.py
+reenviar_convite_repasse_booking.py
+relatar.py
+saude.py
+seed_ipiranga.py
+selfies_reconferir.py
+servicos_ipiranga.py
+simulador_parceiros.py
+subir-v1.sh
+teste-v1.sh
+teste_impressora.py
+teste_uma_hora.py
+virada.py
+whatsapp_apenas.sh
+== ops/entregas_ota.py (inicio)
+#!/usr/bin/env python3
+"""Chat do Airbnb/Booking pela rotina do navegador (v1.0.82, Dom 09/10/2026: "Corrige e checa para ver se deu certo").
+
+O sistema poe na fila o que tem de ir ao hospede pelo chat da plataforma (convite com o link, lembretes, respostas da
+IA). A rotina do navegador (tarefa agendada, de hora em hora, 8h-21h) le esta lista, manda cada mensagem na caixa do
+anfitriao, CONFERE na conversa (o texto aparece la e a caixa ficou vazia) e so entao confirma aqui.
+
+    python ops/entregas_ota.py listar                       # SO LEITURA: o que mandar (JSON), mais antigo primeiro
+    python ops/entregas_ota.py descartar-vencidas           # cancela o que passou de 24 h (ou a estadia acabou)
+    python ops/entregas_ota.py entregue <chave> [<chave>...]         # conferido na conversa
+    python ops/entregas_ota.py nao-consegui <chave> "<motivo curto>"  # gasta uma tentativa (a 5a vira alerta)
+
+Na saida: primeiro nome, quarto, datas, plataforma, codigo da reserva e o texto -- nunca telefone, e-mail ou documento.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+from datetime import datetime, timezone
+from typing import Any
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "api"))
+
+
+def main(argv: list[str] | None = None, state: Any = None, agora: datetime | None = None) -> int:
+    from app.core.record import Actor, ActorKind
+    from app.messaging import entrega_ota
+    ap = argparse.ArgumentParser()
+    ap.add_argument("acao", choices=("listar", "descartar-vencidas", "entregue", "nao-consegui"))
+    ap.add_argument("resto", nargs="*")
+    a = ap.parse_args(argv)
+    if state is None:
+        from app.main import build_state
+        state = build_state()
+    at = agora or datetime.now(timezone.utc)
+    ator = Actor(ActorKind.AI, "rotina-navegador-ota")
+    if a.acao == "listar":
+        print(json.dumps(entrega_ota.a_entregar(state.store, state.outbox, at), ensure_ascii=False, indent=1))
+        return 0
+    if a.acao == "descartar-vencidas":
+        print("vencidas descartadas:", entrega_ota.descartar_vencidas(state, ator=ator, at=at))
+        return 0
+    if a.acao == "entregue":
+        for chave in a.resto:
+            print(chave, "->", entrega_ota.confirmar(state, chave, ator=ator, at=at, entregue=True))
+        return 0
+    if not a.resto:
+        print("falta a chave")
+        return 2
+    print(a.resto[0], "->", entrega_ota.confirmar(state, a.resto[0], ator=ator, at=at, entregue=False,
+                                                    motivo=" ".join(a.resto[1:])))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+../ops/anfitriao_agir.py
+../ops/equipe_convidar.py
+../ops/lojista_convidar.py
+../ops/map_units.py
+../ops/nucleo_ipiranga.py
+../ops/prova_real.py
+../ops/selfies_reconferir.py
+../ops/virada.py
+ordens: {'vent:Q05': {'ligar': True, 'ate': '', 'origem': 'agora', 'solta': None, 'at': '2026-11-21T10:16:24.671540+00:00'}, 'vent:Q06': {'ligar': True, 'ate': '', 'origem': 'agora', 'solta': None, 'at': '2026-11-21T02:47:49.074522+00:00'}}
+regras: []
+fim
+[nuvem] fim 2026-11-21 17:11:06 codigo=0 duracao=1s

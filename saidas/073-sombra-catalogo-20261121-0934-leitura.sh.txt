@@ -1,0 +1,31 @@
+[nuvem] inicio 2026-11-21 12:34:45 073-sombra-catalogo-20261121-0934-leitura.sh
+versao: 1.0.285
+caixas lidas: 2
+LEITOR;2026-11-20 09:38;outro;outro;-;ignora
+LEITOR;2026-11-20 10:04;outro;outro;-;ignora
+LEITOR;2026-11-20 11:09;alteracao;alteracao;-;alarme
+LEITOR;2026-11-20 11:13;outro;outro;-;ignora
+LEITOR;2026-11-20 11:24;cancelamento;cancelamento;-;cancelamento
+LEITOR;2026-11-20 11:31;outro;outro;-;ignora
+LEITOR;2026-11-20 12:01;pagamento;pagamento;-;ignora
+LEITOR;2026-11-20 13:31;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-20 16:34;outro;outro;-;ignora
+LEITOR;2026-11-20 16:35;reserva_nova;reserva_nova;-;reserva
+LEITOR;2026-11-20 17:11;outro;outro;-;ignora
+LEITOR;2026-11-20 17:14;outro;outro;-;ignora
+LEITOR;2026-11-20 17:21;reserva_nova;reserva_nova;-;reserva
+LEITOR;2026-11-20 18:32;outro;outro;-;ignora
+LEITOR;2026-11-20 19:45;mensagem;mensagem;-;ignora
+LEITOR;2026-11-20 20:07;outro;outro;-;ignora
+LEITOR;2026-11-20 22:32;mensagem;mensagem;-;ignora
+LEITOR;2026-11-20 22:39;outro;outro;-;ignora
+LEITOR;2026-11-20 22:39;reserva_nova;reserva_nova;-;reserva
+LEITOR;2026-11-20 23:04;outro;outro;-;ignora
+LEITOR;2026-11-21 06:01;pagamento;pagamento;-;ignora
+LEITOR;2026-11-21 09:29;cancelamento;cancelamento;-;cancelamento
+emails do Airbnb na janela: 22
+ENCAIXE;2026-11-20T19:36;1803458500036229139;Q12C;Q12C;IGUAL;IPI-CAP-1-E-V3
+ENCAIXE;2026-11-20T20:22;1803460809881519834;Q12E;Q12E;IGUAL;IPI-CAP-1-E-V5
+ENCAIXE;2026-11-21T01:40;1803461973947947345;Q12F;Q12F;IGUAL;IPI-CAP-1-E-V6
+fim
+[nuvem] fim 2026-11-21 12:35:03 codigo=0 duracao=18s

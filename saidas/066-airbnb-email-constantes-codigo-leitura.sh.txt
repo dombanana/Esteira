@@ -1,0 +1,155 @@
+[nuvem] inicio 2026-11-21 12:16:10 066-airbnb-email-constantes-codigo-leitura.sh
+== TIPOS (linha 54)
+TIPOS = (
+    ("cancelamento", CANCELADA),
+    ("alteracao", r"alterad|alteracao|alteração|modific|changed|change to|cambio|cambiad|atualizad"),
+    ("reserva_nova", r"confirmad|nova reserva|new (booking|reservation)|reservation confirmed|booking confirmed"
+                     r"|reserva confirmada|nueva reserva|instant book|reservou|has booked|nova solicita"),
+    ("pagamento", r"pagamento|payout|payment|pago|repasse|transfer"),
+    ("mensagem", r"mensagem|message|mensaje|enviou|escreveu|wrote|sent you|pergunta|question"),
+    ("avaliacao", r"avalia|review|reseña|resena"),
+)
+#: codigo da reserva no assunto/texto, por OTA (Airbnb HMXXXXXXXX; Booking 10 digitos; Hostelworld 6-9 digitos)
+CODIGOS = {
+    "Airbnb": re.compile(r"\b(HM[A-Z0-9]{8})\b"),
+    "Booking": re.compile(r"\b(\d{10})\b"),
+    "Hostelworld": re.compile(r"\b(\d{6,9})\b"),
+}
+CODIGO_GERAL = re.compile(r"\b(HM[A-Z0-9]{8}|\d{7,10})\b")
+
+EMAIL = IntentContract(
+    name="entrada.email", description="registrar um e-mail que chegou na caixa reservations@ (modo sombra: nunca responde)",
+    module=MODULE, required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE)
+SAUDE = IntentContract(
+    name="entrada.saude", description="registrar a saude de uma fonte lida pelo worker (Nobeds): falha seguida vira alerta unico",
+    module=MODULE, required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE,
+== NAO_CANCELADA (linha 52)
+NAO_CANCELADA = (r"pedido de cancel|solicita\w* de cancel|request(ed|s)? (to )?cancel|free cancel|cancelamento gr[aá]t"
+                 r"|pol[ií]tica de cancel|cancellation policy|cancelamento gratuito")
+TIPOS = (
+    ("cancelamento", CANCELADA),
+    ("alteracao", r"alterad|alteracao|alteração|modific|changed|change to|cambio|cambiad|atualizad"),
+    ("reserva_nova", r"confirmad|nova reserva|new (booking|reservation)|reservation confirmed|booking confirmed"
+                     r"|reserva confirmada|nueva reserva|instant book|reservou|has booked|nova solicita"),
+    ("pagamento", r"pagamento|payout|payment|pago|repasse|transfer"),
+    ("mensagem", r"mensagem|message|mensaje|enviou|escreveu|wrote|sent you|pergunta|question"),
+    ("avaliacao", r"avalia|review|reseña|resena"),
+)
+#: codigo da reserva no assunto/texto, por OTA (Airbnb HMXXXXXXXX; Booking 10 digitos; Hostelworld 6-9 digitos)
+CODIGOS = {
+    "Airbnb": re.compile(r"\b(HM[A-Z0-9]{8})\b"),
+    "Booking": re.compile(r"\b(\d{10})\b"),
+    "Hostelworld": re.compile(r"\b(\d{6,9})\b"),
+}
+CODIGO_GERAL = re.compile(r"\b(HM[A-Z0-9]{8}|\d{7,10})\b")
+
+EMAIL = IntentContract(
+    name="entrada.email", description="registrar um e-mail que chegou na caixa reservations@ (modo sombra: nunca responde)",
+    module=MODULE, required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE)
+SAUDE = IntentContract(
+== CODIGOS (linha 64)
+CODIGOS = {
+    "Airbnb": re.compile(r"\b(HM[A-Z0-9]{8})\b"),
+    "Booking": re.compile(r"\b(\d{10})\b"),
+    "Hostelworld": re.compile(r"\b(\d{6,9})\b"),
+}
+CODIGO_GERAL = re.compile(r"\b(HM[A-Z0-9]{8}|\d{7,10})\b")
+
+EMAIL = IntentContract(
+    name="entrada.email", description="registrar um e-mail que chegou na caixa reservations@ (modo sombra: nunca responde)",
+    module=MODULE, required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE)
+SAUDE = IntentContract(
+    name="entrada.saude", description="registrar a saude de uma fonte lida pelo worker (Nobeds): falha seguida vira alerta unico",
+    module=MODULE, required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE,
+    external_effects=("whatsapp", "email"))   # alerta unico: WhatsApp (Nobeds fora) ou e-mail (o WhatsApp fora)
+VER = IntentContract(
+    name="entrada.ver", description="a caixa reservations@ no painel: o que chegou, de qual OTA, de que tipo e se bate com a casa",
+    module=MODULE, required_role=Role.HOST, reversibility=Reversibility.REVERSIBLE)
+
+ALERTA_APOS = timedelta(hours=1)
+#: fonte -> (nome para gente, o que isso causa) no alerta unico
+FONTES = {"nobeds": ("Nobeds", ": reservas novas podem nao chegar"),
+          "internet_casa": ("A casa (roteador)", ": internet dos hospedes, cameras e fechaduras pela rede podem estar fora"),
+          "ttlock": ("A nuvem das fechaduras (TTLock)", ": senhas novas e aberturas a distancia nao saem"),
+== CODIGO_GERAL (linha 69)
+CODIGO_GERAL = re.compile(r"\b(HM[A-Z0-9]{8}|\d{7,10})\b")
+
+EMAIL = IntentContract(
+    name="entrada.email", description="registrar um e-mail que chegou na caixa reservations@ (modo sombra: nunca responde)",
+    module=MODULE, required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE)
+SAUDE = IntentContract(
+    name="entrada.saude", description="registrar a saude de uma fonte lida pelo worker (Nobeds): falha seguida vira alerta unico",
+    module=MODULE, required_role=Role.STAFF, reversibility=Reversibility.REVERSIBLE,
+    external_effects=("whatsapp", "email"))   # alerta unico: WhatsApp (Nobeds fora) ou e-mail (o WhatsApp fora)
+VER = IntentContract(
+    name="entrada.ver", description="a caixa reservations@ no painel: o que chegou, de qual OTA, de que tipo e se bate com a casa",
+    module=MODULE, required_role=Role.HOST, reversibility=Reversibility.REVERSIBLE)
+
+ALERTA_APOS = timedelta(hours=1)
+#: fonte -> (nome para gente, o que isso causa) no alerta unico
+FONTES = {"nobeds": ("Nobeds", ": reservas novas podem nao chegar"),
+          "internet_casa": ("A casa (roteador)", ": internet dos hospedes, cameras e fechaduras pela rede podem estar fora"),
+          "ttlock": ("A nuvem das fechaduras (TTLock)", ": senhas novas e aberturas a distancia nao saem"),
+          # P8 da Fase 2 da VPS (17/10): antes so a V3.4 conferia os gateways, 1 vez por dia
+          "ttlock_gateway": ("O gateway das fechaduras (TTLock) fora do ar", ": senhas novas, troca de horario e "
+                             "aberturas a distancia nao chegam as fechaduras dele -- veja se esta na tomada e no Wi-Fi"),
+          "voz": ("A central de voz (Vono)", ": ligacoes para a casa nao chegam -- caem na operadora"),
+          "voz_transcricao": ("A transcricao de audio (whisper)", ": recados e audios do WhatsApp ficam sem texto"),
+== OTA_DOMINIOS (linha 41)
+OTA_DOMINIOS = (
+    ("airbnb.com", "Airbnb"), ("airbnb.com.br", "Airbnb"), ("booking.com", "Booking"),
+    ("hostelworld.com", "Hostelworld"), ("decolar.com", "Decolar"), ("despegar.com", "Decolar"),
+    ("agoda.com", "Agoda"), ("agoda-messaging.com", "Agoda"), ("expedia.com", "Expedia"),
+    ("expediapartnercentral.com", "Expedia"), ("hotels.com", "Expedia"), ("nobeds.com", "Nobeds"),
+    ("asaas.com", "Asaas"),
+)
+#: tipo pelo assunto (pt/en/es), na ordem: o primeiro que casa vence ("cancelada" antes de "reserva")
+#: cancelamento de VERDADE (revisao 03/10): "Pedido de cancelamento", "cancelamento gratis" e a politica de
+#: cancelamento que todo e-mail de OTA cita NAO sao cancelamento
+CANCELADA = r"\bcancelad[ao]s?\b|\b(cancelled|canceled)\b|has been cancel|foi cancelad|cancelaci[oó]n confirmada"
+NAO_CANCELADA = (r"pedido de cancel|solicita\w* de cancel|request(ed|s)? (to )?cancel|free cancel|cancelamento gr[aá]t"
+                 r"|pol[ií]tica de cancel|cancellation policy|cancelamento gratuito")
+TIPOS = (
+    ("cancelamento", CANCELADA),
+    ("alteracao", r"alterad|alteracao|alteração|modific|changed|change to|cambio|cambiad|atualizad"),
+    ("reserva_nova", r"confirmad|nova reserva|new (booking|reservation)|reservation confirmed|booking confirmed"
+                     r"|reserva confirmada|nueva reserva|instant book|reservou|has booked|nova solicita"),
+    ("pagamento", r"pagamento|payout|payment|pago|repasse|transfer"),
+    ("mensagem", r"mensagem|message|mensaje|enviou|escreveu|wrote|sent you|pergunta|question"),
+    ("avaliacao", r"avalia|review|reseña|resena"),
+)
+#: codigo da reserva no assunto/texto, por OTA (Airbnb HMXXXXXXXX; Booking 10 digitos; Hostelworld 6-9 digitos)
+== _texto
+def _texto(msg: email.message.Message) -> str:
+    """O texto do e-mail: a parte text/plain; sem ela, o HTML (a porta de entrada tira as tags)."""
+    plano, html = "", ""
+    partes = msg.walk() if msg.is_multipart() else [msg]
+    for p in partes:
+        tipo = p.get_content_type()
+        if p.get_content_maintype() == "multipart" or "attachment" in str(p.get("Content-Disposition") or ""):
+            continue
+        try:
+            corpo = p.get_payload(decode=True) or b""
+            t = corpo.decode(p.get_content_charset() or "utf-8", "replace")
+        except Exception:  # noqa: BLE001
+            continue
+        if tipo == "text/plain" and not plano:
+            plano = t
+        elif tipo == "text/html" and not html:
+            html = t
+    return plano or html
+
+
+def para_porta(bruto: bytes) -> dict:
+    """O e-mail cru no formato da porta de entrada (`entrada.ler_email`)."""
+    msg = email.message_from_bytes(bruto)
+    remetente = parseaddr(_dec(msg.get("From")))[1].lower()
+    para = parseaddr(_dec(msg.get("Delivered-To") or msg.get("To")))[1].lower()
+    return {"message_id": str(msg.get("Message-ID") or "").strip()[:200], "remetente": remetente,
+            "dominio": remetente.rsplit("@", 1)[-1] if "@" in remetente else "", "para": para,
+            "assunto": _dec(msg.get("Subject"))[:300], "texto": _texto(msg), "quando": str(msg.get("Date") or "")[:40]}
+
+
+def ler_caixa(cfg: Mapping[str, Any], *, conectar: Callable[[str], Any] | None = None,
+fim
+[nuvem] fim 2026-11-21 12:16:10 codigo=0 duracao=0s

@@ -1,0 +1,16 @@
+[nuvem] inicio 2026-11-21 23:40:55 106-bloqueio-titular-da-reserva-leitura.sh
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/ura.py:141:                        "intransferível.")
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/inteligencia.py:362:(texto do anfitrião): "Você está ciente que a reserva é pessoal e intransferível? Podemos receber sua amiga, mas vamos \
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/inteligencia.py:401:                        "intransferível; quem reservou responde pela pessoa recebida). Só depois de um sim/ok claro.",
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/intents.py:811:                   "text_sha256": row["text_sha256"], "term": "reserva pessoal e intransferivel; quem reservou "
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/intents.py:933:TERMO_TERCEIRO = "pessoal e intransferível"
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/intents.py:957:            "term": "reserva pessoal e intransferivel; quem reservou responde pela pessoa recebida", "via": "ia"}
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/knowledge.py:90:                     "A senha é pessoal e intransferível.")
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/knowledge.py:326:    return Decision("regra", "Você está ciente que a reserva é pessoal e intransferível? Podemos receber sua "
+== intents de liberar
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/confere_documento.py:295:    name="reservation.liberar_documento",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1929:    name="reservation.liberar_menor",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/acesso_hospede.py:251:    name="reservation.liberar_acesso",
+estadia confirmed chave ... EQZY evento ... 760a78
+fim
+[nuvem] fim 2026-11-21 23:40:56 codigo=0 duracao=1s

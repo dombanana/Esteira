@@ -1,0 +1,11 @@
+[nuvem] inicio 2026-11-21 17:13:17 083-worker-ve-gravacao-de-ops-leitura.sh
+958:    2. o proprio Nobeds registrou ERRO nas ultimas 24 h (`list_errors`)? -- e ali que aparece canal sem sincronizar.
+3335:    from app.main import build_state
+3337:    state = build_state()
+3926:                # sempre desde as 5h de hoje: registro que a fechadura sincroniza atrasado (sem gateway)
+== tuya_vent_aplicar
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/intents.py:376:    name="luz.tuya_vent_aplicar",
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/ventilador.py:364:    out = chamar(state, "luz.tuya_vent_aplicar", {"store": state.store, "quarto": q, "aparelho": ap, "ligar": ligar,
+/opt/PMS-Banana-AI/SISTEMA/api/app/tuya_casa/anfitriao.py:15:  "vent:<Qnn>"    o ventilador do quarto privativo         -> `luz.tuya_vent_aplicar` (3 reles: um de cada vez)
+fim
+[nuvem] fim 2026-11-21 17:13:17 codigo=0 duracao=0s

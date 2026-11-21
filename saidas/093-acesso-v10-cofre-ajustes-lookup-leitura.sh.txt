@@ -1,0 +1,145 @@
+[nuvem] inicio 2026-11-21 21:55:35 093-acesso-v10-cofre-ajustes-lookup-leitura.sh
+===== Vault.open
+439:    def open(self, ref: str, *, actor: str, purpose: str) -> Mapping[str, Any]:
+440-        data = self._read(ref)
+441-        if self.on_open is not None:
+442-            self.on_open(ref, actor, purpose)
+443-        return data
+444-
+445-    def purge(self, ref: str) -> None:
+446-        """Apaga a linha por completo -- a senha em claro do quarto nao
+447-        sobrevive ao check-out nem como ciphertext orfao (A13, expurgo)."""
+448-        self.db.execute("DELETE FROM vault_items WHERE vault_ref=%s", [ref])
+449-
+450-    def __contains__(self, ref: str) -> bool:
+451-        return self.db.one("SELECT 1 AS x FROM vault_items WHERE vault_ref=%s", [ref]) is not None
+452-
+453-    def refs_com_prefixo(self, prefixo: str) -> set[str]:
+454-        """v1.0.191 (worker lento, amostrador 03/11): as referencias que comecam com `prefixo`, numa consulta -- a
+455-        retirada de senha e a limpeza das fotos perguntavam uma a uma (milhares de consultas a cada volta). So nomes:
+456-        nada e decifrado nem aberto (nao vira Registro de abertura)."""
+457-        if not prefixo:
+458-            raise ValueError("prefixo vazio leria o cofre inteiro")
+459-        # sem ESCAPE (MySQL e SQLite tratam diferente): "_" ou "%" no prefixo so alargam a busca; o startswith corta
+460-        rows = self.db.query("SELECT vault_ref FROM vault_items WHERE vault_ref LIKE %s", [prefixo + "%"])
+461-        return {str(r["vault_ref"]) for r in rows if str(r["vault_ref"]).startswith(prefixo)}
+462-
+463-
+464-# ===========================================================================
+===== _janela/_ajustar/_armarios
+    def _janela(info: Mapping[str, Any], role: str, starts: datetime, ends: datetime) -> tuple[datetime, datetime]:
+        """v1.0.143: o horario que o anfitriao escolheu para esta porta (senao, o de sempre)."""
+        par = (info.get("janelas") or {}).get(role)
+        if not par:
+            return starts, ends
+        try:
+            return datetime.fromisoformat(str(par[0])), datetime.fromisoformat(str(par[1]))
+        except (TypeError, ValueError, IndexError):
+            return starts, ends
+
+    def _ajustar_portas(doors: list, info: Mapping[str, Any]) -> list:
+        from dataclasses import replace as _r
+        sem = set(info.get("sem_roles") or ())
+        out = []
+        for d in doors:
+            if d.role in sem:
+                continue
+            s, e = _janela(info, d.role, d.starts, d.ends)
+            out.append(_r(d, starts=s, ends=e) if (s, e) != (d.starts, d.ends) else d)
+        return out
+
+    def _armarios_do_quarto_inteiro(doors: list, info: Mapping[str, Any]) -> list:
+        """v1.0.176 (Dom 27/10: "quarto coletivo alugado como privativo libera os aparelhos de cada uma das camas"):
+        o armario de cada OUTRA cama do quarto entra como porta propria ("ARMARIO+Q12B"), na mesma janela do
+        armario da estadia. Cama sem armario cadastrado fica de fora; armario repetido nao entra duas vezes."""
+        from dataclasses import replace as _r
+        camas = tuple(info.get("camas_do_quarto") or ())
+        base = next((d for d in doors if d.role == ARMARIO), None)
+        if len(camas) < 2 or base is None:
+            return []
+        ja = {d.lock_id for d in doors if d.lock_id is not None}
+        extra = []
+        for cama in camas:
+            lock = armarios.get(cama)
+            if lock is None or lock in ja:
+                continue
+            ja.add(lock)
+            extra.append(_r(base, role=f"{ARMARIO}+{cama}", lock_id=lock))
+        return extra
+
+    def _sem_gateway(erro: Exception) -> bool:
+===== _event_lookup
+52:def _event_lookup(state: AppState) -> Callable[[str], Mapping[str, Any]]:
+53-    def lookup(event_id: str) -> Mapping[str, Any]:
+54-        for reservation_id, event in state.store.events.items():
+55-            if event.event_id == event_id:
+56-                # 03/10: o acompanhante ("<reserva>:P2") e da reserva do titular -- antes o `next` sem achar
+57-                # levantava StopIteration dentro do adaptador e travava a fila inteira
+58-                rid = reservation_id.rsplit(":P", 1)[0] if ":P" in reservation_id else reservation_id
+59-                reserva = next((r for r in state.store.reservations.values() if r.reservation_id == rid), None)
+60-                tz = ZoneInfo(state.store.timezone)
+61-                checkin = reserva.checkin if reserva is not None and reserva.checkin else event.when.start.astimezone(tz).date()
+62-                checkout = reserva.checkout if reserva is not None and reserva.checkout else event.when.end.astimezone(tz).date()
+63-                # Dom 03/10: quem segue na casa (estadia emendada) recebe a senha ja ate a ULTIMA saida
+64-                from app.reservation.continuacao import checkout_do_acesso
+65-                saida = max(checkout, checkout_do_acesso(state.store, event))
+66-                conta = (getattr(state.store, "account_links", {}) or {}).get(event.who.person) or event.who.person
+67-                # v1.0.176 (Dom 27/10): quarto coletivo alugado INTEIRO -- a senha de cada pessoa da reserva (titular
+68-                # e acompanhantes) abre o armario de TODAS as camas do quarto
+69-                titular = state.store.events.get(rid)
+70-                camas = tuple(titular.where) if titular is not None and len(titular.where) >= 2 else ()
+71-                return {"person_ref": event.who.person, "conta": conta, "space": event.where[0], "instance": event.instance,
+72-                        "checkin": checkin.isoformat(), "checkout": saida.isoformat(),
+73-                        "liberties": tuple(sorted(lib.value for lib in event.scope.liberties)),
+74-                        "camas_do_quarto": camas,
+75-                        "extra_roles": tuple((getattr(state.store, "door_extras", {}).get(event.event_id) or {})
+76-                                             .get("roles", ())),
+77-                        # v1.0.143: portas tiradas e horarios escolhidos pelo anfitriao
+78-                        "sem_roles": tuple((getattr(state.store, "door_extras", {}).get(event.event_id) or {})
+79-                                           .get("sem", ())),
+80-                        "janelas": dict((getattr(state.store, "door_extras", {}).get(event.event_id) or {})
+81-                                        .get("janelas") or {}),
+82-                        # v1.0.201: a conversa da reserva (so o titular) -- a senha vai tambem no chat do Airbnb
+83-                        "chat": _chat_do_titular(reserva, reservation_id == rid)}
+84-        raise KeyError(event_id)
+85-    return lookup
+86-
+87-
+88-def _chat_do_titular(reserva: Any, titular: bool) -> dict | None:
+89-    if reserva is None or not titular:
+90-        return None
+91-    from app.reservation.intents import chat_da_ota
+92-    if not chat_da_ota(reserva):
+93-        return None
+94-    return {"referral_order_id": str(reserva.ota_code), "referral": str(reserva.referral or "")}
+95-
+96-
+97-def _endereco_casa(env: Mapping[str, str]) -> dict:
+98-    from app.reservation.cep import endereco_da_casa
+99-    casa = endereco_da_casa(env)
+100-    if casa.get("cep") and not casa.get("numero"):
+101-        # 03/10: sem numero, o endereco da casa nunca vai ao governo (fnrh_endereco_casa_incompleto) -- avisa na subida
+102-        log.warning("FNRH: endereco da casa sem numero (PMS_FNRH_NUMERO_CASA ou PMS_FNRH_ENDERECO_CASA); "
+===== inbox
+1:/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py:159:class InboxEvent:
+10:/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py-168-    def __post_init__(self) -> None:
+17:/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py:175:class Inbox:
+20:/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py-178-    def __init__(self) -> None:
+24:/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py-182-    def accept(self, event: InboxEvent) -> bool:
+37:/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py-195-    def seen(self, idempotency_key: str) -> bool:
+40:/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py-198-    def __len__(self) -> int:
+43:/opt/PMS-Banana-AI/SISTEMA/api/app/core/outbox.py-201-    def __iter__(self) -> Iterator[InboxEvent]:
+49:/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py:577:class SqlInbox:
+53:/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-581-    def __init__(self, db: Database, vault: SqlVault | Any) -> None:
+56:/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-584-    def accept(self, event: InboxEvent) -> bool:
+69:/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-597-    def seen(self, idempotency_key: str) -> bool:
+72:/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-600-    def __len__(self) -> int:
+75:/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py-603-    def __iter__(self) -> Iterator[InboxEvent]:
+===== SMART/HOSTEL
+57:SMART = ("sleep", "common_area", "kitchen", "yard")   # yard = quintal (Dom, 23/09)
+58:HOSTEL = ("sleep", "common_area")
+59-
+60-#: Fechaduras TTLock do Ipiranga -- ids da V3.4 (migracao 010, `access_resources`).
+61-#: Nao e segredo: e o numero da fechadura na conta; sem a conta, nao abre nada.
+fim
+[nuvem] fim 2026-11-21 21:55:35 codigo=0 duracao=0s

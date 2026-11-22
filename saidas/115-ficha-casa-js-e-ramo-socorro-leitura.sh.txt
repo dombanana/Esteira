@@ -1,0 +1,26 @@
+[nuvem] inicio 2026-11-22 00:52:00 115-ficha-casa-js-e-ramo-socorro-leitura.sh
+== casa.js no nginx (status, ultimos 3 dias)
+== casa.js: tamanho e cache
+-rw-rw-r-- 1 pms pms 20085 Nov 21 10:57 /opt/PMS-Banana-AI/SISTEMA/api/app/visual/casa.js
+/etc/nginx/sites-enabled/dombanana.com.br.conf:20:    location ^~ /visual/ { proxy_pass http://127.0.0.1:8090; proxy_set_header Host $host; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; proxy_set_header X-Forwarded-Proto https; }
+== erros mostrados na pagina (API), por dia e onde
+     64 erro mostrado na pagina: link=*** onde=js chave=outro
+     29 erro mostrado na pagina: link=*** onde=vtmsg chave=outro
+     14 erro mostrado na pagina: link=*** onde=fmsg chave=outro
+      2 erro mostrado na pagina: link=*** onde=fotmsg chave=eself_luz
+      2 erro mostrado na pagina: link=*** onde=fmsg chave=ffalta
+      2 erro mostrado na pagina: link=*** onde=armsg chave=outro
+      1 erro mostrado na pagina: link=*** onde=tsmsg chave=outro
+      1 erro mostrado na pagina: link=*** onde=fotmsg chave=eself_rosto
+     33 Nov 19
+     42 Nov 20
+     39 Nov 21
+      2 Nov 22
+== ramo socorro na fila
+fatal: detected dubious ownership in repository at '/opt/pms-banana-ai-fila.git'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /opt/pms-banana-ai-fila.git
+eec6840b NAO esta em cima do main atual
+fim
+[nuvem] fim 2026-11-22 00:52:06 codigo=0 duracao=6s

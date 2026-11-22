@@ -1,0 +1,33 @@
+[nuvem] inicio 2026-11-22 00:04:55 113-fnrh-gatilho-leitura.sh
+14:VERSAO = "1.0.285"
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/__init__.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/motor/service.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/nao_contatar.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/adapters.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/alerts.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/versao.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/checkout_hospede.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/companions.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/ficha_na_porta.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/nao_veio.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/espelho_portas.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/recorrente.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/saida_porta.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fnrh_fila.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/editar_estadia.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/regimento.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/morador_ficha.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/reemitir.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/recorrente.py:67:        cmd = outbox.get(f"fnrh:submit:{e.event_id}")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fnrh_fila.py:15:PREFIXO = "fnrh:submit:"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/fnrh_fila.py:258:    ref = f"fnrh:pessoa:{enviado.payload.get('person_ref') or ''}"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1017:        idempotency_key=f"fnrh:submit:{event.event_id}",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:1079:             idempotency_key=f"fnrh:{movement}:{event.event_id}")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/editar_estadia.py:540:        conhece = vault is not None and f"fnrh:reserva:{rid}" in vault
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/editar_estadia.py:551:             idempotency_key=f"fnrh:atualizar_reserva:{rid}:{ci}:{co}:{marca}")
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/morador_ficha.py:62:    sub = outbox.get(f"fnrh:submit:{k}") if outbox is not None else None
+grep: write error: Broken pipe
+fim
+[nuvem] fim 2026-11-22 00:04:56 codigo=0 duracao=1s

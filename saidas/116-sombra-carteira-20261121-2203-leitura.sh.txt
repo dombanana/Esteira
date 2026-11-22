@@ -1,0 +1,27 @@
+[nuvem] inicio 2026-11-22 01:03:55 116-sombra-carteira-20261121-2203-leitura.sh
+versao: 1.0.285
+EST;b13524320b;Q12E;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;3bf2c48f6a;Q13C;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;332ac08440;Q10;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;4f2ce6d174;Q05;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;4e6b97f7a5;Q13B;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;7b83b28746;Q03;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;445617a9f1;Q04;origem=nobeds;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;820ce9f76c;Q12E;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;df6bafe474;Q02;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;38387e53bd;Q13C;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;e0ad98d4fe;Q13D;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;c0b10e646e;Q13E;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;f8c564760b;Q09;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;0e24b89605;Q14B;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;5605e1372b;Q02;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;7afbafa553;Q12C;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;b9bf51aa92;Q13F;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;2d1e9b001a;Q08;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;132f1180f4;Q13A;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;a65d8a267a;Q06;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;e1f525c5e8;Q12F;origem=Airbnb;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+EST;4006f73abb;Q07;origem=Teste interno;v10=nao_se_aplica;v11=nao_se_aplica;segura10=n;segura11=n
+== RESUMO: {'estadias': 22, 'v10 nao_se_aplica': 22}
+== DIFERENCAS NA PORTA (0):
+[nuvem] fim 2026-11-22 01:03:56 codigo=0 duracao=1s

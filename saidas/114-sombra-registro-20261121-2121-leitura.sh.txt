@@ -1,0 +1,32 @@
+[nuvem] inicio 2026-11-22 00:22:35 114-sombra-registro-20261121-2121-leitura.sh
+versao: 1.0.285
+EST;5058b3e7eb;Q12E;2026-11-29;2026-12-01;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;3e6e0621b6;Q13C;2026-11-27;2026-11-29;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;0c5557835e;Q10;2026-11-08;2026-12-04;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;de88ed4172;Q05;2026-11-21;2026-11-24;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;90fb9cf34f;Q13B;2026-11-19;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;4a2540b1cf;Q03;2026-11-20;2026-11-23;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;0291567a64;Q04;2026-11-11;2026-12-01;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;2d924dae7f;Q12E;2026-11-21;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;fedc595582;Q02;2026-11-20;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;6bcbdeaa05;Q13C;2026-11-19;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;0f67c22498;Q13D;2026-11-19;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;39d3ec016e;Q13E;2026-11-19;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;3b6656c6d8;Q09;2026-11-21;2026-11-23;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;4ea28759bb;Q14B;2026-11-20;2026-11-23;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=exhausted;fnrh11=vai
+EST;a7361e0faa;Q02;2026-11-22;2026-11-23;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;dd98a12b84;Q12C;2026-11-23;2026-11-25;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;d3fd0ee47b;Q13F;2026-11-20;2026-11-27;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;80cc4f6f33;Q08;2026-11-20;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;bb30d82fd6;Q13A;2026-11-20;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;7d0a7bbc17;Q06;2026-11-21;2026-11-22;v11=dispensada;4dig=s;portas10=s;portas11=s;fnrh10=exhausted;fnrh11=nao
+EST;b2c559c32b;Q12F;2026-11-20;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;bcc3e8cde2;Q07;2026-11-18;2026-12-01;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=-;fnrh11=nao
+EST;2137c7fa8b;Q02;2026-11-20;2026-11-22;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;5e96fbd325;Q09;2026-11-21;2026-11-23;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=sent;fnrh11=vai
+EST;cc1b012281;Q14C;2026-11-20;2026-11-23;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=exhausted;fnrh11=vai
+EST;4a407d2aa0;Q14D;2026-11-20;2026-11-23;v11=feita;4dig=s;portas10=s;portas11=s;fnrh10=exhausted;fnrh11=vai
+== RESUMO: {'estadias': 26, 'ficha feita': 25, 'ficha dispensada': 1}
+== DIFERENCAS (1):
+   7d0a7bbc17 FNRH: V1.0=exhausted V1.1=nunca envia (FICHA DISPENSADA: a V1.0 tentou mandar sem documento)
+[nuvem] fim 2026-11-22 00:22:36 codigo=0 duracao=1s

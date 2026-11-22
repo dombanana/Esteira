@@ -1,0 +1,9 @@
+[nuvem] inicio 2026-11-22 16:21:15 119-sombra-vent-20261122-1320-leitura.sh
+versao: 1.0.286
+cache: 51 aparelhos
+SOMBRA;2026-11-22 13:21;Q07;1;True;3;0
+SOMBRA;2026-11-22 13:21;Q08;0;True;1;0
+SOMBRA;2026-11-22 13:21;Q09;1;True;1;0
+SOMBRA;2026-11-22 13:21;Q10;1;False;None;0
+fim
+[nuvem] fim 2026-11-22 16:21:16 codigo=0 duracao=1s

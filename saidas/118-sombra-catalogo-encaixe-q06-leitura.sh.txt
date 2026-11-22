@@ -1,0 +1,21 @@
+[nuvem] inicio 2026-11-22 03:47:35 118-sombra-catalogo-encaixe-q06-leitura.sh
+entrada: acao criar | unidade V1.0 Q06 | checkin 2026-11-21 | checkout 2026-11-22 | hospedes 2
+reserva casada na V1.0: True | id b2881628 | estado ReservationStatus.CONFIRMED | unidade ?
+produto V1.1: IPI-CRD-3-E-V4 | candidatas: ['Q10', 'Q07', 'Q08', 'Q09', 'Q02', 'Q03']
+  Q10 ocupantes: 1
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+  Q07 ocupantes: 2
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+  Q08 ocupantes: 1
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+  Q09 ocupantes: 2
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+  Q02 ocupantes: 2
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+  Q03 ocupantes: 1
+    id 8a8de823 | mesma reserva: False | ? -> ? | estado ? | tipo Event
+fim
+[nuvem] fim 2026-11-22 03:47:36 codigo=0 duracao=1s

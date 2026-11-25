@@ -1,0 +1,85 @@
+[nuvem] inicio 2026-11-25 03:45:55 131-prova-real-como-roda-leitura.sh
+SISTEMA/ops/escopo_teste.sh
+SISTEMA/ops/instalar_degustacao.sh
+SISTEMA/ops/instalar_evolution.sh
+SISTEMA/ops/prova_estrutura_nucleo.py
+SISTEMA/ops/prova_grupo_6.py
+SISTEMA/ops/prova_real.py
+SISTEMA/ops/teste-v1.sh
+SISTEMA/ops/teste_impressora.py
+SISTEMA/ops/teste_uma_hora.py
+=== SISTEMA/ops/prova_real.py
+#!/usr/bin/env python3
+"""Prova real da V1.0 num banco MariaDB DE VERDADE, descartavel.
+
+Roda o caminho inteiro de um hospede -- reserva do Nobeds, convite, ficha,
+FNRH, senha, painel do hospede, painel do anfitriao -- com FNRH, fechadura e
+e-mail FALSOS (nada sai para fora), e depois REINICIA (reconstroi tudo do
+banco) e confere que nada se perdeu e que o diario fecha.
+
+    .venv/bin/python ops/prova_real.py --dsn mysql://pms:SENHA@127.0.0.1:3306/pms_banana_ai_prova
+
+O banco de prova e criado e apagado pelo `subir-v1.sh`; o de producao nunca e
+tocado por esta prova. Imprime uma linha JSON por verificacao e um resumo.
+"""
+import argparse
+import base64
+import json
+import os
+import sys
+import traceback
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "api"))
+
+RESULTS: list[dict] = []
+
+
+def check(name: str, ok: bool, detail: str = "") -> bool:
+    RESULTS.append({"verificacao": name, "ok": bool(ok), "detalhe": detail})
+    print(json.dumps(RESULTS[-1], ensure_ascii=False), flush=True)
+    return ok
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dsn", required=True)
+    args = ap.parse_args()
+
+    from app.channel.routes import handle_nobeds_webhook
+    from app.core.outbox import Inbox, Worker
+    from app.core.record import Actor, ActorKind
+    from app.inventory import ipiranga
+    from app.inventory.seed import seed
+    from app.main import build_state
+    from app.panel import guest_service, service
+    from app.reservation.adapters import make_fnrh_adapter, make_ttlock_adapter
+    from app.worker import issue_ready_credentials, send_precheckin_invites, submit_ready_fnrh
+
+    class FakeLock:
+        def __init__(self):
+            self.added, self.n = [], 1000
+
+        def add_custom_passcode(self, lock_id, pin, name, starts_at, ends_at):
+            self.added.append(lock_id)
+            self.n += 1
+            return str(self.n)
+
+        def delete_passcode(self, lock_id, pwd_id):
+            pass
+
+=== quem chama prova
+main:SISTEMA/ops/prova_estrutura_nucleo.py:22:Saida: linhas de conferencia e, no fim, um JSON {"resumo": ..., "ok": ...} (mesmo formato da prova_real).
+main:SISTEMA/ops/prova_grupo_6.py:1:"""Prova real "grupo de 6" (V1.0.178, Dom 27/10: o grupo do quarto 12 travou -- duas fichas nunca chegaram, so uma
+main:SISTEMA/ops/prova_grupo_6.py:2:pessoa entrou no Wi-Fi e o mapa mostrava o titular nas 6 camas). Roda dentro da `prova_real.py`, no mesmo banco
+main:SISTEMA/ops/prova_real.py:2:"""Prova real da V1.0 num banco MariaDB DE VERDADE, descartavel.
+main:SISTEMA/ops/prova_real.py:9:    .venv/bin/python ops/prova_real.py --dsn mysql://pms:SENHA@127.0.0.1:3306/pms_banana_ai_prova
+main:SISTEMA/ops/subir-v1.sh:3:# (testes, prova real num banco descartavel, servicos, HTTP). A V3.4 saiu do
+main:SISTEMA/ops/subir-v1.sh:11:#   4 bancos                      5 migracoes   6 testes   7 prova real (banco descartavel)
+main:SISTEMA/ops/subir-v1.sh:256:# --- 7. prova real no MariaDB (banco descartavel) ------------------------------------
+main:SISTEMA/ops/subir-v1.sh:257:PROVA=$(cd "$SYS" && env -i PATH="$PATH" HOME=/root LANG=C.UTF-8 .venv/bin/python ops/prova_real.py --dsn "mysql://pms:$DB_PASSWORD@127.0.0.1:3306/$DB_PROVA" 2>&1)
+main:SISTEMA/ops/subir-v1.sh:260:if echo "$PROVA" | grep -q '"ok": true}$' && echo "$PROVA" | grep -q '"resumo"'; then ok "7 prova real" "$RESUMO (reserva, ficha, FNRH, senha, paineis, reinicio)"
+main:SISTEMA/ops/subir-v1.sh:261:else bad "7 prova real" "${RESUMO:-interrompida} -- ver $LOG"; fi
+main:SISTEMA/ops/teste-v1.sh:3:#   1. atualiza a V1.0 com este pacote (subir-v1.sh: backup, testes, prova real,
+[nuvem] fim 2026-11-25 03:45:55 codigo=0 duracao=0s

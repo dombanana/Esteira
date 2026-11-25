@@ -1,0 +1,490 @@
+[nuvem] inicio 2026-11-25 03:32:51 128-regimento-2-0-base-leitura.sh
+no ar: 1.0.288
+instalado HEAD: fatal: not a git repository (or any of the parent directories): .git
+== fila main
+a76af0e 2026-11-23 09:54:17 +0000 v1.0.288 (em teste): lembrar aparelho pela reserva e registro de conexao de 1 ano (Marco Civil art. 13)
+2d3fa5f 2026-11-23 08:57:19 +0000 v1.0.287 (em teste): portal do Wi-Fi com trava geral de tentativas, sem senha da equipe e lembrar aparelho de 1 dia
+6d41c07 2026-11-22 02:45:26 +0000 v1.0.286 (em teste): o anfitriao encerra pergunta sem responder (encerrar P12 / encerrar antigas)
+547dd68 2026-11-21 10:57:53 +0000 v1.0.285 (em teste): a senha do hospede volta a ser tentada na porta que caiu na contingencia
+8409036 2026-11-20 19:40:41 +0000 v1.0.284 (em teste): link cancelado, separar do grupo, liberar agora, hora adiantada, valor do e-mail
+== ramos
+alta288 a76af0e 2026-11-23 09:54:17 +0000 v1.0.288 (em teste): lembrar aparelho pela reserva e registro de conexao de 1 ano (Marco Civil art. 13)
+main a76af0e 2026-11-23 09:54:17 +0000 v1.0.288 (em teste): lembrar aparelho pela reserva e registro de conexao de 1 ano (Marco Civil art. 13)
+v1.0 a76af0e 2026-11-23 09:54:17 +0000 v1.0.288 (em teste): lembrar aparelho pela reserva e registro de conexao de 1 ano (Marco Civil art. 13)
+alta287 2d3fa5f 2026-11-23 08:57:19 +0000 v1.0.287 (em teste): portal do Wi-Fi com trava geral de tentativas, sem senha da equipe e lembrar aparelho de 1 dia
+alta286 6d41c07 2026-11-22 02:45:26 +0000 v1.0.286 (em teste): o anfitriao encerra pergunta sem responder (encerrar P12 / encerrar antigas)
+socorro 4d1c6ef 2026-11-22 00:14:47 +0000 GUARDADO PARA A V1.1 (Dom 21/11): pagina do hospede blindada -- NAO instalar na V1.0
+alta285 547dd68 2026-11-21 10:57:53 +0000 v1.0.285 (em teste): a senha do hospede volta a ser tentada na porta que caiu na contingencia
+alta284 8409036 2026-11-20 19:40:41 +0000 v1.0.284 (em teste): link cancelado, separar do grupo, liberar agora, hora adiantada, valor do e-mail
+perguntahora2 e723073 2026-11-20 18:05:32 +0000 v1.0.283 (em teste): Pergunte a casa responde o horario de chegada
+perguntahora 9e96342 2026-11-20 17:53:37 +0000 v1.0.283 (em teste): Pergunte a casa responde o horario de chegada
+paineisalta3 9da0ef2 2026-11-20 05:39:47 +0000 v1.0.282 (em teste): conflito vermelho, quarto provisorio, Airbnb no calendario e automacao em massa
+paineisalta2 396d418 2026-11-20 05:03:27 +0000 v1.0.282 (em teste): conflito vermelho, quarto provisorio, Airbnb no calendario e automacao em massa
+paineisalta1 8c1f761 2026-11-20 04:49:40 +0000 v1.0.282 (em teste): conflito vermelho, quarto provisorio, Airbnb no calendario e automacao em massa
+linkhmletras 9e4ff41 2026-11-20 02:54:39 +0000 v1.0.282 (em teste): link do hospede com codigo HM so de letras
+v280 94143e6 2026-11-19 20:10:00 -0300 v1.0.280 (em teste): aparelhos do painel so a partir das 14h da chegada
+== diff instalado x main
+fatal: not a git repository (or any of the parent directories): .git
+fatal: this operation must be run in a work tree
+== arquivos regimento
+-rw-rw-r--  1 pms  pms   17561 Nov 23 09:54 regimento.py
+-rw-rw-r--  1 pms  pms   58395 Nov 23 09:54 regimento_textos.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/knowledge.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/tests/test_v1160_treinador_e_ponte_falai.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/tests/test_link_nunca_solto.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/versao.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/uso_medicinal.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/avisos_conduta.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/regimento.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1132_hospede_extra.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1264_silencio_22h_7h.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1253_regimento_18_airbnb.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1135_regimento_final.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1174_regimento_dress_code.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1138_idiomas_mapa_avisos.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/regimento_textos.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/record/persistence.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/memoria_partes.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/channel/intents.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/tests/test_v1247_varanda_armarios_e_regimento.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/tests/test_v1182_cameras_3_dias_e_uma_foto.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/assistant/perguntas.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/assistant/tests/test_ia_anfitriao.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/tests/test_v1248_comunicacao.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/comunicacao.py
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py
+== testes que citam texto do regimento
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:71:    assert regimento.VERSAO == "1.9" and "declara ter a prescrição" in regimento.TEXTO if hasattr(regimento, "TEXTO") \
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:72:        else regimento.VERSAO == "1.9"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:78:def test_cameras_so_rua_guarda_volumes_e_lojinha_no_regimento_e_desligadas_por_variavel():
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:79:    """Dom 15/11: o regimento cita so as cameras da rua, dos guarda-volumes e da lojinha; as outras sao desligadas
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:85:    # v1.0.253 (regimento 1.8, Dom 17/11): so a camera da fachada; a lojinha usa balanca de prateleira
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1264_silencio_22h_7h.py:2:(meia-noite as 7h) em todos os lugares -- regimento 1.9 (7 idiomas), aviso das 22h, mensagens, robo, figurinha, pagina
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1264_silencio_22h_7h.py:35:    assert regimento.VERSAO == "1.9"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1253_regimento_18_airbnb.py:1:"""v1.0.253 (Dom 17/11/2026, caso Airbnb A133144581): regimento 1.8 -- roupa opcional sem toque nem estimulo sexual,
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1253_regimento_18_airbnb.py:30:    assert RG.VERSAO == "1.9"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py:1:"""v1.0.134 (Dom, 22/10/2026): o regimento interno unico com aceite registrado na ficha (titular e acompanhante, versao
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py:2:e hora, sem dado pessoal; uma vez por versao) e a pagina /regimento; reserva do Airbnb nao vende hospede a mais pelo
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py:25:def test_ficha_grava_o_aceite_uma_vez_por_versao(casa):  # noqa: F811
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py:30:    assert row["versao"] == RG.VERSAO and set(row) == {"event_id", "versao", "at"}
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py:31:    assert RG.aceito(state.store, main.event_id) == RG.VERSAO
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py:36:    assert state.store.aceites_regimento[main.event_id] == antes            # mesma versao: nao regrava
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py:45:    assert RG.aceito(state.store, ev.event_id) == RG.VERSAO
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1135_regimento_final.py:2:fotos proibidas em qualquer ambiente, casa ate as 18h do dia da saida, saida tardia, locker, visitas (House Pass),
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1135_regimento_final.py:3:mediacao, achados e perdidos e o WhatsApp oficial. A versao segue 1.0: ninguem aceitou o texto anterior."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1135_regimento_final.py:11:    assert RG.VERSAO == "1.9"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1135_regimento_final.py:12:    for trecho in ("FOTOS E FILMAGENS", "18h do dia da saída", "13h30", "House Pass de R$ 35", "MEDIAÇÃO",
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1174_regimento_dress_code.py:9:def test_versao_e_dress_code_em_portugues():
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1174_regimento_dress_code.py:10:    assert RG.VERSAO == "1.9"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1174_regimento_dress_code.py:12:    assert "Versão 1.9" in t.splitlines()[1]
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1174_regimento_dress_code.py:32:        assert "1.9" in linhas[1], cod
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/tests/test_v1247_varanda_armarios_e_regimento.py:40:    """v1.0.253 (Dom 17/11, caso Airbnb A133144581): o regimento 1.8 substitui o 1.7 -- fica so a camera da fachada."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/tests/test_v1247_varanda_armarios_e_regimento.py:44:    assert "Versão 1.9" in t and "uma única câmera de segurança, na fachada" in t and "clausura" not in t
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/tests/test_v1247_varanda_armarios_e_regimento.py:47:        assert "1.9" in x.splitlines()[1], cod
+=== FILE regimento.py
+"""Regimento interno da casa, versao unica, com aceite registrado na ficha (Dom, 22/10/2026, v1.0.134).
+
+Dom (22/10): "Regimento interno. Regras de nudismo [dress code livre], visitas, fumo, silencio, camera. Precisam de
+aceite formal do hospede. Eu espero que voce faca esse aceite ali na tela da reserva." O texto substitui os tres
+regulamentos que estavam no Airbnb; o mesmo texto vai na descricao do anuncio. v1.0.135: texto final revisado
+pelo Dom em 22/10 (fotos, horarios, visitas, mediacao, achados e perdidos, WhatsApp oficial). v1.0.138: cannabis
+medicinal, canal oficial = chat da plataforma da reserva, e o texto em 7 idiomas (`pagina(lang)`, regimento_textos.py).
+
+  * `GET /regimento` mostra o texto (sem login, sem dado de ninguem);
+  * a caixa da ficha ("Li e aceito o regimento interno") ja era obrigatoria; agora cada ficha aceita grava
+    `aceites_regimento[<evento>] = {versao, at}` (sem dado pessoal). Mudou o texto: suba `VERSAO` -- quem fizer ou
+    corrigir a ficha depois aceita a versao nova; a anterior fica no diario.
+  * v1.0.174 (Dom 26-27/10, "aprovado ... Alta"): regimento 1.2 -- secao 3 (dress code) igual ao Guia da Casa: livre,
+    inclusive sem roupa; no quintal a roupa e opcional; no resto da casa, sem roupa enquanto todos estiverem
+    confortaveis, toalha recomendada (nao obrigatoria); se alguem avisar desconforto, a casa limita a circulacao e pede
+    toalha. Mesmo texto no Claude Doc do regimento (v1.2).
+"""
+from __future__ import annotations
+
+import html as _html
+import logging
+import re as _re
+from typing import Any
+
+from app.core.event import Role
+from app.core.intent import IntentContext, IntentContract, IntentRouter, Reversibility
+
+MODULE = "reservation"
+VERSAO = "1.9"          # v1.0.264 (Dom 18/11): "Horario de silencio e de fato das 22h as 7h" -- volta o
+#: silencio das 22h as 7h (desfaz a 1.5/v1.0.235), com 22h-23h areas comuns so em voz baixa.
+#: 1.8 = v1.0.253 (Dom 17/11, caso Airbnb A133144581): roupa opcional sem toque nem estimulo
+#: sexual, nada sexual na presenca de outros, como nao participar, nao adequado para criancas; fotos proibidas durante e
+#: depois; UMA camera so (fachada) -- clausura, varanda, internas e sensores de imagem da lojinha retirados (balanca de
+#: prateleira); fumaca registrada e revisada, cobranca so com dano, pela Central de Resolucoes.
+#: 1.7 = v1.0.247 (Dom 15/11): dress code = autorizacao; roupa opcional SO no quintal (Smart), dentro de
+#: casa roupa ou toalha, areas externas com camera sempre com roupa; cameras so em areas externas (rua, clausura -- so
+#: entrega liberada e alarme --, varanda do 3o andar); sensores da lojinha com mascara. Igual aos cartazes A3 e ao guia v2.1
+#: v1.0.245 (Dom 15/11): uso medicinal -- quem usa declara a prescricao (botao opcional);
+#: cameras so na rua, nos guarda-volumes e na lojinha (as outras desligadas)
+#: v1.0.235 (Dom 13/11): silencio da meia-noite (0h) as 7h (antes comecava as 22h) -- versao 1.5
+#: v1.0.182 (Dom 01/11): 1.4 = fotos das cameras guardadas 3 dias (eram 30)
+#: v1.0.178 (Dom 29/10): reserva direta -> WhatsApp (11) 98306-9951 (era o 5444-4543) -- versao 1.3
+#                        # v1.0.174 (Dom 26-27/10): 1.2 = dress code no resto da casa, com toalha recomendada
+#                        # v1.0.160 (Dom 25/10): 1.1 = reserva direta -> WhatsApp (11) 5444-4543 (era o 9951)
+log = logging.getLogger("pms.regimento")
+
+TEXTO = """REGIMENTO INTERNO — DOM BANANA
+Versão 1.9 — novembro de 2026. Substitui todos os regulamentos anteriores.
+
+Dom Banana Ltda. (CNPJ 66.547.650/0001-60), Rua Frei Durão, 542, Ipiranga, São Paulo/SP. Casa compartilhada que funciona como pousada/hostel, com autoatendimento. Cada hóspede aceita este regimento na ficha de cadastro.
+
+1. QUEM SE HOSPEDA
+• Só maiores de 18 anos.
+• Todas as pessoas precisam estar na reserva. Hóspede a mais é pedido como alteração da reserva na plataforma.
+• Depois da reserva enviamos o link de cadastro. Cada hóspede faz a sua ficha (FNRH, exigida por lei) com documento oficial com foto. Com as fichas de todos, o app libera as senhas. Sem a ficha de todos, a entrada no quarto não é liberada.
+• Senhas e tags são pessoais. Não passe para ninguém.
+
+2. HORÁRIOS
+• Áreas comuns: a partir das 6h do dia da chegada até as 18h do dia da saída.
+• Quarto ou cama: das 14h (check-in) até as 11h (checkout). Precisou de mais tempo, dá para ficar até as 13h30, com taxa de R$ 15.
+• Guarda-volumes (locker): livre das 6h do dia da chegada às 18h do dia da saída. Precisou de mais tempo, a taxa é de R$ 15 a cada 24 horas.
+• Fogão, forno grande e quintal: das 6h às 23h. Fora desse horário ficam fechados, salvo em evento organizado e avisado com antecedência.
+• Silêncio: das 22h às 7h. Entre 22h e 23h, áreas comuns só com voz baixa.
+
+3. ROUPA OPCIONAL (DRESS CODE LIVRE)
+• A roupa opcional é uma autorização, não uma obrigação: cada pessoa escolhe como se vestir, dentro da regra de cada área.
+• No quintal (acomodação Smart), que não é visível da rua e não tem câmera, a roupa é opcional. É o único lugar da casa onde se pode ficar sem roupa: só maiores de 18 anos, proibido fotografar e sempre sentado sobre a sua toalha.
+• Dentro de casa, na varanda e na entrada: roupa ou toalha. Sem roupa, só da porta do quintal para fora. Na rua, sempre com roupa.
+• A nudez não vem acompanhada de toque nem de estímulo sexual de qualquer tipo.
+• Nenhuma atividade sexual na presença de outras pessoas, em nenhuma área comum da casa.
+• Como não participar: a roupa é sempre opcional. Você pode ficar vestido o tempo todo, e nas áreas internas é obrigatório estar com roupa ou toalha.
+• A casa não é adequada para crianças nem bebês.
+
+4. FOTOS E FILMAGENS
+É PROIBIDO FOTOGRAFAR OU FILMAR QUALQUER PESSOA SEM A AUTORIZAÇÃO DELA, EM QUALQUER AMBIENTE DA CASA, SEM EXCEÇÃO — com ou sem roupa, por qualquer motivo, durante e depois da estadia. Nenhuma imagem de outro hóspede pode ser publicada ou compartilhada. Quem descumprir sai da casa, e o caso é comunicado à plataforma de reserva e, quando couber, às autoridades.
+
+5. CÂMERAS E SENSORES
+Há uma única câmera de segurança, na fachada da casa, em área totalmente aberta, voltada para a calçada e o portão de entrada. Ela serve para segurança e controle de acesso.
+Não há câmeras nem dispositivos de gravação dentro da casa: nem na entrada, na varanda, nas áreas comuns, na lojinha, nos quartos, nos banheiros ou no quintal. Na lojinha, o controle de estoque é feito por balança de prateleira, sem imagem. A casa também tem sensores sem imagem: sensores de abertura de porta (freezer, geladeira e armário de panelas) e detectores de fumaça.
+O sistema da casa registra fotos da câmera da fachada quando acontece uma ação (portão aberto, chamado) e guarda por 3 dias. Só o anfitrião e a equipe autorizada veem as imagens; elas podem ser entregues à plataforma de reserva ou a autoridades em caso de ocorrência.
+
+6. FUMO
+• Proibido fumar (inclusive vape e cigarro eletrônico) dentro dos quartos, banheiros, cozinha e qualquer área fechada.
+• Fumar só no fumódromo ao ar livre.
+• Uso medicinal de cannabis é permitido para quem está em tratamento e tem prescrição médica. Quem faz uso declara ter a prescrição (pode marcar na página da estadia: é opcional e a casa guarda só a data), usa só no fumódromo ao ar livre e guarda em pote fechado. Uso recreativo, venda e repasse são proibidos (Lei 11.343/2006).
+• Substâncias ilícitas são proibidas na casa.
+
+7. VISITAS
+• Avise antes pelo canal da casa. Visitante não entra em quartos e não dorme na casa.
+• Visita que fica mais de 1 hora paga o House Pass de R$ 35, em consumação na lojinha.
+
+8. COZINHA
+• As reservas do Airbnb incluem a cozinha completa, inclusive o fogão. Em outras plataformas, o uso do fogão segue a modalidade reservada.
+• Use o armário e a bandeja com o número do seu quarto. Lave e guarde o que usar.
+• Proibido fritura por imersão e proibido fumar na cozinha. Fumaça e gordura disparam os detectores de fumaça; cada disparo é registrado e revisado, e só há cobrança se houver dano ou custo, pela Central de Resoluções da plataforma.
+
+9. BANHEIROS
+• Todos os banheiros são coletivos e sem gênero.
+• Proibido depilação, corte de cabelo e tintura nos banheiros.
+
+10. LOJINHA E ITENS À PARTE
+• A lojinha é de autoatendimento, operada por loja parceira, e é paga na hora no totem.
+• Pela lojinha: toalha R$ 5 (taxa única), cobertor extra R$ 8 (taxa única), máquina de lavar ou secar R$ 17, bicicleta R$ 15 por hora.
+• A diária inclui roupa de cama, travesseiro e 1 cobertor. Não fornecemos itens de higiene pessoal.
+
+11. DANOS E COBRANÇAS
+Danos, limpeza extraordinária e pessoa não registrada são cobrados de forma proporcional e com registro, pela Central de Resoluções da plataforma de reserva.
+
+12. COMO RESOLVEMOS PROBLEMAS (MEDIAÇÃO)
+• Primeiro passo, sempre: fale com a casa pelo canal oficial. Quase tudo se resolve ali, na hora.
+• Reserva feita pelo Airbnb: registre também no chat do Airbnb o que for importante (dano, reclamação, pedido de reembolso). Dinheiro da reserva, danos e cobranças vão pela Central de Resoluções do Airbnb.
+• Reserva feita por outra plataforma: pela central de atendimento dessa plataforma.
+• Convivência entre hóspedes: a casa decide, com base neste regimento, e pode pedir a saída de quem descumprir. Crime (assédio, furto, foto sem autorização, agressão) vai para a polícia.
+• Nada disto tira o direito de procurar o Procon, o consumidor.gov.br ou a Justiça.
+
+13. PISCINA, ESCADAS E LUGARES ALTOS
+• A piscina abre só no verão e em dias de calor. Ela não tem grade, portão nem trava: use com cuidado, nunca sozinho à noite ou depois de beber.
+• O deck do cinema, a escada dos quartos compartilhados, as escadas das beliches e a borda da piscina não têm parapeito. Atenção ao circular.
+
+14. ANIMAIS
+• Até 2 animais por reserva, avisados na reserva, e só nos quartos 02, 03 e 04. Eles circulam só no piso inferior e não sobem aos quartos dos andares de cima.
+• Barulho de animal no horário de silêncio (22h às 7h) gera multa e pode levar à saída da casa.
+• A casa tem a calopsita Zagalo na sala.
+
+15. CANCELAMENTO, LIMPEZA E PROBLEMAS
+• Cancelamento e reembolso seguem a política escolhida na reserva da plataforma.
+• Viu algo sujo, danificado ou diferente do anúncio? Mande foto pelo canal da casa assim que entrar, para resolvermos logo.
+
+16. CONVIVÊNCIA
+Assédio, discriminação, ameaça, conduta sexual em área comum ou foto de outra pessoa sem autorização levam à saída da casa e são comunicados à plataforma.
+
+17. PERTENCES, ENTREGAS E VEÍCULOS
+• Guarde objetos de valor no seu armário ou locker.
+• Esteja presente para receber as suas entregas. Nunca receba entrega de outras pessoas.
+• Não temos garagem; carros ficam na rua.
+
+18. ACHADOS E PERDIDOS
+• Objeto esquecido é registrado no dia em que é achado (foto, data e lugar).
+• Sabendo de quem é, avisamos pelo canal da casa. A pessoa busca ou paga o envio.
+• Guardamos por 30 dias. Depois disso, roupas e objetos simples são doados ou descartados.
+• Documentos, dinheiro, cartões, eletrônicos e joias de quem não aparecer ou não for identificado são entregues à polícia em até 15 dias, como manda a lei.
+• Comida esquecida na geladeira ou no armário é descartada no dia seguinte à saída.
+
+19. PRIVACIDADE (LGPD)
+• Dados coletados: ficha de cadastro (FNRH), foto do documento, selfie, contato e fotos da câmera da fachada.
+• Para quê: cumprir a lei de registro de hóspedes, liberar o acesso, dar segurança e atender você.
+• Quem vê: o anfitrião e a equipe autorizada. A FNRH é enviada ao governo, como manda a lei.
+• Por quanto tempo: a ficha, pelo prazo exigido em lei; as fotos da câmera da fachada, 3 dias.
+• Seus direitos: pedir acesso, correção ou exclusão dos seus dados pelo canal da casa.
+
+CANAL OFICIAL DE COMUNICAÇÃO DA CASA: o chat da plataforma em que você reservou (Airbnb, Booking ou outra). Todas as mensagens da sua estadia, inclusive as automáticas, vêm por lá. Quem reservou direto com a casa: WhatsApp (11) 98306-9951."""
+
+
+AVISO_CORTESIA = {"en": "Courtesy translation. The Portuguese text is the one that applies.",
+                  "es": "Traducción de cortesía. Vale el texto en portugués.",
+                  "fr": "Traduction de courtoisie. Le texte en portugais fait foi.",
+                  "de": "Höflichkeitsübersetzung. Maßgeblich ist der portugiesische Text.",
+                  "ja": "参考訳です。正式な文書はポルトガル語版です。",
+                  "zh": "此为参考译文，以葡萄牙语版本为准。"}
+LINGUAS = {"pt": "pt-BR", "en": "en", "es": "es", "fr": "fr", "de": "de", "ja": "ja", "zh": "zh-CN"}
+ROTULOS = {"pt": "PT", "en": "EN", "es": "ES", "fr": "FR", "de": "DE", "ja": "日本語", "zh": "中文"}
+
+
+def texto_em(lang: str | None) -> tuple[str, str]:
+    """(idioma, texto): o portugues, ou uma das 6 traducoes (v1.0.138). Fora dos 7, o portugues."""
+    from app.reservation.regimento_textos import TEXTOS
+    cod = str(lang or "pt").strip().replace("_", "-").lower()[:2]
+    if cod in TEXTOS:
+        return cod, TEXTOS[cod]
+    return "pt", TEXTO
+
+
+def pagina(lang: str | None = None) -> str:
+    """O regimento em HTML simples (titulos em maiusculas viram h2, linhas com "•" viram lista). v1.0.138: `lang`
+    (pt, en, es, fr, de, ja, zh) com a barra de idiomas; as traducoes sao de cortesia, vale o portugues."""
+    idioma, texto = texto_em(lang)
+    partes, lista = [], []
+
+    def fecha() -> None:
+        if lista:
+            partes.append("<ul>" + "".join(f"<li>{x}</li>" for x in lista) + "</ul>")
+            lista.clear()
+    linhas = texto.splitlines()
+    for i, bruta in enumerate(linhas):
+        linha = bruta.strip()
+        if not linha:
+            fecha()
+            continue
+        e = _html.escape(linha)
+        if linha.startswith("•"):
+            lista.append(_html.escape(linha.lstrip("• ").strip()))
+        elif i == 0:
+            fecha()
+            partes.append(f"<h1>{e}</h1>")
+        elif _re.match(r"^\d{1,2}\. ", linha):          # "7. VISITAS" (ja/zh nao tem maiusculas)
+            fecha()
+            partes.append(f"<h2>{e}</h2>")
+        else:
+            fecha()
+            partes.append(f"<p>{e}</p>")
+    fecha()
+    barra = '<nav class="idiomas" aria-label="Idioma">' + "".join(
+        f'<a href="/regimento?lang={l}"{" aria-current=\"true\"" if l == idioma else ""}>{ROTULOS[l]}</a>' for l in LINGUAS) + "</nav>"
+    cortesia = f'<p class="cortesia">{_html.escape(AVISO_CORTESIA[idioma])}</p>' if idioma != "pt" else ""
+    return (f"<!doctype html><html lang='{LINGUAS[idioma]}'><meta charset='utf-8'>"
+            "<meta name='viewport' content='width=device-width,initial-scale=1'><title>Regimento interno · Dom Banana</title>"
+            "<style>body{font-family:system-ui,sans-serif;max-width:720px;margin:0 auto;padding:16px 16px 48px;"
+            "line-height:1.5;color:#1d2a2c;background:#fbfaf6}h1{font-size:1.35rem}h2{font-size:1.02rem;margin-top:1.6em}"
+            "ul{padding-left:1.2em}li{margin:.25em 0}.idiomas{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}"
+            ".idiomas a{padding:4px 10px;border-radius:999px;background:#eee7d7;color:#1d2a2c;text-decoration:none;font-size:14px;"
+            "font-weight:600}.idiomas a[aria-current]{background:#151515;color:#fff}.cortesia{font-size:.9rem;color:#5F5A50}"
+            "@media(prefers-color-scheme:dark){body{background:#151c1e;color:#e9efe9}.idiomas a{background:#2a3538;color:#e9efe9}}"
+            "</style><body>" + barra + cortesia + "".join(partes) + "</body></html>")
+
+
+def aceito(store: Any, event_id: str) -> str | None:
+    """A versao do regimento aceita por este evento (None = ainda nao aceitou nesta versao do sistema)."""
+    return ((getattr(store, "aceites_regimento", {}) or {}).get(event_id) or {}).get("versao")
+
+
+ACEITE = IntentContract(
+    name="reservation.aceite_regimento",
+    description="anota que a pessoa aceitou o regimento interno (versao e hora; sem dado pessoal)",
+    module=MODULE, required_role=Role.GUEST, reversibility=Reversibility.REVERSIBLE)
+
+
+def _aceite(ctx: IntentContext) -> str:
+    store, event = ctx.params["store"], ctx.params["event"]
+    tabela = store.aceites_regimento
+    antes = tabela.get(event.event_id)
+    if antes and antes.get("versao") == VERSAO:
+        return f"Regimento {VERSAO} já aceito."
+    row = {"event_id": event.event_id, "versao": VERSAO, "at": ctx.at.isoformat()}
+    ctx.change("aceite_regimento", event.event_id, antes, row)
+    ctx.transaction.after_commit(lambda: tabela.__setitem__(event.event_id, row))
+    return f"Regimento {VERSAO} aceito."
+
+
+def registrar(state: Any, event: Any, caller: Any, at: Any, out: Any = None) -> None:
+    """Depois da ficha gravada: anota o aceite. Nunca vira erro para o hospede (a ficha ja esta gravada)."""
+    if event is None or getattr(out, "shadow", False):
+        return
+    from app.panel.service import _call
+    try:
+        _call(state, "reservation.aceite_regimento", caller, {"event": event, "store": state.store}, at)
+    except Exception as erro:  # noqa: BLE001
+        log.error("aceite do regimento nao anotado: %s", type(erro).__name__)
+
+
+def register(router: IntentRouter) -> None:
+    router.register(ACEITE, _aceite)
+=== FILE regimento_textos.py (cabeca e tamanho)
+58395 /opt/PMS-Banana-AI/SISTEMA/api/app/reservation/regimento_textos.py
+"""v1.0.138 (Dom 22/10/2026): o regimento interno nos outros 6 idiomas (traducoes de cortesia; vale o portugues).
+Mesma estrutura linha a linha do TEXTO em portugues (regimento.py); a pagina /regimento?lang= usa este dicionario."""
+from __future__ import annotations
+
+TEXTOS: dict[str, str] = {
+    "en": """INTERNAL RULES — DOM BANANA
+Version 1.9 — November 2026. Replaces all previous rules.
+
+Dom Banana Ltda. (CNPJ 66.547.650/0001-60), Rua Frei Durão, 542, Ipiranga, São Paulo/SP. A shared house that operates as a guesthouse/hostel, with self-service. Every guest accepts these rules on the registration form.
+
+1. WHO CAN STAY
+• Adults aged 18 or over only.
+• Everyone must be on the booking. An extra guest is requested as a change to the booking on the platform.
+• After booking, we send the registration link. Each guest fills in their own form (FNRH, required by law) with an official photo ID. Once everyone's forms are in, the app releases the codes. Without everyone's forms, access to the room is not released.
+• Codes and tags are personal. Do not share them with anyone.
+
+2. HOURS
+• Common areas: from 6 am on the day of arrival until 6 pm on the day of departure.
+• Room or bed: from 2 pm (check-in) until 11 am (checkout). Need more time? You can stay until 1:30 pm for a fee of R$ 15.
+• Luggage storage (locker): free from 6 am on the day of arrival until 6 pm on the day of departure. Need more time? The fee is R$ 15 per 24 hours.
+• Stove, large oven and backyard: from 6 am to 11 pm. Outside these hours they are closed, except for an organized event announced in advance.
+• Quiet hours: from 10 pm to 7 am. Between 10 pm and 11 pm, common areas only with low voices.
+
+3. CLOTHING-OPTIONAL (FREE DRESS CODE)
+• Clothing-optional is a permission, not an obligation: everyone chooses how to dress, within the rule of each area.
+• In the backyard (Smart stays), which is not visible from the street and has no camera, clothing is optional. It is the only place in the house where you may be unclothed: adults (18+) only, no photos, and always sit on your own towel.
+• Indoors, on the veranda and at the entrance: clothes or a towel. Unclothed only from the backyard door outwards. On the street, always clothed.
+• Nudity is never accompanied by touching or sexual stimulation of any kind.
+• No sexual activity in the presence of other people, in any common area of the house.
+• How to opt out: clothing is always optional. You may stay dressed at all times, and in indoor areas clothes or a towel are required.
+• The house is not suitable for children or infants.
+
+4. PHOTOS AND FILMING
+IT IS FORBIDDEN TO PHOTOGRAPH OR FILM ANY PERSON WITHOUT THEIR PERMISSION, IN ANY AREA OF THE HOUSE, WITHOUT EXCEPTION — clothed or not, for any reason, during and after the stay. No image of another guest may be published or shared. Anyone who breaks this rule leaves the house, and the case is reported to the booking platform and, where appropriate, to the authorities.
+
+5. CAMERAS AND SENSORS
+There is a single security camera, on the front façade of the house, in a fully outdoor area, facing the sidewalk and the entrance gate. It is used for security and access control.
+There are no cameras or recording devices inside the house: not at the entrance, on the veranda, in the common areas, in the house shop, in the bedrooms, in the bathrooms or in the backyard. In the house shop, stock is controlled by shelf scales, with no images. The house also has sensors without images: door-opening sensors (freezer, fridge and cookware cabinet) and smoke detectors.
+The house system records photos from the façade camera when an action happens (gate opened, call) and keeps them for 3 days. Only the host and authorized staff see the images; they may be handed over to the booking platform or to the authorities in case of an incident.
+
+6. SMOKING
+• Smoking (including vapes and e-cigarettes) is forbidden inside the rooms, bathrooms, kitchen and any enclosed area.
+• Smoking only in the outdoor smoking area.
+• Medical cannabis use is allowed for those undergoing treatment who have a medical prescription. Whoever uses it declares having the prescription (you can tick it on your stay page: it is optional and the house keeps only the date), uses it only in the outdoor smoking area and keeps it in a closed container. Recreational use, sale and passing it on are forbidden (Lei 11.343/2006).
+• Illegal substances are forbidden in the house.
+
+7. VISITORS
+• Let us know in advance through the house channel. Visitors do not enter rooms and do not sleep in the house.
+• A visitor who stays more than 1 hour pays the R$ 35 House Pass, redeemable as credit at the house shop.
+
+8. KITCHEN
+• Airbnb bookings include the full kitchen, including the stove. On other platforms, use of the stove depends on the option booked.
+• Use the cupboard and tray with your room number. Wash and put away what you use.
+• Deep-frying is forbidden and smoking in the kitchen is forbidden. Smoke and grease set off the smoke detectors; each alarm is logged and reviewed, and a charge applies only when there is damage or cost, through the platform's Resolution Center.
+
+9. BATHROOMS
+• All bathrooms are shared and gender-neutral.
+• Hair removal, haircuts and hair dyeing are forbidden in the bathrooms.
+
+10. HOUSE SHOP AND EXTRA ITEMS
+• The house shop is self-service, run by a partner store, and is paid on the spot at the kiosk.
+• Through the house shop: towel R$ 5 (one-time fee), extra blanket R$ 8 (one-time fee), washing machine or dryer R$ 17, bicycle R$ 15 per hour.
+• The nightly rate includes bed linen, a pillow and 1 blanket. We do not provide personal hygiene items.
+
+11. DAMAGE AND CHARGES
+Damage, extraordinary cleaning and unregistered persons are charged proportionally and with a record, through the booking platform's Resolution Center.
+
+12. HOW WE SOLVE PROBLEMS (MEDIATION)
+• First step, always: talk to the house through the 
+=== estrutura textos
+6:    "en": """INTERNAL RULES — DOM BANANA
+111:    "es": """REGLAMENTO INTERNO — DOM BANANA
+216:    "fr": """RÈGLEMENT INTÉRIEUR — DOM BANANA
+321:    "de": """HAUSORDNUNG — DOM BANANA
+426:    "ja": """館内規則 — DOM BANANA
+531:    "zh": """住宿守则 — DOM BANANA
+=== quem usa regimento
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/tests/test_v1160_treinador_e_ponte_falai.py:137:    from app.reservation import regimento as RG
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/tests/test_v1160_treinador_e_ponte_falai.py:138:    from app.reservation import regimento_textos as RT
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:2170:    from app.reservation.regimento import register as register_regimento   # 22/10: aceite do regimento interno
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:67:    from app.reservation import regimento
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:71:    assert regimento.VERSAO == "1.9" and "declara ter a prescrição" in regimento.TEXTO if hasattr(regimento, "TEXT
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:72:        else regimento.VERSAO == "1.9"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:82:    from app.reservation import regimento
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1245_uso_medicinal.py:84:    t = regimento.TEXTO
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1264_silencio_22h_7h.py:34:    from app.reservation import regimento
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1264_silencio_22h_7h.py:35:    assert regimento.VERSAO == "1.9"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1253_regimento_18_airbnb.py:9:from app.reservation import regimento as RG
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1134_regimento_e_airbnb.py:14:from app.reservation import regimento as RG
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1135_regimento_final.py:6:from app.reservation import regimento as RG
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1174_regimento_dress_code.py:6:from app.reservation import regimento as RG
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/tests/test_v1138_idiomas_mapa_avisos.py:13:from app.reservation import regimento as RG
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/tests/test_v1247_varanda_armarios_e_regimento.py:41:    from app.reservation import regimento
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/tests/test_v1247_varanda_armarios_e_regimento.py:43:    t = regimento.TEXTO
+/opt/PMS-Banana-AI/SISTEMA/api/app/cameras/tests/test_v1182_cameras_3_dias_e_uma_foto.py:9:from app.reservation import regimento as R
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/routes.py:107:        from app.reservation.regimento import pagina
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py:461:        from app.reservation.regimento import registrar as aceite_regimento   # v1.0.134
+/opt/PMS-Banana-AI/SISTEMA/api/app/panel/guest_service.py:499:    from app.reservation.regimento import registrar as aceite_regimento        # v1.0.134
+=== Economico (18h, 10h, micro, quintal)
+/opt/PMS-Banana-AI/SISTEMA/api/app/messaging/intents.py:335:              "perfil": PM.boas_vindas(store, event, f"https://{GUEST_BASE.split('//')[-1]}/{code}")},          # v1.0.150: Smart/Economico, privativo/coletivo
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/lembretes.py:478:        # v1.0.150 (Dom 24/10): o aviso e proprio do perfil (privativo x coletivo, Smart x Economico), so em portugues
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/intents.py:846:    # v1.0.150 (Dom 24/10): a primeira mensagem e propria do perfil (privativo x coletivo, Smart x Economico), so em
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:4:quartos coletivos, e na mesma logica, as mensagens devem ser proprias para Smart ou para Economico." / "As mensagens
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:9:Quatro perfis = tipo (privativo | coletivo) x versao (smart | economico):
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:11:  * versao: Smart = a estadia tem a liberdade "kitchen" (`finance.smart.is_smart`), senao Economico.
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:25:SMART, ECONOMICO = "smart", "economico"
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:95:        return SMART if is_smart(event) else ECONOMICO
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:182:    return ("Plano Econômico: na cozinha, você usa o micro-ondas. Fogão, coworking e quintal com piscina fazem parte do "
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:203:    """A versao (smart | economico) da ultima estadia da mesma pessoa (ou da conta ligada) antes desta; vazio se nao ha."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:218:    da casa, ou ... voce fez o upgrade para Smart, ou ... voce fez o downgrade para Economico." Sem o mapa (ja conhece)."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:222:    if antes == ECONOMICO and agora == SMART:
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:225:    elif antes == SMART and agora == ECONOMICO:
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/perfil_mensagem.py:226:        plano = ("Desta vez você escolheu o Econômico: na cozinha, você usa o micro-ondas; fogão, coworking e quintal "
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/vender_noites.py:40:#: piso por noite (preco anunciado), tabela aprovada pelo Dom em 02/11. Smart = Economico + 20% do Q10 Economico
+/opt/PMS-Banana-AI/SISTEMA/api/app/reservation/vender_noites.py:42:PISO_ECONOMICO = {"capsula": 6000, "solteiro": 9500, "casal": 10500}
+/opt/PMS-Banana-AI/SISTEMA/api/app/channel/intents.py:584:    economicos do Airbnb fechados em 24/10) nunca e reaberto por engano; a partir dai, so a mudanca de trava sai.
+/opt/PMS-Banana-AI/SISTEMA/api/app/venda/travas.py:23:NOMES = {"airbnb": "Airbnb (Smart)", "airbnb_eco": "Airbnb econômico", "booking": "Booking", "hostelworld": "Hostelworld",
+/opt/PMS-Banana-AI/SISTEMA/api/app/venda/travas.py:28:#: data (Smart x economico). A taxa e a do Airbnb (`canal_de_taxa`).
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/airbnb_reservas.py:47:    """A versao do anuncio na instancia da casa: Smart = smart; Economico = hostel (D21)."""
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/airbnb_calendario.py:6:"airbnb_cal"). Para cada unidade da casa, uma linha por anuncio (Smart e Economico; o quarto inteiro na linha do quarto),
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:3:Smart, "a3.12a" = cama 12A Economico) e provada contra 150 dias de e-mails reais (nos 27 anuncios com reserva, o quarto da
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:7:Campos: (unidade publicada, categoria, versao). Versao: "smart" ou "economico" (D21: a versao vem do anuncio).
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:14:    "1803431242843328379": ("Q02", "privativo-casal", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:15:    "1803442799099175162": ("Q03", "privativo-casal", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:16:    "1803444849114374544": ("Q04", "privativo-solteiro", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:17:    "1803447447547629794": ("Q05", "privativo-solteiro", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:18:    "1803448958094096328": ("Q06", "privativo-casal", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:19:    "1803450111681795703": ("Q07", "privativo-casal", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:20:    "1803451218190268844": ("Q08", "privativo-casal", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:21:    "1803452293014962537": ("Q09", "privativo-casal", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:22:    "1803453366539675992": ("Q10", "privativo-casal", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:23:    "1803454688298297239": ("Q11", "privativo-solteiro", "economico"),   # anunciado
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:24:    "1803456122034444141": ("Q12A", "capsula-12", "economico"),   # anunciado · a3.12a
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:25:    "1803457308855564917": ("Q12B", "capsula-12", "economico"),   # anunciado · a3.12b
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:26:    "1803458500036229139": ("Q12C", "capsula-12", "economico"),   # anunciado · a3.12c
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:27:    "1803459648552288816": ("Q12D", "capsula-12", "economico"),   # anunciado · a3.12d
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:28:    "1803460809881519834": ("Q12E", "capsula-12", "economico"),   # anunciado · a3.12e
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:29:    "1803461973947947345": ("Q12F", "capsula-12", "economico"),   # anunciado · a3.12f
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:30:    "1803463133903474527": ("Q13A", "capsula-13", "economico"),   # anunciado · a3.13a
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:31:    "1803464315189659750": ("Q13B", "capsula-13", "economico"),   # anunciado · a3.13b
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:32:    "1803465516465398267": ("Q13C", "capsula-13", "economico"),   # anunciado · a3.13c
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:33:    "1803466783379649412": ("Q13D", "capsula-13", "economico"),   # anunciado · a3.13d
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:34:    "1803468018473901515": ("Q13E", "capsula-13", "economico"),   # anunciado · a3.13e
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:35:    "1803469202397788484": ("Q13F", "capsula-13", "economico"),   # anunciado · a3.13f
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:36:    "1803470378683729142": ("Q14A", "capsula-14", "economico"),   # anunciado · a3.14a
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:37:    "1803471583271879127": ("Q14B", "capsula-14", "economico"),   # anunciado · a3.14b
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:38:    "1803472779451283502": ("Q14C", "capsula-14", "economico"),   # anunciado · a3.14c
+/opt/PMS-Banana-AI/SISTEMA/api/app/entrada/anuncios_airbnb.py:39:    "1803473988324976562": ("Q14D", "capsula-14", "economico"),   # anunciado · a3.14d
+[nuvem] fim 2026-11-25 03:32:52 codigo=0 duracao=1s

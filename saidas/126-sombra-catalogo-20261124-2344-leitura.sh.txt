@@ -1,0 +1,18 @@
+[nuvem] inicio 2026-11-25 02:45:35 126-sombra-catalogo-20261124-2344-leitura.sh
+versao: 1.0.288
+caixas lidas: 2
+LEITOR;2026-11-23 21:52;outro;outro;-;ignora
+LEITOR;2026-11-24 06:01;pagamento;pagamento;-;ignora
+LEITOR;2026-11-24 07:00;outro;outro;-;ignora
+LEITOR;2026-11-24 07:11;outro;outro;-;ignora
+LEITOR;2026-11-24 09:46;mensagem;mensagem;-;ignora
+LEITOR;2026-11-24 10:48;mensagem;mensagem;-;ignora
+LEITOR;2026-11-24 12:02;pagamento;pagamento;-;ignora
+LEITOR;2026-11-24 12:58;mensagem;mensagem;-;ignora
+LEITOR;2026-11-24 15:37;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-24 17:03;outro;outro;-;ignora
+LEITOR;2026-11-24 17:24;outro;outro;-;ignora
+LEITOR;2026-11-24 18:56;mensagem;mensagem;-;ignora
+emails do Airbnb na janela: 12
+fim
+[nuvem] fim 2026-11-25 02:46:06 codigo=0 duracao=31s

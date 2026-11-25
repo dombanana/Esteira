@@ -1,0 +1,1877 @@
+[nuvem] inicio 2026-11-25 03:33:51 129-regimento-2-0-arquivos-leitura.sh
+main: a76af0ec50e73418b4a9240497ce97cf8e2d8b89
+=== FILE reservation/regimento_textos.py
+"""v1.0.138 (Dom 22/10/2026): o regimento interno nos outros 6 idiomas (traducoes de cortesia; vale o portugues).
+Mesma estrutura linha a linha do TEXTO em portugues (regimento.py); a pagina /regimento?lang= usa este dicionario."""
+from __future__ import annotations
+
+TEXTOS: dict[str, str] = {
+    "en": """INTERNAL RULES — DOM BANANA
+Version 1.9 — November 2026. Replaces all previous rules.
+
+Dom Banana Ltda. (CNPJ 66.547.650/0001-60), Rua Frei Durão, 542, Ipiranga, São Paulo/SP. A shared house that operates as a guesthouse/hostel, with self-service. Every guest accepts these rules on the registration form.
+
+1. WHO CAN STAY
+• Adults aged 18 or over only.
+• Everyone must be on the booking. An extra guest is requested as a change to the booking on the platform.
+• After booking, we send the registration link. Each guest fills in their own form (FNRH, required by law) with an official photo ID. Once everyone's forms are in, the app releases the codes. Without everyone's forms, access to the room is not released.
+• Codes and tags are personal. Do not share them with anyone.
+
+2. HOURS
+• Common areas: from 6 am on the day of arrival until 6 pm on the day of departure.
+• Room or bed: from 2 pm (check-in) until 11 am (checkout). Need more time? You can stay until 1:30 pm for a fee of R$ 15.
+• Luggage storage (locker): free from 6 am on the day of arrival until 6 pm on the day of departure. Need more time? The fee is R$ 15 per 24 hours.
+• Stove, large oven and backyard: from 6 am to 11 pm. Outside these hours they are closed, except for an organized event announced in advance.
+• Quiet hours: from 10 pm to 7 am. Between 10 pm and 11 pm, common areas only with low voices.
+
+3. CLOTHING-OPTIONAL (FREE DRESS CODE)
+• Clothing-optional is a permission, not an obligation: everyone chooses how to dress, within the rule of each area.
+• In the backyard (Smart stays), which is not visible from the street and has no camera, clothing is optional. It is the only place in the house where you may be unclothed: adults (18+) only, no photos, and always sit on your own towel.
+• Indoors, on the veranda and at the entrance: clothes or a towel. Unclothed only from the backyard door outwards. On the street, always clothed.
+• Nudity is never accompanied by touching or sexual stimulation of any kind.
+• No sexual activity in the presence of other people, in any common area of the house.
+• How to opt out: clothing is always optional. You may stay dressed at all times, and in indoor areas clothes or a towel are required.
+• The house is not suitable for children or infants.
+
+4. PHOTOS AND FILMING
+IT IS FORBIDDEN TO PHOTOGRAPH OR FILM ANY PERSON WITHOUT THEIR PERMISSION, IN ANY AREA OF THE HOUSE, WITHOUT EXCEPTION — clothed or not, for any reason, during and after the stay. No image of another guest may be published or shared. Anyone who breaks this rule leaves the house, and the case is reported to the booking platform and, where appropriate, to the authorities.
+
+5. CAMERAS AND SENSORS
+There is a single security camera, on the front façade of the house, in a fully outdoor area, facing the sidewalk and the entrance gate. It is used for security and access control.
+There are no cameras or recording devices inside the house: not at the entrance, on the veranda, in the common areas, in the house shop, in the bedrooms, in the bathrooms or in the backyard. In the house shop, stock is controlled by shelf scales, with no images. The house also has sensors without images: door-opening sensors (freezer, fridge and cookware cabinet) and smoke detectors.
+The house system records photos from the façade camera when an action happens (gate opened, call) and keeps them for 3 days. Only the host and authorized staff see the images; they may be handed over to the booking platform or to the authorities in case of an incident.
+
+6. SMOKING
+• Smoking (including vapes and e-cigarettes) is forbidden inside the rooms, bathrooms, kitchen and any enclosed area.
+• Smoking only in the outdoor smoking area.
+• Medical cannabis use is allowed for those undergoing treatment who have a medical prescription. Whoever uses it declares having the prescription (you can tick it on your stay page: it is optional and the house keeps only the date), uses it only in the outdoor smoking area and keeps it in a closed container. Recreational use, sale and passing it on are forbidden (Lei 11.343/2006).
+• Illegal substances are forbidden in the house.
+
+7. VISITORS
+• Let us know in advance through the house channel. Visitors do not enter rooms and do not sleep in the house.
+• A visitor who stays more than 1 hour pays the R$ 35 House Pass, redeemable as credit at the house shop.
+
+8. KITCHEN
+• Airbnb bookings include the full kitchen, including the stove. On other platforms, use of the stove depends on the option booked.
+• Use the cupboard and tray with your room number. Wash and put away what you use.
+• Deep-frying is forbidden and smoking in the kitchen is forbidden. Smoke and grease set off the smoke detectors; each alarm is logged and reviewed, and a charge applies only when there is damage or cost, through the platform's Resolution Center.
+
+9. BATHROOMS
+• All bathrooms are shared and gender-neutral.
+• Hair removal, haircuts and hair dyeing are forbidden in the bathrooms.
+
+10. HOUSE SHOP AND EXTRA ITEMS
+• The house shop is self-service, run by a partner store, and is paid on the spot at the kiosk.
+• Through the house shop: towel R$ 5 (one-time fee), extra blanket R$ 8 (one-time fee), washing machine or dryer R$ 17, bicycle R$ 15 per hour.
+• The nightly rate includes bed linen, a pillow and 1 blanket. We do not provide personal hygiene items.
+
+11. DAMAGE AND CHARGES
+Damage, extraordinary cleaning and unregistered persons are charged proportionally and with a record, through the booking platform's Resolution Center.
+
+12. HOW WE SOLVE PROBLEMS (MEDIATION)
+• First step, always: talk to the house through the official channel. Almost everything is solved there, right away.
+• Booked through Airbnb: also record anything important (damage, complaint, refund request) in the Airbnb chat. Booking money, damage and charges go through the Airbnb Resolution Center.
+• Booked through another platform: through that platform's customer service.
+• Coexistence between guests: the house decides, based on these rules, and may ask anyone who breaks them to leave. Crimes (harassment, theft, photos without permission, assault) go to the police.
+• None of this removes your right to go to Procon, consumidor.gov.br or the courts.
+
+13. POOL, STAIRS AND HIGH PLACES
+• The pool opens only in summer and on hot days. It has no fence, gate or lock: use it with care, never alone at night or after drinking.
+• The cinema deck, the stairs to the shared rooms, the bunk-bed ladders and the edge of the pool have no railing. Take care when moving around.
+
+14. ANIMALS
+• Up to 2 animals per booking, declared at booking, and only in rooms 02, 03 and 04. They move around only on the lower floor and do not go up to the rooms on the upper floors.
+• Animal noise during quiet hours (10 pm to 7 am) results in a fine and may lead to leaving the house.
+• The house has a cockatiel, Zagalo, in the living room.
+
+15. CANCELLATION, CLEANING AND PROBLEMS
+• Cancellation and refunds follow the policy chosen in the platform booking.
+• Saw something dirty, damaged or different from the listing? Send a photo through the house channel as soon as you arrive, so we can fix it quickly.
+
+16. COEXISTENCE
+Harassment, discrimination, threats, sexual conduct in a common area or photos of another person without permission lead to leaving the house and are reported to the platform.
+
+17. BELONGINGS, DELIVERIES AND VEHICLES
+• Keep valuables in your cupboard or locker.
+• Be present to receive your deliveries. Never accept deliveries for other people.
+• We have no garage; cars stay on the street.
+
+18. LOST AND FOUND
+• A forgotten item is recorded on the day it is found (photo, date and place).
+• If we know whose it is, we notify them through the house channel. The person picks it up or pays for shipping.
+• We keep items for 30 days. After that, clothes and simple objects are donated or discarded.
+• Documents, money, cards, electronics and jewelry belonging to someone who does not show up or cannot be identified are handed over to the police within 15 days, as required by law.
+• Food left in the fridge or cupboard is discarded the day after departure.
+
+19. PRIVACY (LGPD)
+• Data collected: registration form (FNRH), photo of the document, selfie, contact details and façade camera photos.
+• What for: to comply with the guest registration law, release access, provide security and assist you.
+• Who sees it: the host and authorized staff. The FNRH is sent to the government, as required by law.
+• For how long: the form, for the period required by law; façade camera photos, 3 days.
+• Your rights: request access, correction or deletion of your data through the house channel.
+
+OFFICIAL HOUSE COMMUNICATION CHANNEL: the chat of the platform where you booked (Airbnb, Booking or other). All messages during your stay, including automatic ones, come through there. If you booked directly with the house: WhatsApp (11) 98306-9951.""",
+    "es": """REGLAMENTO INTERNO — DOM BANANA
+Versión 1.9 — noviembre de 2026. Sustituye todos los reglamentos anteriores.
+
+Dom Banana Ltda. (CNPJ 66.547.650/0001-60), Rua Frei Durão, 542, Ipiranga, São Paulo/SP. Casa compartida que funciona como posada/hostel, con autoservicio. Cada huésped acepta este reglamento en la ficha de registro.
+
+1. QUIÉN SE HOSPEDA
+• Solo mayores de 18 años.
+• Todas las personas deben estar en la reserva. Un huésped adicional se solicita como modificación de la reserva en la plataforma.
+• Después de la reserva enviamos el enlace de registro. Cada huésped completa su ficha (FNRH, exigida por ley) con un documento oficial con foto. Con las fichas de todos, la app libera los códigos. Sin la ficha de todos, no se libera la entrada a la habitación.
+• Los códigos y las tags son personales. No se los pase a nadie.
+
+2. HORARIOS
+• Áreas comunes: desde las 6 h del día de llegada hasta las 18 h del día de salida.
+• Habitación o cama: de las 14 h (check-in) a las 11 h (checkout). Si necesita más tiempo, puede quedarse hasta las 13:30 h, con una tasa de R$ 15.
+• Guardaequipaje (locker): libre desde las 6 h del día de llegada hasta las 18 h del día de salida. Si necesita más tiempo, la tasa es de R$ 15 por cada 24 horas.
+• Fogón, horno grande y patio: de las 6 h a las 23 h. Fuera de ese horario permanecen cerrados, salvo en un evento organizado y avisado con antelación.
+• Silencio: de las 22 h a las 7 h. Entre las 22 h y las 23 h, áreas comunes solo en voz baja.
+
+3. ROPA OPCIONAL (DRESS CODE LIBRE)
+• La ropa opcional es una autorización, no una obligación: cada persona elige cómo vestirse, dentro de la regla de cada área.
+• En el patio (alojamiento Smart), que no es visible desde la calle y no tiene cámara, la ropa es opcional. Es el único lugar de la casa donde se puede estar sin ropa: solo mayores de 18, prohibido fotografiar y siempre sentado sobre tu toalla.
+• Dentro de la casa, en el balcón y en la entrada: ropa o toalla. Sin ropa, solo de la puerta del patio hacia afuera. En la calle, siempre con ropa.
+• La desnudez nunca va acompañada de contacto ni de estimulación sexual de ningún tipo.
+• Ninguna actividad sexual en presencia de otras personas, en ninguna área común de la casa.
+• Cómo no participar: la ropa es siempre opcional. Puedes estar vestido todo el tiempo, y en las áreas internas es obligatorio llevar ropa o toalla.
+• La casa no es adecuada para niños ni bebés.
+
+4. FOTOS Y FILMACIONES
+ESTÁ PROHIBIDO FOTOGRAFIAR O FILMAR A CUALQUIER PERSONA SIN SU AUTORIZACIÓN, EN CUALQUIER AMBIENTE DE LA CASA, SIN EXCEPCIÓN — con o sin ropa, por cualquier motivo, durante y después de la estancia. Ninguna imagen de otro huésped puede publicarse ni compartirse. Quien incumpla sale de la casa, y el caso se comunica a la plataforma de reserva y, cuando corresponda, a las autoridades.
+
+5. CÁMARAS Y SENSORES
+Hay una única cámara de seguridad, en la fachada de la casa, en un área totalmente abierta, orientada hacia la acera y el portón de entrada. Sirve para seguridad y control de acceso.
+No hay cámaras ni dispositivos de grabación dentro de la casa: ni en la entrada, en el balcón, en las áreas comunes, en la tiendita, en los cuartos, en los baños o en el patio. En la tiendita, el control de stock se hace con balanzas de estante, sin imagen. La casa también tiene sensores sin imagen: sensores de apertura de puerta (congelador, nevera y armario de ollas) y detectores de humo.
+El sistema de la casa registra fotos de la cámara de la fachada cuando ocurre una acción (portón abierto, llamada) y las guarda 3 días. Solo el anfitrión y el equipo autorizado ven las imágenes; pueden entregarse a la plataforma de reserva o a las autoridades en caso de incidente.
+
+6. TABACO
+• Prohibido fumar (incluidos vape y cigarrillo electrónico) dentro de las habitaciones, baños, cocina y cualquier área cerrada.
+• Fumar solo en el fumadero al aire libre.
+• El uso medicinal de cannabis está permitido para quien está en tratamiento y tiene receta médica. Quien lo usa declara tener la receta (puede marcarlo en la página de la estadía: es opcional y la casa guarda solo la fecha), lo usa solo en el fumadero al aire libre y lo guarda en un frasco cerrado. El uso recreativo, la venta y la cesión están prohibidos (Lei 11.343/2006).
+• Las sustancias ilícitas están prohibidas en la casa.
+
+7. VISITAS
+• Avise antes por el canal de la casa. Las visitas no entran en las habitaciones y no duermen en la casa.
+• La visita que se queda más de 1 hora paga el House Pass de R$ 35, en consumo en la tiendita.
+
+8. COCINA
+• Las reservas de Airbnb incluyen la cocina completa, incluido el fogón. En otras plataformas, el uso del fogón depende de la modalidad reservada.
+• Use el armario y la bandeja con el número de su habitación. Lave y guarde lo que use.
+• Prohibido freír por inmersión y prohibido fumar en la cocina. El humo y la grasa activan los detectores de humo; cada activación se registra y se revisa, y solo hay cobro si hay daño o costo, por el Centro de Resoluciones de la plataforma.
+
+9. BAÑOS
+• Todos los baños son colectivos y sin distinción de género.
+• Prohibido depilarse, cortarse el pelo y teñirse en los baños.
+
+10. TIENDITA Y ARTÍCULOS APARTE
+• La tiendita es de autoservicio, operada por una tienda asociada, y se paga al momento en el tótem.
+• Por la tiendita: toalla R$ 5 (tasa única), manta extra R$ 8 (tasa única), lavadora o secadora R$ 17, bicicleta R$ 15 por hora.
+• La tarifa diaria incluye ropa de cama, almohada y 1 manta. No proporcionamos artículos de higiene personal.
+
+11. DAÑOS Y COBROS
+Los daños, la limpieza extraordinaria y las personas no registradas se cobran de forma proporcional y con registro, a través del Centro de Resoluciones de la plataforma de reserva.
+
+12. CÓMO RESOLVEMOS PROBLEMAS (MEDIACIÓN)
+• Primer paso, siempre: hable con la casa por el canal oficial. Casi todo se resuelve ahí, al momento.
+• Reserva hecha por Airbnb: registre también en el chat de Airbnb lo que sea importante (daño, reclamación, solicitud de reembolso). El dinero de la reserva, los daños y los cobros van por el Centro de Resoluciones de Airbnb.
+• Reserva hecha por otra plataforma: por el centro de atención de esa plataforma.
+• Convivencia entre huéspedes: la casa decide, con base en este reglamento, y puede pedir la salida de quien lo incumpla. Los delitos (acoso, hurto, foto sin autorización, agresión) van a la policía.
+• Nada de esto le quita el derecho de acudir a Procon, a consumidor.gov.br o a la Justicia.
+
+13. PISCINA, ESCALERAS Y LUGARES ALTOS
+• La piscina abre solo en verano y en días de calor. No tiene reja, portón ni traba: úsela con cuidado, nunca solo de noche o después de beber.
+• El deck del cine, la escalera de las habitaciones compartidas, las escaleras de las literas y el borde de la piscina no tienen barandilla. Atención al circular.
+
+14. ANIMALES
+• Hasta 2 animales por reserva, avisados en la reserva, y solo en las habitaciones 02, 03 y 04. Circulan solo en la planta baja y no suben a las habitaciones de los pisos superiores.
+• El ruido de animales en el horario de silencio (22 h a 7 h) genera multa y puede llevar a la salida de la casa.
+• La casa tiene la cacatúa ninfa Zagalo en la sala.
+
+15. CANCELACIÓN, LIMPIEZA Y PROBLEMAS
+• La cancelación y el reembolso siguen la política elegida en la reserva de la plataforma.
+• ¿Vio algo sucio, dañado o distinto del anuncio? Envíe una foto por el canal de la casa apenas entre, para resolverlo pronto.
+
+16. CONVIVENCIA
+El acoso, la discriminación, las amenazas, la conducta sexual en áreas comunes o la foto de otra persona sin autorización llevan a la salida de la casa y se comunican a la plataforma.
+
+17. PERTENENCIAS, ENTREGAS Y VEHÍCULOS
+• Guarde los objetos de valor en su armario o locker.
+• Esté presente para recibir sus entregas. Nunca reciba entregas de otras personas.
+• No tenemos garaje; los coches se quedan en la calle.
+
+18. OBJETOS PERDIDOS
+• El objeto olvidado se registra el día en que se encuentra (foto, fecha y lugar).
+• Si sabemos de quién es, avisamos por el canal de la casa. La persona lo recoge o paga el envío.
+• Lo guardamos durante 30 días. Después, la ropa y los objetos simples se donan o se desechan.
+• Documentos, dinero, tarjetas, electrónicos y joyas de quien no aparezca o no sea identificado se entregan a la policía en un plazo de 15 días, como manda la ley.
+• La comida olvidada en la nevera o en el armario se desecha al día siguiente de la salida.
+
+19. PRIVACIDAD (LGPD)
+• Datos recopilados: ficha de registro (FNRH), foto del documento, selfie, contacto y fotos de la cámara de la fachada.
+• Para qué: cumplir la ley de registro de huéspedes, liberar el acceso, dar seguridad y atenderle.
+• Quién los ve: el anfitrión y el equipo autorizado. La FNRH se envía al gobierno, como manda la ley.
+• Por cuánto tiempo: la ficha, por el plazo exigido por ley; las fotos de la cámara de la fachada, 3 días.
+• Sus derechos: pedir acceso, corrección o eliminación de sus datos por el canal de la casa.
+
+CANAL OFICIAL DE COMUNICACIÓN DE LA CASA: el chat de la plataforma en la que reservó (Airbnb, Booking u otra). Todos los mensajes de su estancia, incluidos los automáticos, llegan por ahí. Quien reservó directamente con la casa: WhatsApp (11) 98306-9951.""",
+    "fr": """RÈGLEMENT INTÉRIEUR — DOM BANANA
+Version 1.9 — novembre 2026. Remplace tous les règlements précédents.
+
+Dom Banana Ltda. (CNPJ 66.547.650/0001-60), Rua Frei Durão, 542, Ipiranga, São Paulo/SP. Maison partagée qui fonctionne comme pension/auberge (hostel), en libre-service. Chaque voyageur accepte ce règlement sur la fiche d'enregistrement.
+
+1. QUI PEUT SÉJOURNER
+• Uniquement les personnes de 18 ans et plus.
+• Toutes les personnes doivent figurer sur la réservation. Un voyageur supplémentaire se demande comme modification de la réservation sur la plateforme.
+• Après la réservation, nous envoyons le lien d'enregistrement. Chaque voyageur remplit sa fiche (FNRH, exigée par la loi) avec une pièce d'identité officielle avec photo. Avec les fiches de tous, l'application libère les codes. Sans la fiche de tous, l'accès à la chambre n'est pas libéré.
+• Les codes et les tags sont personnels. Ne les transmettez à personne.
+
+2. HORAIRES
+• Espaces communs : de 6 h le jour d'arrivée jusqu'à 18 h le jour de départ.
+• Chambre ou lit : de 14 h (check-in) à 11 h (check-out). Besoin de plus de temps ? Vous pouvez rester jusqu'à 13 h 30, moyennant des frais de R$ 15.
+• Consigne à bagages (casier) : libre de 6 h le jour d'arrivée à 18 h le jour de départ. Besoin de plus de temps ? Les frais sont de R$ 15 par tranche de 24 heures.
+• Cuisinière, grand four et cour : de 6 h à 23 h. En dehors de ces horaires, ils sont fermés, sauf lors d'un événement organisé et annoncé à l'avance.
+• Silence : de 22 h à 7 h. Entre 22 h et 23 h, espaces communs uniquement à voix basse.
+
+3. TENUE FACULTATIVE (DRESS CODE LIBRE)
+• La tenue facultative est une autorisation, pas une obligation : chacun choisit comment s'habiller, selon la règle de chaque espace.
+• Dans la cour (séjour Smart), qui n'est pas visible depuis la rue et n'a pas de caméra, les vêtements sont facultatifs. C'est le seul endroit de la maison où l'on peut être sans vêtements : réservé aux adultes (18+), photos interdites, et toujours assis sur sa propre serviette.
+• À l'intérieur, sur la véranda et à l'entrée : vêtements ou serviette. Sans vêtements, seulement de la porte de la cour vers l'extérieur. Dans la rue, toujours habillé.
+• La nudité ne s'accompagne jamais de contact ni de stimulation sexuelle d'aucune sorte.
+• Aucune activité sexuelle en présence d'autres personnes, dans aucun espace commun de la maison.
+• Comment ne pas participer : les vêtements sont toujours facultatifs. Vous pouvez rester habillé tout le temps, et à l'intérieur, vêtements ou serviette sont obligatoires.
+• La maison ne convient pas aux enfants ni aux bébés.
+
+4. PHOTOS ET VIDÉOS
+IL EST INTERDIT DE PHOTOGRAPHIER OU DE FILMER QUI QUE CE SOIT SANS SON AUTORISATION, DANS TOUT ESPACE DE LA MAISON, SANS EXCEPTION — habillé ou non, pour quelque raison que ce soit, pendant et après le séjour. Aucune image d'un autre voyageur ne peut être publiée ni partagée. Toute personne qui enfreint cette règle quitte la maison, et le cas est signalé à la plateforme de réservation et, le cas échéant, aux autorités.
+
+5. CAMÉRAS ET CAPTEURS
+Il y a une seule caméra de sécurité, sur la façade de la maison, dans un espace entièrement extérieur, orientée vers le trottoir et le portail d'entrée. Elle sert à la sécurité et au contrôle d'accès.
+Il n'y a ni caméra ni appareil d'enregistrement à l'intérieur de la maison : ni à l'entrée, sur la véranda, dans les espaces communs, dans la petite boutique, dans les chambres, dans les salles de bain ou dans la cour. Dans la petite boutique, le stock est contrôlé par des balances d'étagère, sans image. La maison dispose aussi de capteurs sans image : capteurs d'ouverture de porte (congélateur, réfrigérateur et placard à casseroles) et détecteurs de fumée.
+Le système de la maison enregistre des photos de la caméra de façade lorsqu'une action a lieu (portail ouvert, appel) et les conserve 3 jours. Seuls l'hôte et l'équipe autorisée voient les images ; elles peuvent être remises à la plateforme de réservation ou aux autorités en cas d'incident.
+
+6. TABAC
+• Interdit de fumer (y compris vape et cigarette électronique) dans les chambres, salles de bain, cuisine et tout espace fermé.
+• Fumer uniquement dans l'espace fumeurs en plein air.
+• L'usage médical du cannabis est autorisé pour les personnes en traitement qui ont une ordonnance. Qui en fait usage déclare avoir l'ordonnance (à cocher sur la page du séjour : c'est facultatif et la maison garde seulement la date), l'utilise uniquement dans l'espace fumeurs en plein air et le conserve dans un pot fermé. L'usage récréatif, la vente et la cession sont interdits (Lei 11.343/2006).
+• Les substances illicites sont interdites dans la maison.
+
+7. VISITES
+• Prévenez à l'avance par le canal de la maison. Les visiteurs n'entrent pas dans les chambres et ne dorment pas dans la maison.
+• Un visiteur qui reste plus de 1 heure paie le House Pass de R$ 35, en consommation à la petite boutique.
+
+8. CUISINE
+• Les réservations Airbnb incluent la cuisine complète, y compris la cuisinière. Sur les autres plateformes, l'usage de la cuisinière dépend de la formule réservée.
+• Utilisez le placard et le plateau portant le numéro de votre chambre. Lavez et rangez ce que vous utilisez.
+• Friture par immersion interdite et interdiction de fumer dans la cuisine. La fumée et la graisse déclenchent les détecteurs de fumée ; chaque déclenchement est enregistré et examiné, et des frais ne s'appliquent qu'en cas de dommage ou de coût, via le Centre de résolution de la plateforme.
+
+9. SALLES DE BAIN
+• Toutes les salles de bain sont collectives et non genrées.
+• Épilation, coupe de cheveux et coloration interdites dans les salles de bain.
+
+10. PETITE BOUTIQUE ET ARTICLES EN SUPPLÉMENT
+• La petite boutique est en libre-service, gérée par un commerce partenaire, et se paie sur place à la borne.
+• Via la petite boutique : serviette R$ 5 (frais uniques), couverture supplémentaire R$ 8 (frais uniques), lave-linge ou sèche-linge R$ 17, vélo R$ 15 par heure.
+• La nuitée comprend le linge de lit, un oreiller et 1 couverture. Nous ne fournissons pas d'articles d'hygiène personnelle.
+
+11. DOMMAGES ET FRAIS
+Les dommages, le nettoyage extraordinaire et les personnes non enregistrées sont facturés de manière proportionnelle et avec justificatif, via le Centre de résolution de la plateforme de réservation.
+
+12. COMMENT NOUS RÉSOLVONS LES PROBLÈMES (MÉDIATION)
+• Première étape, toujours : parlez à la maison par le canal officiel. Presque tout se résout là, sur le moment.
+• Réservation faite via Airbnb : consignez aussi dans le chat Airbnb tout ce qui est important (dommage, réclamation, demande de remboursement). L'argent de la réservation, les dommages et les frais passent par le Centre de résolution Airbnb.
+• Réservation faite via une autre plateforme : par le service client de cette plateforme.
+• Vie commune entre voyageurs : la maison décide, sur la base de ce règlement, et peut demander le départ de toute personne qui l'enfreint. Les infractions pénales (harcèlement, vol, photo sans autorisation, agression) sont signalées à la police.
+• Rien de tout cela ne vous retire le droit de saisir le Procon, consumidor.gov.br ou la justice.
+
+13. PISCINE, ESCALIERS ET LIEUX EN HAUTEUR
+• La piscine n'ouvre qu'en été et les jours de chaleur. Elle n'a ni clôture, ni portail, ni verrou : utilisez-la avec prudence, jamais seul la nuit ou après avoir bu.
+• La terrasse du cinéma, l'escalier des chambres partagées, les échelles des lits superposés et le bord de la piscine n'ont pas de garde-corps. Faites attention en circulant.
+
+14. ANIMAUX
+• Jusqu'à 2 animaux par réservation, signalés lors de la réservation, et uniquement dans les chambres 02, 03 et 04. Ils circulent uniquement au niveau inférieur et ne montent pas dans les chambres des étages supérieurs.
+• Le bruit d'un animal pendant les heures de silence (22 h à 7 h) entraîne une amende et peut conduire au départ de la maison.
+• La maison a une calopsitte, Zagalo, dans le salon.
+
+15. ANNULATION, PROPRETÉ ET PROBLÈMES
+• L'annulation et le remboursement suivent la politique choisie lors de la réservation sur la plateforme.
+• Vous avez vu quelque chose de sale, d'endommagé ou de différent de l'annonce ? Envoyez une photo par le canal de la maison dès votre arrivée, pour que nous réglions cela rapidement.
+
+16. VIE COMMUNE
+Le harcèlement, la discrimination, les menaces, une conduite sexuelle dans un espace commun ou la photo d'une autre personne sans autorisation entraînent le départ de la maison et sont signalés à la plateforme.
+
+17. EFFETS PERSONNELS, LIVRAISONS ET VÉHICULES
+• Rangez vos objets de valeur dans votre placard ou votre casier.
+• Soyez présent pour recevoir vos livraisons. Ne réceptionnez jamais la livraison d'une autre personne.
+• Nous n'avons pas de garage ; les voitures restent dans la rue.
+
+18. OBJETS TROUVÉS
+• Un objet oublié est enregistré le jour où il est trouvé (photo, date et lieu).
+• Si nous savons à qui il appartient, nous prévenons par le canal de la maison. La personne vient le chercher ou paie l'envoi.
+• Nous le gardons 30 jours. Passé ce délai, les vêtements et les objets simples sont donnés ou jetés.
+• Les documents, l'argent, les cartes, les appareils électroniques et les bijoux d'une personne qui ne se manifeste pas ou n'est pas identifiée sont remis à la police sous 15 jours, comme l'exige la loi.
+• La nourriture oubliée dans le réfrigérateur ou le placard est jetée le lendemain du départ.
+
+19. CONFIDENTIALITÉ (LGPD)
+• Données collectées : fiche d'enregistrement (FNRH), photo du document, selfie, coordonnées et photos de la caméra de façade.
+• Pour quoi : respecter la loi sur l'enregistrement des voyageurs, libérer l'accès, assurer la sécurité et vous assister.
+• Qui les voit : l'hôte et l'équipe autorisée. La FNRH est envoyée au gouvernement, comme l'exige la loi.
+• Pendant combien de temps : la fiche, pendant le délai exigé par la loi ; les photos de la caméra de façade, 3 jours.
+• Vos droits : demander l'accès, la correction ou la suppression de vos données par le canal de la maison.
+
+CANAL OFFICIEL DE COMMUNICATION DE LA MAISON : le chat de la plateforme sur laquelle vous avez réservé (Airbnb, Booking ou autre). Tous les messages de votre séjour, y compris les messages automatiques, arrivent par là. Si vous avez réservé directement avec la maison : WhatsApp (11) 98306-9951.""",
+    "de": """HAUSORDNUNG — DOM BANANA
+Version 1.9 — November 2026. Ersetzt alle früheren Hausordnungen.
+
+Dom Banana Ltda. (CNPJ 66.547.650/0001-60), Rua Frei Durão, 542, Ipiranga, São Paulo/SP. Gemeinschaftshaus, das als Pension/Hostel mit Selbstbedienung betrieben wird. Jeder Gast akzeptiert diese Hausordnung im Anmeldeformular.
+
+1. WER HIER ÜBERNACHTET
+• Nur Personen ab 18 Jahren.
+• Alle Personen müssen in der Buchung stehen. Ein zusätzlicher Gast wird als Buchungsänderung über die Plattform beantragt.
+• Nach der Buchung senden wir den Link zur Anmeldung. Jeder Gast füllt sein eigenes Formular (FNRH, gesetzlich vorgeschrieben) mit einem amtlichen Lichtbildausweis aus. Sobald die Formulare aller Gäste vorliegen, gibt die App die Codes frei. Ohne die Formulare aller Gäste wird der Zugang zum Zimmer nicht freigegeben.
+• Codes und Tags sind persönlich. Geben Sie sie an niemanden weiter.
+
+2. ZEITEN
+• Gemeinschaftsbereiche: ab 6 Uhr am Anreisetag bis 18 Uhr am Abreisetag.
+• Zimmer oder Bett: von 14 Uhr (Check-in) bis 11 Uhr (Check-out). Brauchen Sie mehr Zeit? Sie können bis 13:30 Uhr bleiben, gegen eine Gebühr von R$ 15.
+• Gepäckaufbewahrung (Schließfach): frei von 6 Uhr am Anreisetag bis 18 Uhr am Abreisetag. Brauchen Sie mehr Zeit? Die Gebühr beträgt R$ 15 je 24 Stunden.
+• Herd, großer Backofen und Hof: von 6 Uhr bis 23 Uhr. Außerhalb dieser Zeiten bleiben sie geschlossen, außer bei einer organisierten und vorher angekündigten Veranstaltung.
+• Ruhezeit: von 22 Uhr bis 7 Uhr. Zwischen 22 Uhr und 23 Uhr in den Gemeinschaftsbereichen nur mit leiser Stimme.
+
+3. KLEIDUNG OPTIONAL (FREIER DRESSCODE)
+• Kleidung optional ist eine Erlaubnis, keine Pflicht: Jede Person entscheidet, wie sie sich kleidet, im Rahmen der Regel des jeweiligen Bereichs.
+• Im Hof (Smart-Aufenthalt), der von der Straße aus nicht einsehbar ist und keine Kamera hat, ist Kleidung optional. Es ist der einzige Ort im Haus, an dem man unbekleidet sein darf: nur ab 18, Fotografieren verboten, immer auf dem eigenen Handtuch sitzen.
+• Im Haus, auf der Veranda und am Eingang: Kleidung oder Handtuch. Unbekleidet nur von der Hoftür nach draußen. Auf der Straße immer bekleidet.
+• Nacktheit ist nie mit Berührungen oder sexueller Stimulation jeglicher Art verbunden.
+• Keine sexuellen Handlungen in Anwesenheit anderer Personen, in keinem Gemeinschaftsbereich des Hauses.
+• Nicht teilnehmen: Kleidung ist immer optional. Sie können jederzeit bekleidet bleiben, und in den Innenbereichen sind Kleidung oder Handtuch Pflicht.
+• Das Haus ist nicht für Kinder oder Babys geeignet.
+
+4. FOTOS UND FILMAUFNAHMEN
+ES IST VERBOTEN, IRGENDEINE PERSON OHNE IHRE ERLAUBNIS ZU FOTOGRAFIEREN ODER ZU FILMEN, IN JEDEM BEREICH DES HAUSES, OHNE AUSNAHME — bekleidet oder nicht, aus welchem Grund auch immer, während und nach dem Aufenthalt. Kein Bild eines anderen Gastes darf veröffentlicht oder geteilt werden. Wer gegen diese Regel verstößt, verlässt das Haus, und der Fall wird der Buchungsplattform und gegebenenfalls den Behörden gemeldet.
+
+5. KAMERAS UND SENSOREN
+Es gibt eine einzige Sicherheitskamera, an der Fassade des Hauses, in einem vollständig offenen Außenbereich, ausgerichtet auf den Gehweg und das Eingangstor. Sie dient der Sicherheit und Zugangskontrolle.
+Im Haus gibt es keine Kameras und keine Aufnahmegeräte: weder am Eingang, auf der Veranda, in den Gemeinschaftsbereichen, im Hausladen, in den Zimmern, in den Bädern noch im Hof. Im Hausladen wird der Bestand mit Regalwaagen kontrolliert, ohne Bilder. Das Haus hat außerdem Sensoren ohne Bild: Türöffnungssensoren (Gefrierschrank, Kühlschrank und Topfschrank) und Rauchmelder.
+Das Haussystem speichert Fotos der Fassadenkamera, wenn eine Aktion stattfindet (Tor geöffnet, Anruf), und bewahrt sie 3 Tage auf. Nur der Gastgeber und autorisiertes Personal sehen die Bilder; sie können bei einem Vorfall an die Buchungsplattform oder die Behörden übergeben werden.
+
+6. RAUCHEN
+• Rauchen (auch Vape und E-Zigarette) ist in den Zimmern, Bädern, in der Küche und in jedem geschlossenen Bereich verboten.
+• Rauchen nur im Raucherbereich im Freien.
+• Medizinischer Cannabiskonsum ist für Personen in Behandlung mit ärztlichem Rezept erlaubt. Wer konsumiert, erklärt, ein Rezept zu haben (kann auf der Aufenthaltsseite angekreuzt werden: freiwillig, das Haus speichert nur das Datum), konsumiert nur im Raucherbereich im Freien und bewahrt es in einem geschlossenen Behälter auf. Freizeitkonsum, Verkauf und Weitergabe sind verboten (Lei 11.343/2006).
+• Illegale Substanzen sind im Haus verboten.
+
+7. BESUCH
+• Kündigen Sie Besuch vorher über den Kanal des Hauses an. Besucher betreten keine Zimmer und übernachten nicht im Haus.
+• Besuch, der länger als 1 Stunde bleibt, zahlt den House Pass von R$ 35, als Guthaben im Hausladen.
+
+8. KÜCHE
+• Airbnb-Buchungen beinhalten die komplette Küche, einschließlich Herd. Auf anderen Plattformen richtet sich die Nutzung des Herds nach der gebuchten Variante.
+• Benutzen Sie den Schrank und das Tablett mit Ihrer Zimmernummer. Spülen Sie ab und räumen Sie weg, was Sie benutzen.
+• Frittieren ist verboten und Rauchen in der Küche ist verboten. Rauch und Fett lösen die Rauchmelder aus; jeder Alarm wird protokolliert und geprüft, und eine Gebühr fällt nur bei Schaden oder Kosten an, über das Lösungscenter der Plattform.
+
+9. BÄDER
+• Alle Bäder sind Gemeinschaftsbäder und geschlechtsneutral.
+• Haarentfernung, Haareschneiden und Haarefärben sind in den Bädern verboten.
+
+10. HAUSLADEN UND ZUSATZARTIKEL
+• Der Hausladen ist Selbstbedienung, wird von einem Partnergeschäft betrieben und wird sofort am Terminal bezahlt.
+• Über den Hausladen: Handtuch R$ 5 (einmalige Gebühr), zusätzliche Decke R$ 8 (einmalige Gebühr), Waschmaschine oder Trockner R$ 17, Fahrrad R$ 15 pro Stunde.
+• Der Übernachtungspreis beinhaltet Bettwäsche, Kissen und 1 Decke. Hygieneartikel stellen wir nicht zur Verfügung.
+
+11. SCHÄDEN UND GEBÜHREN
+Schäden, außergewöhnliche Reinigung und nicht registrierte Personen werden anteilig und mit Nachweis über das Resolution Center der Buchungsplattform berechnet.
+
+12. WIE WIR PROBLEME LÖSEN (VERMITTLUNG)
+• Erster Schritt, immer: Sprechen Sie mit dem Haus über den offiziellen Kanal. Fast alles lässt sich dort sofort lösen.
+• Buchung über Airbnb: Halten Sie Wichtiges (Schaden, Beschwerde, Erstattungsantrag) auch im Airbnb-Chat fest. Buchungsgeld, Schäden und Gebühren laufen über das Resolution Center von Airbnb.
+• Buchung über eine andere Plattform: über den Kundenservice dieser Plattform.
+• Zusammenleben der Gäste: Das Haus entscheidet auf Grundlage dieser Hausordnung und kann verlangen, dass Personen, die dagegen verstoßen, das Haus verlassen. Straftaten (Belästigung, Diebstahl, Foto ohne Erlaubnis, Körperverletzung) gehen an die Polizei.
+• Nichts davon nimmt Ihnen das Recht, sich an Procon, consumidor.gov.br oder die Gerichte zu wenden.
+
+13. POOL, TREPPEN UND HOHE STELLEN
+• Der Pool ist nur im Sommer und an heißen Tagen geöffnet. Er hat keinen Zaun, kein Tor und keine Sperre: Benutzen Sie ihn vorsichtig, nie allein nachts oder nach Alkoholkonsum.
+• Das Kinodeck, die Treppe zu den Gemeinschaftszimmern, die Leitern der Etagenbetten und der Poolrand haben kein Geländer. Seien Sie beim Bewegen vorsichtig.
+
+14. TIERE
+• Bis zu 2 Tiere pro Buchung, bei der Buchung angegeben, und nur in den Zimmern 02, 03 und 04. Sie bewegen sich nur im unteren Stockwerk und gehen nicht in die Zimmer der oberen Stockwerke.
+• Tierlärm während der Ruhezeit (22 Uhr bis 7 Uhr) führt zu einer Geldstrafe und kann zum Verlassen des Hauses führen.
+• Im Haus lebt der Nymphensittich Zagalo im Wohnzimmer.
+
+15. STORNIERUNG, REINIGUNG UND PROBLEME
+• Stornierung und Erstattung folgen der bei der Buchung auf der Plattform gewählten Richtlinie.
+• Etwas Schmutziges, Beschädigtes oder vom Inserat Abweichendes gesehen? Senden Sie gleich nach der Ankunft ein Foto über den Kanal des Hauses, damit wir es schnell lösen.
+
+16. ZUSAMMENLEBEN
+Belästigung, Diskriminierung, Drohungen, sexuelles Verhalten in einem Gemeinschaftsbereich oder Fotos einer anderen Person ohne Erlaubnis führen zum Verlassen des Hauses und werden der Plattform gemeldet.
+
+17. GEGENSTÄNDE, LIEFERUNGEN UND FAHRZEUGE
+• Bewahren Sie Wertsachen in Ihrem Schrank oder Schließfach auf.
+• Seien Sie anwesend, um Ihre Lieferungen entgegenzunehmen. Nehmen Sie nie Lieferungen für andere Personen an.
+• Wir haben keine Garage; Autos bleiben auf der Straße.
+
+18. FUNDSACHEN
+• Ein vergessener Gegenstand wird am Tag des Auffindens erfasst (Foto, Datum und Ort).
+• Wenn wir wissen, wem er gehört, benachrichtigen wir über den Kanal des Hauses. Die Person holt ihn ab oder bezahlt den Versand.
+• Wir bewahren ihn 30 Tage auf. Danach werden Kleidung und einfache Gegenstände gespendet oder entsorgt.
+• Dokumente, Geld, Karten, Elektronik und Schmuck von Personen, die sich nicht melden oder nicht identifiziert werden, werden innerhalb von 15 Tagen der Polizei übergeben, wie es das Gesetz verlangt.
+• Im Kühlschrank oder Schrank vergessene Lebensmittel werden am Tag nach der Abreise entsorgt.
+
+19. DATENSCHUTZ (LGPD)
+• Erhobene Daten: Anmeldeformular (FNRH), Foto des Ausweises, Selfie, Kontaktdaten und Fotos der Fassadenkamera.
+• Wofür: um das Gästeregistrierungsgesetz zu erfüllen, den Zugang freizugeben, Sicherheit zu bieten und Sie zu betreuen.
+• Wer sie sieht: der Gastgeber und das autorisierte Team. Die FNRH wird an die Regierung übermittelt, wie es das Gesetz verlangt.
+• Wie lange: das Formular für die gesetzlich vorgeschriebene Frist; die Fotos der Fassadenkamera 3 Tage.
+• Ihre Rechte: Zugang, Berichtigung oder Löschung Ihrer Daten über den Kanal des Hauses verlangen.
+
+OFFIZIELLER KOMMUNIKATIONSKANAL DES HAUSES: der Chat der Plattform, über die Sie gebucht haben (Airbnb, Booking oder andere). Alle Nachrichten während Ihres Aufenthalts, auch die automatischen, kommen darüber. Wer direkt beim Haus gebucht hat: WhatsApp (11) 98306-9951.""",
+    "ja": """館内規則 — DOM BANANA
+バージョン1.9 — 2026年11月。これまでのすべての規則に代わるものです。
+
+Dom Banana Ltda.（CNPJ 66.547.650/0001-60）、Rua Frei Durão, 542, Ipiranga, São Paulo/SP。セルフサービス方式のゲストハウス／ホステルとして運営するシェアハウスです。各宿泊者は登録フォームでこの規則に同意します。
+
+1. 宿泊できる方
+• 18歳以上の方のみ。
+• 宿泊する全員が予約に含まれている必要があります。追加の宿泊者は、プラットフォーム上で予約の変更として申請してください。
+• 予約後、登録リンクをお送りします。各宿泊者は、顔写真付きの公的身分証明書を使って自分の登録フォーム（法律で義務付けられたFNRH）を記入します。全員のフォームが揃うと、アプリが暗証番号を発行します。全員のフォームが揃わない場合、部屋への入室は許可されません。
+• 暗証番号とタグは本人専用です。誰にも教えないでください。
+
+2. 時間
+• 共用エリア：到着日の6時から出発日の18時まで。
+• 部屋またはベッド：14時（チェックイン）から11時（チェックアウト）まで。もう少し時間が必要な場合は、R$ 15の料金で13時30分まで滞在できます。
+• 荷物預かり（ロッカー）：到着日の6時から出発日の18時まで無料。それ以上必要な場合は、24時間ごとにR$ 15の料金がかかります。
+• コンロ、大型オーブン、中庭：6時から23時まで。この時間外は、事前に告知された企画イベントを除き、閉鎖されます。
+• 静粛時間：22時から7時まで。22時から23時の間、共用エリアでは小さな声でお話しください。
+
+3. 服装任意（服装自由）
+• 服装任意は許可であり、義務ではありません。各エリアのルールの範囲で、服装は各自が選べます。
+• 中庭（Smart宿泊）は通りから見えず、カメラもなく、服の着用は任意です。家の中で服を着なくてよいのはここだけです。18歳以上のみ、撮影禁止、必ず自分のタオルの上に座ってください。
+• 屋内、ベランダ、入口では服またはタオルを着用してください。服を着ないのは中庭のドアから外だけです。通りでは常に服を着用してください。
+• 裸であることに、いかなる種類の接触や性的刺激も伴いません。
+• 家のどの共用エリアでも、他の人がいる場での性的行為は禁止です。
+• 参加しない方法：服は常に任意です。いつでも服を着たままでかまいません。屋内では服またはタオルの着用が必須です。
+• 当館はお子様・乳幼児には適していません。
+
+4. 写真・動画撮影
+本人の許可なく、家のどの場所でも、例外なく人を撮影・録画することは禁止です。服の有無や理由を問わず、滞在中も滞在後も同様です。他のゲストの画像を公開・共有することはできません。違反した方は退館となり、予約プラットフォームおよび必要に応じて当局に報告します。
+
+5. カメラとセンサー
+防犯カメラは1台のみで、家の正面（ファサード）の完全な屋外にあり、歩道と入口の門に向いています。防犯と入館管理のために使います。
+家の中にはカメラも録画機器もありません。入口、ベランダ、共用エリア、売店、客室、浴室、中庭のいずれにもありません。売店の在庫管理は画像を使わない棚の計量器で行います。また、画像のないセンサーとして、ドア開閉センサー（冷凍庫、冷蔵庫、鍋の棚）と煙感知器があります。
+館内システムは、動作があったとき（門の開錠、呼び出し）に正面カメラの写真を記録し、3日間保存します。画像を見るのはホストと許可されたスタッフのみで、トラブルの際は予約プラットフォームや当局に提出することがあります。
+
+6. 喫煙
+• 部屋、浴室、キッチン、その他の屋内エリアでの喫煙（ベイプ・電子タバコを含む）は禁止です。
+• 喫煙は屋外の喫煙所でのみ可能です。
+• 医療用大麻は、治療中で医師の処方箋をお持ちの方に限り許可されます。使用する方は処方箋があることを申告します（滞在ページでチェックできます：任意で、保存するのは日付のみ）。屋外の喫煙所でのみ使用し、密閉容器に保管してください。嗜好目的の使用、販売、譲渡は禁止です（Lei 11.343/2006）。
+• 違法薬物は館内で禁止です。
+
+7. 来訪者
+• 事前に館内のチャンネルでお知らせください。来訪者は部屋に入れず、館内に宿泊できません。
+• 1時間を超えて滞在する来訪者は、R$ 35のHouse Passを売店での利用クレジットとしてお支払いいただきます。
+
+8. キッチン
+• Airbnbの予約にはコンロを含むキッチン全体の利用が含まれます。他のプラットフォームでは、コンロの利用は予約したプランによります。
+• ご自分の部屋番号が付いた棚とトレイをお使いください。使ったものは洗って片付けてください。
+• 揚げ物とキッチンでの喫煙は禁止です。煙や油は煙感知器を作動させます。作動はすべて記録・確認され、損害や費用がある場合にのみ、プラットフォームの解決センターを通じて請求します。
+
+9. 浴室
+• すべての浴室は共用で、性別の区別はありません。
+• 浴室での脱毛、散髪、毛染めは禁止です。
+
+10. 売店と別料金のアイテム
+• 売店はセルフサービスで、提携店舗が運営し、端末でその場でお支払いいただきます。
+• 売店で：タオル R$ 5（1回限りの料金）、追加の毛布 R$ 8（1回限りの料金）、洗濯機または乾燥機 R$ 17、自転車 1時間 R$ 15。
+• 宿泊料金にはシーツ類、枕、毛布1枚が含まれます。洗面用具は提供していません。
+
+11. 損害と請求
+損害、特別清掃、未登録の人物については、記録に基づき相応の金額を、予約プラットフォームの解決センターを通じて請求します。
+
+12. 問題の解決方法（調停）
+• まず必ず：公式チャンネルで館内にご連絡ください。ほとんどのことはその場で解決します。
+• Airbnbでの予約：重要なこと（損害、苦情、返金の依頼）はAirbnbのチャットにも記録してください。予約の料金、損害、請求はAirbnbの解決センターを通じて処理されます。
+• 他のプラットフォームでの予約：そのプラットフォームのカスタマーサービスを通じて。
+• 宿泊者同士の共同生活：館内がこの規則に基づいて判断し、違反した方に退館を求めることがあります。犯罪（ハラスメント、盗難、無断撮影、暴行）は警察に通報します。
+• いずれの場合も、Procon、consumidor.gov.br、裁判所に訴える権利は失われません。
+
+13. プール、階段、高い場所
+• プールは夏と暑い日のみ開放します。柵、門、ロックはありません：注意して使用し、夜間に一人で、または飲酒後には決して使用しないでください。
+• シネマデッキ、相部屋の階段、二段ベッドのはしご、プールの縁には手すりがありません。移動の際はご注意ください。
+
+14. 動物
+• 1予約につき2匹まで、予約時に申告し、02・03・04号室のみ。動物は下の階のみで過ごし、上の階の部屋には上がれません。
+• 静粛時間（22時から7時）中の動物の鳴き声は罰金の対象となり、退館につながることがあります。
+• 館内のリビングにはオカメインコのZagaloがいます。
+
+15. キャンセル、清掃、問題
+• キャンセルと返金は、プラットフォームでの予約時に選択したポリシーに従います。
+• 汚れ、破損、掲載内容との違いに気づいたら？すぐに対応できるよう、入室後すぐに館内のチャンネルへ写真を送ってください。
+
+16. 共同生活
+ハラスメント、差別、脅迫、共用エリアでの性的な行為、他人の無断撮影は退館の対象となり、プラットフォームに報告されます。
+
+17. 持ち物、配達、車両
+• 貴重品はご自分の棚またはロッカーに保管してください。
+• 配達物はご自身で受け取ってください。他人宛ての配達物は決して受け取らないでください。
+• ガレージはありません。車は路上駐車となります。
+
+18. 落とし物
+• 忘れ物は見つかった日に記録します（写真、日付、場所）。
+• 持ち主が分かる場合は、館内のチャンネルでお知らせします。本人が取りに来るか、送料を負担して発送します。
+• 30日間保管します。その後、衣類や簡単な物品は寄付または処分します。
+• 持ち主が現れない、または特定できない書類、現金、カード、電子機器、貴金属は、法律に従い15日以内に警察に届けます。
+• 冷蔵庫や棚に残された食品は、出発の翌日に処分します。
+
+19. プライバシー（LGPD）
+• 収集するデータ：登録フォーム（FNRH）、身分証明書の写真、セルフィー、連絡先、正面カメラの写真。
+• 目的：宿泊者登録に関する法律の遵守、入室の許可、安全の確保、お客様への対応。
+• 閲覧者：ホストと許可されたスタッフ。FNRHは法律に従い政府に送付されます。
+• 保存期間：登録フォームは法律で定められた期間、正面カメラの写真は3日間。
+• お客様の権利：館内のチャンネルを通じて、データの開示、訂正、削除を求めることができます。
+
+館内の公式連絡チャンネル：予約したプラットフォーム（Airbnb、Bookingなど）のチャット。自動メッセージを含む滞在中のすべてのメッセージはそこから届きます。館内に直接予約した方：WhatsApp (11) 98306-9951。""",
+    "zh": """住宿守则 — DOM BANANA
+版本1.9 — 2026年11月。取代此前所有规章。
+
+Dom Banana Ltda.（CNPJ 66.547.650/0001-60），Rua Frei Durão, 542, Ipiranga, São Paulo/SP。本店为合住式房屋，以自助方式经营民宿/青年旅舍。每位住客在登记表上接受本守则。
+
+1. 入住对象
+• 仅限18岁以上人士。
+• 所有入住人员都必须在预订中。增加住客需在平台上以修改预订的方式申请。
+• 预订后我们会发送登记链接。每位住客须凭带照片的官方证件填写自己的登记表（法律要求的FNRH）。所有人的登记表齐全后，应用才会发放密码。缺少任何一人的登记表，房间将不予开放。
+• 密码和门卡为个人专用，请勿转交他人。
+
+2. 时间
+• 公共区域：从入住当天6点到退房当天18点。
+• 房间或床位：从14点（入住）到11点（退房）。如需更多时间，可支付R$ 15的费用延至13点30分。
+• 行李寄存（储物柜）：入住当天6点到退房当天18点免费。如需更长时间，每24小时收费R$ 15。
+• 灶台、大烤箱和院子：6点至23点。此时间以外关闭，提前通知的有组织活动除外。
+• 安静时段：22点至7点。22点至23点之间，公共区域请低声交谈。
+
+3. 衣着自选（着装自由）
+• 衣着自选是一种许可，而非义务：每个人在各区域规则内自行选择穿着。
+• 院子（Smart住宿）从街上看不到，也没有摄像头，在那里穿衣与否可自行决定。这是屋内唯一可以不穿衣服的地方：仅限18岁以上，禁止拍照，并始终坐在自己的毛巾上。
+• 室内、阳台和入口：请穿衣服或围毛巾。只有从院子门往外才可以不穿衣服。在街上请始终穿着衣服。
+• 裸体绝不伴随任何形式的触碰或性刺激。
+• 在家中任何公共区域，禁止在他人在场时进行任何性行为。
+• 如何不参与：衣着始终自选。您可以一直穿着衣服，在室内区域必须穿衣服或围毛巾。
+• 本住宿不适合儿童或婴儿。
+
+4. 拍照与录像
+未经本人许可，禁止在屋内任何地方拍摄或录像任何人，没有例外——无论是否穿衣、出于何种原因，入住期间和入住之后均适用。不得发布或分享其他客人的任何图像。违者须离店，并将情况报告给预订平台，必要时报告给有关部门。
+
+5. 摄像头与传感器
+只有一个安全摄像头，位于房屋正面外墙，在完全开放的室外区域，朝向人行道和入口大门。它用于安全和出入管理。
+屋内没有任何摄像头或录制设备：入口、阳台、公共区域、小卖部、客房、卫生间和院子都没有。小卖部的库存由货架秤管理，不使用图像。屋内还有不带图像的传感器：门开合传感器（冰柜、冰箱和锅具柜）以及烟雾探测器。
+当发生动作（大门开启、呼叫）时，系统会记录正面摄像头的照片，并保存3天。只有房东和授权员工能看到图像；如发生事件，可能提供给预订平台或有关部门。
+
+6. 吸烟
+• 禁止在房间、卫生间、厨房和任何封闭区域吸烟（包括电子烟）。
+• 只能在室外吸烟区吸烟。
+• 正在接受治疗并持有医生处方的人可以医用大麻。使用者声明持有处方（可在住宿页面勾选：自愿，本屋只保存日期），仅限室外吸烟区使用，并存放在密闭容器中。娱乐性使用、出售和转让均被禁止（Lei 11.343/2006）。
+• 本店内禁止违禁物品。
+
+7. 访客
+• 请提前通过本店渠道告知。访客不得进入房间，也不得在本店过夜。
+• 停留超过1小时的访客须支付R$ 35的House Pass，可在小卖部消费抵用。
+
+8. 厨房
+• Airbnb的预订包含整个厨房（含灶台）的使用。其他平台的预订，灶台使用视所订的方案而定。
+• 请使用标有您房间号的柜子和托盘。用过的东西请洗净并放回。
+• 禁止油炸，禁止在厨房吸烟。烟雾和油烟会触发烟雾探测器；每次触发都会被记录和审核，只有造成损坏或费用时，才会通过平台的调解中心收费。
+
+9. 卫生间
+• 所有卫生间均为公用，不分性别。
+• 禁止在卫生间脱毛、理发和染发。
+
+10. 小卖部和额外物品
+• 小卖部为自助式，由合作商店经营，在自助终端当场付款。
+• 通过小卖部：毛巾 R$ 5（一次性费用），额外毛毯 R$ 8（一次性费用），洗衣机或烘干机 R$ 17，自行车每小时 R$ 15。
+• 房费包含床上用品、枕头和1条毛毯。我们不提供个人洗漱用品。
+
+11. 损坏与收费
+损坏、特殊清洁和未登记人员将按比例并有记录地通过预订平台的解决中心收费。
+
+12. 我们如何解决问题（调解）
+• 第一步，永远是：通过官方渠道与本店沟通。几乎所有问题都能当场解决。
+• 通过Airbnb预订：重要事项（损坏、投诉、退款申请）也请记录在Airbnb聊天中。预订款项、损坏和收费通过Airbnb解决中心处理。
+• 通过其他平台预订：通过该平台的客服中心处理。
+• 住客之间的相处：本店依据本守则作出决定，并可要求违反者离开。犯罪行为（骚扰、盗窃、未经许可拍照、人身伤害）交由警方处理。
+• 以上均不影响您向Procon、consumidor.gov.br或法院寻求帮助的权利。
+
+13. 泳池、楼梯和高处
+• 泳池仅在夏季和炎热天气开放。泳池没有围栏、门或锁：请小心使用，切勿在夜间独自使用或饮酒后使用。
+• 影院露台、合住房间的楼梯、双层床的梯子和泳池边缘没有护栏。走动时请注意。
+
+14. 动物
+• 每个预订最多2只动物，须在预订时告知，且仅限02、03和04号房。动物只能在下层活动，不得上楼进入上层房间。
+• 动物在安静时段（22点至7点）发出噪音将被罚款，并可能导致离店。
+• 本店客厅有一只名叫Zagalo的玄凤鹦鹉。
+
+15. 取消、清洁与问题
+• 取消和退款遵循在平台预订时选择的政策。
+• 发现脏污、损坏或与房源描述不符？请在入住后立即通过本店渠道发送照片，以便我们尽快解决。
+
+16. 相处
+骚扰、歧视、威胁、在公共区域的性行为或未经许可拍摄他人，将导致离店并通报平台。
+
+17. 物品、快递与车辆
+• 请将贵重物品存放在您的柜子或储物柜中。
+• 请亲自接收您的快递。切勿代他人接收快递。
+• 本店没有车库；车辆停在街上。
+
+18. 失物招领
+• 遗忘物品在发现当天登记（照片、日期和地点）。
+• 如知道失主，我们会通过本店渠道通知。失主自行领取或支付邮费。
+• 我们保存30天。此后，衣物和普通物品将被捐赠或丢弃。
+• 无人认领或无法确认失主的证件、现金、银行卡、电子产品和首饰，将依法在15天内交给警方。
+• 遗留在冰箱或柜子里的食物在退房次日丢弃。
+
+19. 隐私（LGPD）
+• 收集的数据：登记表（FNRH）、证件照片、自拍照、联系方式和正面摄像头照片。
+• 用途：遵守住客登记法律、开放门禁、保障安全和为您提供服务。
+• 查看者：房东和授权员工。FNRH依法提交给政府。
+• 保存期限：登记表按法律规定的期限保存；正面摄像头照片保存3天。
+• 您的权利：通过本店渠道申请访问、更正或删除您的数据。
+
+本店官方沟通渠道：您预订所用平台的聊天（Airbnb、Booking或其他）。您住宿期间的所有消息，包括自动消息，都通过该渠道发送。直接向本店预订的住客：WhatsApp (11) 98306-9951。""",
+}
+=== FILE reservation/tests/test_v1245_uso_medicinal.py
+"""v1.0.245 (Dom 15/11): declaracao OPCIONAL de uso medicinal de cannabis -- nao e condicao de acesso, so quem vai usar
+toca no botao, guarda so data e hora, so o anfitriao ve, apagada no fim da estadia; nasce so para a equipe de teste."""
+from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
+
+import pytest
+
+from app.core.intent import NotAuthorized
+from app.reservation import uso_medicinal as UM
+from app.reservation.tests.test_fnrh_flow import AGORA, _call, _chegou, _hospede
+
+ON = {"PMS_USO_MEDICINAL": "on"}
+
+
+def _declarar(state, event, caller, retirar=False, env=ON, at=None):
+    p = {"event_id": event.event_id, "retirar": retirar, "env": env, "store": state.store}
+    return state.router.call("reservation.uso_medicinal", caller=caller, house=state.house, params=p,
+                             ledger=state.ledger, outbox=state.outbox, switches=state.switches, at=at or AGORA)
+
+
+def test_nasce_so_para_a_equipe_de_teste():
+    state, event = _chegou()
+    assert UM.modo({}) == "equipe"
+    assert UM.situacao(state.store, event, env={}) is None                 # fora da lista: o cartao nem aparece
+    assert UM.situacao(state.store, event, env={"PMS_USO_MEDICINAL": "off"}) is None
+    assert UM.situacao(state.store, event, env=ON) == {"declarado_em": "", "texto": UM.DECLARACAO}
+    with pytest.raises(ValueError, match="não está disponível"):
+        _declarar(state, event, _hospede(event), env={})
+
+
+def test_declara_guarda_so_data_e_hora_e_retira():
+    state, event = _chegou()
+    out = _declarar(state, event, _hospede(event))
+    assert "registrada" in out.answer
+    dado = state.store.vault.open(f"usomed:{event.event_id}", actor="t", purpose="t")
+    assert set(dado) == {"declarado_em", "texto"}                         # nada de diagnostico, receita ou nome
+    assert UM.declarado_em(state.store, event.event_id)
+    assert "Declarou uso medicinal" in UM.para_anfitriao(state.store, event.event_id)
+    assert "já registrada" in _declarar(state, event, _hospede(event)).answer   # uma vez so
+    assert "retirada" in _declarar(state, event, _hospede(event), retirar=True).answer
+    assert UM.declarado_em(state.store, event.event_id) == "" and UM.para_anfitriao(state.store, event.event_id) == ""
+    assert "declarado_em" not in state.store.vault.open(f"usomed:{event.event_id}", actor="t", purpose="t")
+
+
+def test_so_o_proprio_hospede_declara():
+    from app.core.event import Role
+    from app.core.intent import Caller, Surface
+    from app.core.record import Actor, ActorKind
+    state, event = _chegou()
+    outro = Caller(Actor(ActorKind.PERSON, "person-outra"), Role.GUEST, "house-ipiranga", Surface.SCREEN)
+    with pytest.raises(NotAuthorized):
+        _declarar(state, event, outro)
+
+
+def test_some_no_fim_da_estadia():
+    state, event = _chegou(checkin="2026-10-01", checkout="2026-10-03")
+    _declarar(state, event, _hospede(event))
+    assert UM.limpar(state.store, AGORA) == 0                             # estadia valendo: fica
+    depois = event.when.end + timedelta(minutes=1)
+    assert UM.limpar(state.store, depois) == 1
+    assert UM.declarado_em(state.store, event.event_id) == ""
+    assert UM.limpar(state.store, depois) == 0
+
+
+def test_a_pagina_do_hospede_recebe_o_cartao_e_o_regimento_traz_a_regra(monkeypatch):
+    from app.reservation import regimento
+    monkeypatch.setenv("PMS_USO_MEDICINAL", "on")
+    state, event = _chegou()
+    assert UM.situacao(state.store, event)["declarado_em"] == ""
+    assert regimento.VERSAO == "1.9" and "declara ter a prescrição" in regimento.TEXTO if hasattr(regimento, "TEXTO") \
+        else regimento.VERSAO == "1.9"
+    html = open(__file__.replace("reservation/tests/test_v1245_uso_medicinal.py", "panel/static/hospede.html"),
+                encoding="utf-8").read()
+    assert "/uso-medicinal" in html and "usoMedicinalBox" in html and html.count("umgo:") == 7
+
+
+def test_cameras_so_rua_guarda_volumes_e_lojinha_no_regimento_e_desligadas_por_variavel():
+    """Dom 15/11: o regimento cita so as cameras da rua, dos guarda-volumes e da lojinha; as outras sao desligadas
+    pela casa (`PMS_CAMERAS_DESLIGADAS`) e param de tirar foto."""
+    from app.cameras.config import cadastro
+    from app.reservation import regimento
+    from app.reservation.regimento_textos import TEXTOS
+    t = regimento.TEXTO
+    # v1.0.253 (regimento 1.8, Dom 17/11): so a camera da fachada; a lojinha usa balanca de prateleira
+    assert "uma única câmera de segurança, na fachada" in t and "Não há câmeras nem dispositivos de gravação" in t
+    assert "balança de prateleira, sem imagem" in t and "sensores de imagem" not in t
+    for proibida in ("corredores dos quartos", "sala; cozinha", "que não tem câmera"):
+        assert proibida not in t, proibida
+    assert all("01 to 05" not in x and "01 a 05" not in x and "01 à 05" not in x for x in TEXTOS.values())
+    env = {"PMS_CAMERAS_DESLIGADAS": "cozinha,q01-05,q06-11,q12-14"}
+    cad = cadastro("house-ipiranga", env)
+    assert {c.id for c in cad.ativas()} == {"rua", "locker", "varanda", "cafe", "freezer", "lojinha"}
+    assert cad.cameras_da_porta("QUARTO", "13") == () and cad.cameras_da_porta("COZINHA") == ()
+    assert len(cadastro("house-ipiranga", {}).ativas()) == 10              # sem a variavel, nada muda
+=== FILE reservation/tests/test_v1264_silencio_22h_7h.py
+"""v1.0.264 (Dom 18/11: "Horario de silencio e de fato das 22h as 7h. Revisem todo o material"): desfaz a v1.0.235/236
+(meia-noite as 7h) em todos os lugares -- regimento 1.9 (7 idiomas), aviso das 22h, mensagens, robo, figurinha, pagina
+/silencio com a arte de 22h, TV da sala e Wi-Fi (corte e velocidade de noite a partir das 22h)."""
+from __future__ import annotations
+
+import pathlib
+import re
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+TZ = ZoneInfo("America/Sao_Paulo")
+APP = pathlib.Path(__file__).parents[2]
+#: frases de silencio com o horario da 1.0.235, em todos os idiomas da casa
+MEIA_NOITE = re.compile(r"meia-noite \(0h\) às 7h|da meia-noite às 7h|Da meia-noite às 7h|0h às 7h|0h[–-]7h|"
+                        r"midnight to 7 ?am|medianoche a (las )?7 h|minuit à 7 h|Mitternacht bis 7 Uhr|"
+                        r"0時から7時|0点至7点")
+
+
+def _textos() -> list[pathlib.Path]:
+    nomes = ["reservation/regimento.py", "reservation/regimento_textos.py", "reservation/avisos.py",
+             "reservation/perfil_mensagem.py", "reservation/denuncia_barulho.py", "reservation/capsulas.py",
+             "messaging/adapters.py", "messaging/knowledge.py", "messaging/base_casa.json", "figurinhas.py",
+             "panel/paginas_casa.py", "painel_casa/avisos_tv.py", "sinalizacao/textos.json", "network/routes.py",
+             "network/portal.py", "network/intents.py", "panel/static/painel.html"]
+    return [APP / n for n in nomes]
+
+
+def test_nenhum_texto_da_casa_fala_mais_da_meia_noite_as_7h():
+    sobrou = {p.name: MEIA_NOITE.findall(p.read_text(encoding="utf-8")) for p in _textos()}
+    assert not {k: v for k, v in sobrou.items() if v}
+
+
+def test_regimento_19_com_silencio_das_22h_as_7h_em_7_idiomas():
+    from app.reservation import regimento
+    assert regimento.VERSAO == "1.9"
+    pt = (APP / "reservation/regimento.py").read_text(encoding="utf-8")
+    assert "Silêncio: das 22h às 7h." in pt and "(22h às 7h)" in pt and "Versão 1.9" in pt
+    tr = (APP / "reservation/regimento_textos.py").read_text(encoding="utf-8")
+    for frase in ("from 10 pm to 7 am", "de las 22 h a las 7 h", "Version 1.9", "Versión 1.9", "バージョン1.9", "版本1.9"):
+        assert frase in tr, frase
+
+
+def test_aviso_das_22h_diz_que_o_silencio_comecou():
+    from app.reservation.avisos import SILENCIO
+    assert SILENCIO["pt"].startswith("Boa noite! Começou o horário de silêncio: das 22h às 7h")
+    assert "23h" in SILENCIO["pt"]                                 # quintal, fogao e forno grande seguem ate as 23h
+
+
+def test_wifi_silencio_das_22h_as_7h():
+    from app.network.policy import in_silence, silence_slot, speed_period
+    d = lambda h, m=0: datetime(2026, 11, 18, h, m, tzinfo=TZ)
+    assert not in_silence(d(21, 59), TZ) and in_silence(d(22), TZ) and in_silence(d(23, 59), TZ)
+    assert in_silence(d(0), TZ) and in_silence(d(6, 59), TZ) and not in_silence(d(7), TZ)
+    assert silence_slot(d(22, 40), TZ) == "2026-11-18T22:30"
+    assert speed_period(d(23), TZ) == ("noite", "2026-11-18")
+    assert speed_period(d(3), TZ) == ("noite", "2026-11-17")
+    assert speed_period(d(12), TZ) == ("dia", "2026-11-18")
+
+
+def test_tv_da_sala_pede_silencio_das_22h():
+    from app.painel_casa.avisos_tv import noite
+    assert noite(22) and noite(23) and noite(0) and noite(6) and not noite(7) and not noite(21)
+
+
+def test_pagina_do_silencio_volta_com_a_arte():
+    from app.panel.paginas_casa import pagina
+    assert "silencio.jpg" in pagina("silencio", "pt")
+
+
+def test_luz_da_cama_nao_pisca_no_silencio():
+    from app.luz.config import LightConfig
+    cfg = LightConfig.from_env({})
+    assert cfg.quiet(22 * 60) and cfg.quiet(6 * 60) and not cfg.quiet(7 * 60) and not cfg.quiet(21 * 60 + 59)
+=== FILE reservation/tests/test_v1253_regimento_18_airbnb.py
+"""v1.0.253 (Dom 17/11/2026, caso Airbnb A133144581): regimento 1.8 -- roupa opcional sem toque nem estimulo sexual,
+nada sexual na presenca de outras pessoas, como nao participar, nao adequado para criancas; fotos proibidas durante e
+depois da estadia; uma unica camera (fachada); fumaca registrada e revisada, cobranca so com dano. Robo e site iguais."""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from app.reservation import regimento as RG
+from app.reservation.regimento_textos import TEXTOS
+
+#: as 4 linhas novas da secao 3 e a linha da camera, em cada idioma (o portugues vale; os outros sao cortesia)
+CHAVES = {
+    "pt": ("toque nem de estímulo sexual", "Nenhuma atividade sexual na presença", "Como não participar",
+           "crianças nem bebês", "uma única câmera"),
+    "en": ("touching or sexual stimulation", "No sexual activity in the presence", "How to opt out",
+           "children or infants", "a single security camera"),
+    "es": ("contacto ni de estimulación sexual", "Ninguna actividad sexual en presencia", "Cómo no participar",
+           "niños ni bebés", "una única cámara"),
+    "fr": ("contact ni de stimulation sexuelle", "Aucune activité sexuelle en présence", "Comment ne pas participer",
+           "enfants ni aux bébés", "une seule caméra"),
+    "de": ("Berührungen oder sexueller Stimulation", "Keine sexuellen Handlungen in Anwesenheit", "Nicht teilnehmen",
+           "Kinder oder Babys", "eine einzige Sicherheitskamera"),
+    "ja": ("接触や性的刺激", "性的行為は禁止", "参加しない方法", "乳幼児", "防犯カメラは1台のみ"),
+    "zh": ("触碰或性刺激", "禁止在他人在场时进行任何性行为", "如何不参与", "儿童或婴儿", "只有一个安全摄像头"),
+}
+
+
+def test_regimento_18_nos_7_idiomas():
+    assert RG.VERSAO == "1.9"
+    textos = {"pt": RG.TEXTO, **TEXTOS}
+    n = len(RG.TEXTO.splitlines())
+    for cod, t in textos.items():
+        assert len(t.splitlines()) == n, cod                              # mesma estrutura linha a linha
+        for chave in CHAVES[cod]:
+            assert chave in t, (cod, chave)
+    for velho in ("clausura", "sensores de imagem", "gera multa na hora", "Ambiente não sexual"):
+        assert velho not in RG.TEXTO, velho
+    assert "durante e depois da estadia" in RG.TEXTO and "só há cobrança se houver dano" in RG.TEXTO
+
+
+def test_robo_e_site_falam_so_da_camera_da_fachada():
+    from app.messaging import knowledge as K
+    base = json.loads((Path(K.__file__).parent / "base_casa.json").read_text(encoding="utf-8"))
+    por_id = {x.get("id"): x.get("resposta", "") for x in base["entradas"]}
+    assert "uma única câmera de segurança, na fachada" in por_id["cameras"] and "clausura" not in por_id["cameras"]
+    assert "toque ou estímulo sexual" in por_id["nudismo"] and "fica vestido" in por_id["nudismo"]
+    assert "câmeras" not in por_id["bagagem"] and "câmeras" not in por_id["objetos"]
+    assert "toque ou estímulo sexual" in K._nudismo(None, None, "pode nudismo?", None).text
+    site = (Path(K.__file__).parents[1] / "panel" / "static" / "imprensa.html").read_text(encoding="utf-8")
+    assert "Uma só, na fachada" in site and "varanda-camera-fumo-abrigos" not in site and "enclave" not in site
+    from app.panel import comunicacao as C
+    assert "varanda-camera-fumo-abrigos" not in str(C.__dict__) or all(
+        "varanda-camera-fumo-abrigos" not in str(v) for k, v in vars(C).items() if k.isupper())
+=== FILE reservation/tests/test_v1135_regimento_final.py
+"""v1.0.135 (Dom, 22/10/2026): o texto final do regimento interno (revisado pelo Dom no documento) na pagina /regimento:
+fotos proibidas em qualquer ambiente, casa ate as 18h do dia da saida, saida tardia, locker, visitas (House Pass),
+mediacao, achados e perdidos e o WhatsApp oficial. A versao segue 1.0: ninguem aceitou o texto anterior."""
+from __future__ import annotations
+
+from app.reservation import regimento as RG
+
+
+def test_texto_final():
+    p = RG.pagina()
+    assert RG.VERSAO == "1.9"
+    for trecho in ("FOTOS E FILMAGENS", "18h do dia da saída", "13h30", "House Pass de R$ 35", "MEDIAÇÃO",
+                   "ACHADOS E PERDIDOS", "98306-9951", "quartos 02, 03 e 04", "não é visível da rua", "R$ 17"):
+        assert trecho in p, trecho
+    assert "23h do dia da saída" not in p and "nudismo" not in p.lower() and "<script" not in p
+    assert p.count("<h2>") == 19
+=== FILE reservation/tests/test_v1174_regimento_dress_code.py
+"""v1.0.174 (Dom 26-27/10/2026): regimento 1.2 -- o dress code. v1.0.247 (Dom 15/11): regimento 1.7 -- o dress code
+livre e uma AUTORIZACAO; roupa opcional so no quintal (Smart); dentro de casa roupa ou toalha; areas externas com
+camera sempre com roupa. Igual aos cartazes A3 e ao Guia da Casa v2.1."""
+from __future__ import annotations
+
+from app.reservation import regimento as RG
+
+
+def test_versao_e_dress_code_em_portugues():
+    assert RG.VERSAO == "1.9"
+    t = RG.TEXTO
+    assert "Versão 1.9" in t.splitlines()[1]
+    for trecho in ("é uma autorização, não uma obrigação", "No quintal (acomodação Smart)", "a roupa é opcional",
+                   "É o único lugar da casa onde se pode ficar sem roupa", "Dentro de casa, na varanda e na entrada: roupa ou toalha",
+                   "Sem roupa, só da porta do quintal para fora", "sempre com roupa",
+                   "A nudez não vem acompanhada de toque nem de estímulo sexual",
+                   "Nenhuma atividade sexual na presença de outras pessoas", "Como não participar",
+                   "não é adequada para crianças nem bebês"):
+        assert trecho in t, trecho
+    for velho in ("enquanto todos se sentirem confortáveis", "recomendamos o uso de toalha; não é obrigatório",
+                  "inclusive sem roupa"):
+        assert velho not in t, velho
+    p = RG.pagina()
+    assert "nudismo" not in p.lower() and p.count("<h2>") == 19
+
+
+def test_dress_code_nas_seis_traducoes():
+    from app.reservation.regimento_textos import TEXTOS
+    toalha = {"en": "towel", "es": "toalla", "fr": "serviette", "de": "Handtuch", "ja": "タオル", "zh": "毛巾"}
+    for cod, texto in TEXTOS.items():
+        linhas = texto.splitlines()
+        assert "1.9" in linhas[1], cod
+        i = next(k for k, l in enumerate(linhas) if l.startswith("3."))
+        secao = "\n".join(linhas[i:i + 8])
+        assert secao.count("•") == 7 and secao.count(toalha[cod]) >= 2, cod
+
+
+def test_robo_responde_a_regra_nova():
+    import json
+    from pathlib import Path
+    from app.messaging import knowledge as K
+    base = json.loads((Path(K.__file__).parent / "base_casa.json").read_text(encoding="utf-8"))
+    nud = next(x for x in base["entradas"] if x.get("id") == "nudismo")
+    assert "quintal a roupa é opcional" in nud["resposta"] and "não é naturista" in nud["resposta"]
+    assert "confortáveis" not in nud["resposta"]
+    d = K._nudismo(None, None, "pode nudismo?", None)
+    assert d.kind == "regra" and "quintal a roupa é opcional" in d.text and "consentimento" in d.text
+=== FILE reservation/tests/test_v1138_idiomas_mapa_avisos.py
+"""v1.0.138 (Dom, 22/10/2026): sete idiomas para o hospede (regimento, painel, portal do Wi-Fi), as paginas
+/como-chegar e /silencio, o mapa no convite e os avisos programados (silencio as 22h do 1o dia; saida amanha as 18h)
+em portugues + o idioma do hospede."""
+from __future__ import annotations
+
+import re
+from pathlib import Path
+
+from app.finance.tests.test_direct_booking import _casa
+from app.network import routes as WR
+from app.panel import paginas_casa as PC
+from app.reservation import avisos as AV
+from app.reservation import regimento as RG
+from app.reservation.tests.test_lembretes_hospede import LIGADO, airbnb, ficha_feita, lembretes, sp, texto_de
+from app.worker import lembretes_hospede, send_precheckin_invites
+
+
+import pytest as _pytest_v1150
+
+
+@_pytest_v1150.fixture(autouse=True)
+def _idiomas_ligados(monkeypatch):
+    """v1.0.150 (Dom 24/10): o padrao agora e so portugues; estes testes guardam as traducoes, com a chave ligada."""
+    monkeypatch.setenv("PMS_MENSAGENS_IDIOMAS", "on")
+
+IDIOMAS = ("pt", "en", "es", "fr", "de", "ja", "zh")
+
+
+def test_regimento_em_sete_idiomas_mesma_estrutura():
+    from app.reservation.regimento_textos import TEXTOS
+    pt = RG.TEXTO.splitlines()
+    assert "cannabis" in RG.TEXTO and RG.TEXTO.count("WhatsApp") == 1 and "canal da casa" in RG.TEXTO
+    for cod, texto in TEXTOS.items():
+        linhas = texto.splitlines()
+        assert len(linhas) == len(pt), cod
+        for a, b in zip(pt, linhas):
+            assert bool(a.strip()) == bool(b.strip()) and a.startswith("•") == b.startswith("•"), (cod, a, b)
+            if re.match(r"^\d{1,2}\. ", a):
+                assert b.startswith(a.split(" ")[0] + " "), (cod, a, b)
+            for lit in ("R$ 15", "R$ 35", "R$ 17", "Lei 11.343/2006", "98306-9951", "consumidor.gov.br"):
+                if lit in a:
+                    assert lit in b, (cod, lit, b)
+    for cod in IDIOMAS:
+        p = RG.pagina(cod)
+        assert p.count("<h2>") == 19 and "<script" not in p and f'href="/regimento?lang={cod}" aria-current' in p
+        if cod == "pt":
+            assert 'class="cortesia"' not in p
+        else:
+            assert RG.AVISO_CORTESIA[cod] in p
+    assert RG.pagina("zh-CN").count("中文") >= 1 and RG.pagina("xx") == RG.pagina("pt") == RG.pagina(None)
+
+
+def test_paginas_como_chegar_e_silencio():
+    for cod in IDIOMAS:
+        p = PC.pagina("como_chegar", cod)
+        assert "/visual/mapas/como-chegar.jpg" in p and "800" in p and "<script" not in p
+        s = PC.pagina("silencio", cod)
+        assert "/visual/mapas/silencio.jpg" in s
+    assert "如何到达" in PC.pagina("como_chegar", "zh-TW") and "How to get" in PC.pagina("como_chegar", "ru")
+    pasta = Path(__file__).resolve().parents[2] / "visual" / "mapas"
+    for nome in ("como-chegar.jpg", "silencio.jpg", "como-chegar-mini.webp"):
+        assert (pasta / nome).stat().st_size > 1000, nome
+
+
+def test_painel_do_hospede_tem_os_sete_idiomas():
+    html = (Path(__file__).resolve().parents[2] / "panel" / "static" / "hospede.html").read_text(encoding="utf-8")
+    for cod in ("fr", "de", "ja", "zh"):
+        assert f"T.{cod}={{" in html and f"/regimento?lang={cod}" in html
+    assert '{id:"ja",rotulo:"日本語"},{id:"zh",rotulo:"中文"}' in html
+    # v1.0.159 (Dom 25/10): o mapa recortado e o texto dentro do quadro da casa, sem botao para outra pagina
+    assert "mapas/rota-metro.webp" in html and "mapas/arredores.webp" in html and "/como-chegar?lang=" not in html
+    # as mesmas chaves do portugues (as 10 da 1.0.131/132 inclusive)
+    chaves = lambda cod: set(re.findall(r'(?:^|[,{])([a-z_0-9]+):"', re.search(r"T\.%s=\{(.*?)\};\n" % cod, html, re.S).group(1)))
+    for cod in ("fr", "de", "ja", "zh"):
+        assert {"compinvd", "hxgo", "rules", "mapa", "wifi", "pinready"} <= chaves(cod), cod
+
+
+def test_portal_do_wifi_fala_o_idioma_do_aparelho():
+    assert WR.idioma("ja-JP") == "ja" and WR.idioma("zh-CN") == "zh" and WR.idioma("ru") == "en" and WR.idioma("") == "en"
+    for cod in IDIOMAS:
+        assert "{smart}" in WR.TXT[cod]["p_limite"] and "<b>" in WR.TXT[cod]["p_senha"]
+    assert "接続" in WR.TXT["ja"]["entrar"] and "Connect" == WR.TXT["en"]["entrar"]
+    assert "ドアと同じ" in WR.PAGE.format(body=WR.FORM.format(ctx="x", erro="", quiet="", trial="", **{
+        "p_senha": WR.TXT["ja"]["p_senha"], "entrar": WR.TXT["ja"]["entrar"],
+        "p_limite": WR.TXT["ja"]["p_limite"].format(smart=3, hostel=2)}))
+    assert "已连接" in WR.CONTINUAR and "Connect&eacute;" in WR.CONTINUAR
+
+
+def test_avisos_texto_em_portugues_mais_o_idioma():
+    assert AV.normalizar("fr-CA") == "fr" and AV.normalizar("pt-BR") == "pt" and AV.normalizar("ko") == "en"
+    t = AV.texto("silencio_dia1", "de", "https://x/ABC")                 # v1.0.140: um idioma so
+    assert t.startswith("Guten Abend!") and "Ruhezeit" in t and t.count("https://x/ABC/silencio") == 1
+    assert "13h30" in AV.texto("saida_amanha", "pt", "L") and "Boa noite" not in t
+    assert "地図" in AV.como_chegar("ja", "L") and AV.como_chegar("pt", "L").startswith("Para chegar a pé")
+
+
+def test_convite_do_chat_leva_o_mapa():
+    state = _casa()
+    rid = airbnb(state, checkin="2026-10-05", checkout="2026-10-07")
+    send_precheckin_invites(state, at=sp("2026-10-01", "09:10"), env=LIGADO)
+    c = next(c for c in state.outbox if c.adapter == "nobeds" and c.idempotency_key.startswith("precheck:") or
+             (c.adapter == "nobeds" and "convite" in str(c.payload.get("text_ref", ""))))
+    texto = texto_de(state, c)
+    assert "/como-chegar" in texto and "800 m" in texto and "Hi!" not in texto and "12-minute" not in texto, texto[-300:]
+    assert rid
+
+
+def test_silencio_as_22h_do_dia_da_chegada_e_saida_amanha_as_18h_uma_vez_cada():
+    state = _casa()
+    rid = airbnb(state, checkin="2026-10-05", checkout="2026-10-07")
+    send_precheckin_invites(state, at=sp("2026-10-01", "09:10"), env=LIGADO)
+    ficha_feita(state, rid, sp("2026-10-05", "15:00"))
+    state.store.vault.merge(state.store.events[rid].who.person, {"language": "de-DE"})   # o idioma do contato
+    assert not lembretes(state, rid=rid, kind="silencio_dia1")
+    assert lembretes_hospede(state, at=sp("2026-10-05", "21:59"), env=LIGADO)["lembretes"] == []
+    out = lembretes_hospede(state, at=sp("2026-10-05", "22:05"), env=LIGADO)
+    assert out["lembretes"] == [f"silencio_dia1:{rid}"]
+    por_canal = {c.adapter: texto_de(state, c) for c in lembretes(state, rid=rid, kind="silencio_dia1")}
+    assert por_canal["nobeds"].startswith("Boa noite!") and "Ruhezeit" not in por_canal["nobeds"]   # Airbnb: so pt
+    assert set(por_canal) == {"nobeds"}            # v1.0.150 (Dom 24/10): "a mensagem de silencio tambem e a OTA"
+    assert lembretes_hospede(state, at=sp("2026-10-05", "22:40"), env=LIGADO)["lembretes"] == []   # uma vez so
+    assert lembretes_hospede(state, at=sp("2026-10-06", "22:10"), env=LIGADO)["lembretes"] == []   # so no 1o dia
+    assert lembretes_hospede(state, at=sp("2026-10-06", "17:59"), env=LIGADO)["lembretes"] == []
+    out = lembretes_hospede(state, at=sp("2026-10-06", "18:00"), env=LIGADO)
+    assert out["lembretes"] == [f"saida_amanha:{rid}"]
+    assert "Amanhã é a sua saída" in texto_de(state, lembretes(state, rid=rid, kind="saida_amanha")[0])
+    assert lembretes_hospede(state, at=sp("2026-10-06", "19:00"), env=LIGADO)["lembretes"] == []
+    assert len({c.idempotency_key.rsplit(":", 1)[0] for c in lembretes(state, rid=rid, kind="saida_amanha")}) == 1
+=== FILE cameras/tests/test_v1247_varanda_armarios_e_regimento.py
+"""v1.0.247 (Dom 15/11): a camera da varanda e EXTERNA e existe para proteger os pertences dos quartos compartilhados --
+cada abertura (e cada senha errada) dos armarios 12A-14D vira foto dela, no registro daquele armario. Os armarios dos
+privativos (cozinha) nao tem camera. Regimento 1.7: cameras so em areas externas (rua, clausura, varanda)."""
+from __future__ import annotations
+
+from datetime import timedelta
+
+from app.cameras import aberturas as A
+from app.cameras import config as CFG
+from app.reservation.doors import LockMap
+
+
+def test_armario_dos_compartilhados_aponta_para_a_varanda():
+    cad = CFG.cadastro("house-ipiranga", {})
+    assert cad.cameras_da_porta("ARMARIO", "Q12B") == ("varanda",)
+    assert cad.cameras_da_porta("ARMARIO", "Q14D") == ("varanda",)
+    assert cad.cameras_da_porta("ARMARIO", "Q09") == ()                    # privativo: armario na cozinha, sem camera
+    sensor = CFG.cadastro("house-ipiranga", {"PMS_CAMERAS_SENSOR": "varanda"})
+    assert sensor.cameras_da_porta("ARMARIO", "Q12B") == ()                # se um dia virar sensor, nao fotografa
+    assert A.porta_de(LockMap.of({"Q12": 1}, {"ENTRADA": 2}, {"Q12B": 77}), 77) == ("ARMARIO", "Q12B")
+
+
+def test_abertura_e_senha_errada_no_armario_viram_foto_da_varanda():
+    from app.cameras import service as S
+    from app.cameras.tests.test_cameras import ENV, AGORA, _registro
+    from app.main import build_state
+    locks = LockMap.of({"Q12": 1201}, {"ENTRADA": 1, "SAIDA": 2}, {"Q12B": 7712, "Q09": 7709})
+    state = build_state({})
+    S.registrar_aberturas(state, [_registro(7712, AGORA)], locks=locks, env=ENV, at=AGORA)
+    errada = {**_registro(7712, AGORA + timedelta(seconds=20)), "success": 0}
+    S.registrar_aberturas(state, [errada], locks=locks, env=ENV, at=AGORA + timedelta(seconds=30))
+    S.registrar_aberturas(state, [_registro(7709, AGORA + timedelta(seconds=40))], locks=locks, env=ENV,
+                          at=AGORA + timedelta(seconds=50))
+    pedidos = list(state.store.cameras_pedidos.values())
+    assert pedidos and {p["camera"] for p in pedidos} == {"varanda"}
+    assert len(pedidos) == 2 and all("armário 12B" in p.get("motivo", "") for p in pedidos)
+
+
+def test_regimento_18_so_a_camera_da_fachada():
+    """v1.0.253 (Dom 17/11, caso Airbnb A133144581): o regimento 1.8 substitui o 1.7 -- fica so a camera da fachada."""
+    from app.reservation import regimento
+    from app.reservation.regimento_textos import TEXTOS
+    t = regimento.TEXTO
+    assert "Versão 1.9" in t and "uma única câmera de segurança, na fachada" in t and "clausura" not in t
+    assert "nem na entrada, na varanda" in t and "balança de prateleira, sem imagem" in t
+    for cod, x in TEXTOS.items():
+        assert "1.9" in x.splitlines()[1], cod
+=== FILE cameras/tests/test_v1182_cameras_3_dias_e_uma_foto.py
+"""v1.0.182 (Dom 01/11: "todas as fotos das cameras de seguranca ficam com prazo de 3 dias no sistema"; e uma foto
+por passagem): prazo de 3 dias para tudo, o cadastro nao passa disto, a passagem guarda uma foto so, e o regimento
+diz 3 dias em todos os idiomas."""
+from __future__ import annotations
+
+import json
+
+from app.cameras import config as C
+from app.reservation import regimento as R
+from app.reservation.regimento_textos import TEXTOS
+
+
+def test_tudo_fica_3_dias_e_o_cadastro_nao_passa_disto():
+    assert (C.RETENCAO_ACOES_DIAS, C.RETENCAO_ROTINA_DIAS, C.RETENCAO_MAX_DIAS) == (3, 3, 3)
+    raw = json.dumps({"cameras": [{"id": "rua", "nome": "Rua", "ip": "10.0.0.5", "area": "fachada"}],
+                      "retencao_acoes_dias": 30, "retencao_rotina_dias": 7})
+    cad = C._parse(raw)
+    assert (cad.retencao_acoes_dias, cad.retencao_rotina_dias) == (3, 3)
+    assert C._parse(json.dumps({"cameras": [], "retencao_acoes_dias": 2})).retencao_acoes_dias == 2
+
+
+def test_passagem_guarda_uma_foto_do_momento():
+    j = C.ACOES["passagem"]
+    assert j.maximo == 1 and j.antes_s == 0
+
+
+def test_regimento_diz_3_dias_em_todos_os_idiomas():
+    assert R.VERSAO == "1.9"
+    textos = [R.TEXTO] + list(TEXTOS.values())
+    assert len(TEXTOS) == 6
+    for t in textos:
+        assert "1.9" in t.splitlines()[1]
+    assert "guarda por 3 dias" in R.TEXTO and "fotos da câmera da fachada, 3 dias" in R.TEXTO
+    proibidas = ["keeps them for 30 days", "camera photos, 30 days", "las guarda durante 30 días",
+                 "cámaras, 30 días", "les conserve 30 jours", "caméras, 30 jours", "bewahrt sie 30 Tage",
+                 "Kamerafotos 30 Tage", "30日間保存します。", "カメラの写真は30日間", "并保存30天", "摄像头照片保存30天",
+                 "guarda por 30 dias", "fotos das câmeras, 30 dias"]
+    tudo = "\n".join(textos)
+    assert not [p for p in proibidas if p in tudo]
+=== FILE reservation/tests/test_v1134_regimento_e_airbnb.py
+"""v1.0.134 (Dom, 22/10/2026): o regimento interno unico com aceite registrado na ficha (titular e acompanhante, versao
+e hora, sem dado pessoal; uma vez por versao) e a pagina /regimento; reserva do Airbnb nao vende hospede a mais pelo
+app -- explica que e pela alteracao da reserva no Airbnb."""
+from __future__ import annotations
+
+from dataclasses import replace
+
+import pytest
+
+from app.finance.tests.test_direct_booking import AGORA
+from app.panel import guest_service
+from app.panel.service import PanelError
+from app.reservation import hospede_extra as HX
+from app.reservation import regimento as RG
+from app.reservation.tests.test_acompanhantes import CAIO, casa  # noqa: F401
+from app.reservation.tests.test_fnrh_flow import FICHA
+
+
+def test_pagina_do_regimento():
+    p = RG.pagina()
+    assert "<h1>REGIMENTO INTERNO" in p and "DRESS CODE LIVRE" in p and "CÂMERAS" in p
+    assert "quintal" in p and "nudismo" not in p.lower() and "<script" not in p
+
+
+def test_ficha_grava_o_aceite_uma_vez_por_versao(casa):  # noqa: F811
+    state, rid, code = casa
+    assert guest_service.submit_ficha(state, code, {**FICHA, "house_rules_accepted": "on"}, at=AGORA).ok
+    main = state.store.events[rid]
+    row = state.store.aceites_regimento[main.event_id]
+    assert row["versao"] == RG.VERSAO and set(row) == {"event_id", "versao", "at"}
+    assert RG.aceito(state.store, main.event_id) == RG.VERSAO
+    with pytest.raises(PanelError):                                       # sem a caixa, nada feito
+        guest_service.submit_ficha(state, code, {**FICHA}, at=AGORA)
+    antes = dict(row)
+    assert guest_service.submit_ficha(state, code, {**FICHA, "house_rules_accepted": "on", "corrigir": "1"}, at=AGORA).ok
+    assert state.store.aceites_regimento[main.event_id] == antes            # mesma versao: nao regrava
+
+
+def test_acompanhante_tambem_aceita(casa):  # noqa: F811
+    state, rid, code = casa
+    assert guest_service.submit_ficha(state, code, {**FICHA, "house_rules_accepted": "on"}, at=AGORA).ok
+    assert guest_service.submit_ficha(state, code + "P2", {**CAIO, "house_rules_accepted": "on"}, at=AGORA).ok
+    from app.reservation.companions import slot_key
+    ev = state.store.events[slot_key(rid, 2)]
+    assert RG.aceito(state.store, ev.event_id) == RG.VERSAO
+
+
+def _canal(state, rid, **campos):
+    for k, r in list(state.store.reservations.items()):
+        if r.reservation_id == rid:
+            state.store.reservations[k] = replace(r, **campos)
+
+
+def test_reserva_do_airbnb_nao_vende_hospede_a_mais(casa, monkeypatch):  # noqa: F811
+    state, rid, code = casa
+    monkeypatch.setenv(HX.SWITCH, "on")
+    monkeypatch.setenv(HX.CAPACIDADE, "06=3")
+    state.store.catalog[HX.ITEM] = {"price_cents": 5000}
+    assert guest_service.submit_ficha(state, code, {**FICHA, "house_rules_accepted": "on"}, at=AGORA).ok
+    _canal(state, rid, referral="Booking.com", channel="nobeds", ota_code="")
+    assert guest_service.view(state, code, at=AGORA).data["hospede_extra"]["pode"]     # outro canal: pode
+    _canal(state, rid, referral="Airbnb")
+    s = guest_service.view(state, code, at=AGORA).data["hospede_extra"]
+    assert s["pode"] is False and "Airbnb" in s["motivo"]
+    with pytest.raises(PanelError):
+        guest_service.hospede_extra(state, code, at=AGORA)
+    assert not [x for x in state.store.finance.extras.values() if x.get("catalog") == HX.ITEM]
+=== test_v1160 trecho
+
+
+def test_central_do_4543_pergunta_ao_falai_antes_da_ura_da_casa():
+    conf = (API.parents[1] / "voz" / "asterisk" / "extensions_vono.conf").read_text(encoding="utf-8")
+    inicio = conf.split("[ura-inicio]")[1].split("[ura-menu]")[0]
+    assert "GosubIf(${DIALPLAN_EXISTS(falai-porta-4543,s,1)}?falai-porta-4543,s,1())" in inicio
+    # depois da porta do falai, o cabecalho da casa volta (o falai troca o token do CURL)
+    depois = inicio.split("falai-porta-4543,s,1())")[1]
+    assert depois.index("X-Voz-Token: __PMS_VOZ_TOKEN__") < depois.index("api/voz/estado")
+
+
+def test_regimento_com_o_4543():
+    from app.reservation import regimento as RG
+    from app.reservation import regimento_textos as RT
+    assert RG.VERSAO in ("1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9")  # 1.4 (v1.0.182): cameras 3 dias; 1.3 (v1.0.178, Dom 29/10): o contato do hospede passa a ser o 98306-9951
+    textos = (API / "reservation" / "regimento.py").read_text(encoding="utf-8") + \
+        (API / "reservation" / "regimento_textos.py").read_text(encoding="utf-8")
+    assert textos.count("(11) 98306-9951") >= 7 and "Versão 1.9" in textos   # v1.0.178: o 4543 segue so como linha da central
+    assert RT is not None
+=== versao.py cabeca
+"""A versao do sistema e o historico de melhorias (Dom 04/10: "a partir de agora, vamos considerar que essa e a v1.0.x
+-- x e a versao, ja comeca em 1" / "a partir de agora a gente vai gravar um historico das melhorias. Esse historico vai
+ficar disponivel no site de vendas").
+
+Regra de cada subida para producao: sobe o ultimo numero de VERSAO e poe a entrada nova NO TOPO de HISTORICO, no
+mesmo commit (o teste confere). O texto e para quem compra: linguagem simples, o que mudou para a casa e o hospede,
+nunca nome de hospede, numero de quarto ou detalhe tecnico. O painel mostra a versao no cabecalho; o site de vendas
+(/solucaohoteleira, secao "Melhorias") mostra a versao e o historico. A etiqueta de instalacao no git continua `v1.0`.
+"""
+from __future__ import annotations
+
+#: Dom 19/10: o que esta ligado na casa e a V1.0 e conta 1.0.x. As entregas de 16 a 19/10 tinham saido como 1.1.0 a
+#: 1.1.4 por engano (a V1.1 e a copia separada, por modulos, sem a casa) e voltaram a ser 1.0.114 a 1.0.118.
+VERSAO = "1.0.288"
+
+#: da mais nova para a mais antiga
+HISTORICO: list[dict] = [
+    {"versao": "1.0.288", "data": "2026-11-23", "itens": [
+        "Wi-Fi: o roteador lembra o aparelho pelo tempo da reserva (o fim da estadia apaga) e a casa passa a guardar o registro de conexao por 1 ano, como manda a lei, sem nada de navegacao.",
+    ]},
+    {"versao": "1.0.287", "data": "2026-11-23", "itens": [
+        "Portal do Wi-Fi mais seguro antes de religar: trava de senhas erradas para a casa inteira (gravada e com aviso ao anfitriao), senha da equipe fora do portal e lembrar aparelho de 1 dia.",
+    ]},
+    {"versao": "1.0.286", "data": "2026-11-22", "itens": [
+        "Pergunta que a casa nao soube responder agora pode ser encerrada pelo anfitriao no WhatsApp da casa (encerrar P12 ou encerrar antigas), sem mandar nada a quem perguntou e sem apagar nada.",
+    ]},
+    {"versao": "1.0.285", "data": "2026-11-21", "itens": [
+        "Porta sem internet que caiu no codigo de contingencia volta a tentar a senha do proprio hospede de 10 em 10 minutos; quando entra, o hospede usa a senha de sempre e o aviso ao anfitriao vira resolvido; se chegar a hora de entrar sem a senha, o anfitriao e chamado.",
+    ]},
+    {"versao": "1.0.284", "data": "2026-11-20", "itens": [
+=== testes de versao
+main:SISTEMA/api/app/panel/tests/test_versao.py:5:from app.versao import HISTORICO, VERSAO, publico, rotulo
+main:SISTEMA/api/app/panel/tests/test_versao.py:11:    assert all(h["versao"].startswith("1.0.") for h in HISTORICO)
+main:SISTEMA/api/app/panel/tests/test_versao.py:13:    assert HISTORICO[0]["versao"] == VERSAO                     # toda subida: versao nova + entrada no topo
+main:SISTEMA/api/app/panel/tests/test_versao.py:14:    numeros = [tuple(int(x) for x in h["versao"].split(".")) for h in HISTORICO]
+main:SISTEMA/api/app/panel/tests/test_versao.py:16:    assert all(h["itens"] and re.fullmatch(r"\d{4}-\d{2}-\d{2}", h["data"]) for h in HISTORICO)
+main:SISTEMA/api/app/panel/tests/test_versao.py:23:    assert not re.search(r"\bQ\d{2}\b|reserva-nobeds|@|\d{8,}", texto)  # nada de quarto, id, contato
+SISTEMA/api/app/finance/tests/test_versao_v171.py
+SISTEMA/api/app/panel/tests/test_versao.py
+=== FILE finance/smart.py
+"""Desconto do plano Smart (regra do Dom, 24/09/2026): "todas as pessoas que forem plano
+Smart tem 10% de desconto em tudo que consumirem na casa".
+
+Um ponto so, usado por tudo o que o hospede compra da casa:
+  * adicionais do link (amenities, bicicleta, cozinha, late checkout...) -- `catalog._order`;
+  * pacotes (aberturas a distancia, mensagens da Casa Viva) -- `packs.order`;
+  * adicional lancado pela equipe na reserva -- `intents._add_extra`;
+  * lojinha / honest market -- `shop._checkout`.
+
+Fora do desconto: credito comprado para a Carteira (nao e consumo; o desconto ja vale
+quando o credito e usado) e a propria diaria (a hospedagem nao e "consumo na casa").
+
+Lojinha (PROPOSTA, a confirmar com o Dom): quem paga o desconto e a CASA, nao o lojista.
+O lojista recebe pelo preco cheio; a comissao da casa cai no valor do desconto.
+
+`PMS_DESCONTO_SMART` muda a porcentagem (0 desliga); padrao 0 desde a v1.0.147 (Dom 24/10: "nao tem mais os 10%
+de desconto do pacote Smart... nao contabiliza mais 10% de desconto para nada"). O mecanismo fica: ligar e decisao da casa.
+"""
+from __future__ import annotations
+
+import os
+from typing import Any, Mapping
+
+DEFAULT_PCT = 0
+
+
+def pct(env: Mapping[str, str] | None = None) -> int:
+    raw = str((env if env is not None else os.environ).get("PMS_DESCONTO_SMART", DEFAULT_PCT)).strip()
+    try:
+        return max(0, min(int(raw), 100))
+    except ValueError:
+        return DEFAULT_PCT
+
+
+def is_smart(event: Any) -> bool:
+    """Smart = a estadia tem a cozinha do quarto (mesma regra de `catalog` e da Casa Viva)."""
+    if event is None:
+        return False
+    return any(getattr(l, "value", l) == "kitchen" for l in event.scope.liberties)
+
+
+def pct_for(event: Any, env: Mapping[str, str] | None = None) -> int:
+    return pct(env) if is_smart(event) else 0
+
+
+def apply(cents: int, percent: int) -> tuple[int, int]:
+    """(valor a pagar, desconto) em centavos. Meio centavo arredonda para cima, igual a tela."""
+    cents = int(cents)
+    off = (cents * percent + 50) // 100 if percent else 0      # meio centavo para cima (igual ao Math.round da tela)
+    return cents - off, off
+
+
+def priced(row: dict, event: Any, list_cents: int) -> dict:
+    """Linha de adicional com o desconto aplicado: `amount_cents` ja e o que se paga;
+    `list_cents` e `discount_cents` ficam para o hospede ver e para a conta."""
+    percent = pct_for(event)
+    net, off = apply(list_cents, percent)
+    out = {**row, "amount_cents": net}
+    if off:
+        out.update({"list_cents": int(list_cents), "discount_cents": off, "discount": f"smart-{percent}"})
+    return out
+=== FILE reservation/perfil_mensagem.py
+"""v1.0.150 (Dom 24/10/2026): mensagens automaticas proprias por TIPO de acomodacao e por VERSAO, so em portugues.
+
+Dom: "Precisamos ter mensagem automatica propria para os quartos privativos, mensagem automatica propria para os
+quartos coletivos, e na mesma logica, as mensagens devem ser proprias para Smart ou para Economico." / "As mensagens
+precisam estar so em portugues. A gente vai reafirmar que so entra na casa com o preenchimento da ficha. Por isso, ela
+deve ser feita com antecedencia. Colocaremos tambem nas mensagens o mapinha do metro ate aqui em casa ... e, nessa
+primeira mensagem, o botao clicavel de falar com o anfitriao."
+
+Quatro perfis = tipo (privativo | coletivo) x versao (smart | economico):
+  * tipo: a cama de quarto compartilhado (ou o quarto que tem camas) e "coletivo" (`finance.versao.e_cama`);
+  * versao: Smart = a estadia tem a liberdade "kitchen" (`finance.smart.is_smart`), senao Economico.
+Os textos seguem as regras aprovadas da base da casa (fogao, armario de panelas e quintal so no Smart, das 6h as 18h;
+Wi-Fi Smart 2 aparelhos com o dobro da velocidade; armario da cozinha da reserva com a mesma senha).
+
+"Falar com o anfitriao": no chat da plataforma (Airbnb/Booking) nao vai contato nem link de WhatsApp (regra da casa e da
+plataforma) -- vai "responda aqui mesmo, nesta conversa". No WhatsApp e no e-mail, o WhatsApp da casa (o e-mail leva
+um botao). O mapa: o chat so leva texto, entao vai o link da pagina /como-chegar (a imagem); o e-mail mostra a imagem.
+"""
+from __future__ import annotations
+
+import re
+from typing import Any
+
+PRIVATIVO, COLETIVO = "privativo", "coletivo"
+SMART, ECONOMICO = "smart", "economico"
+
+#: Ipiranga (24/10): perfil de cada quarto coletivo (base da casa: "12 masculino, 13 e 14 mistos")
+GENERO_DO_QUARTO = {"Q12": "masculino", "Q13": "misto", "Q14": "misto"}
+
+#: Dom 24/10: "Evita ficar repetindo palavras muito proximas ... Faca a revisao do texto sempre." Cada texto foi lido
+#: inteiro, no perfil, para nao repetir palavra perto (casa/casa, ficha/ficha, senha/senha, faca/fez, quarto/quarto).
+#: Dom 24/10 (2a rodada): "A primeira mensagem de reserva feita, o foco e o preenchimento da ficha ... obrigatorio segundo
+#: a lei numero tal ... Os outros dados ... vao ficar para uma outra mensagem ... na chegada da casa."
+LEI = "Lei nº 11.771/2008 (Lei Geral do Turismo, art. 26)"
+#: Dom 24/10 (o texto dele): "Ola, Bia. Sua vaga esta garantida, mas seu cadastro na casa ainda nao. Preencha sua
+#: ficha aqui. Segue o link. Pela lei numero, todo meio de hospedagem deve registrar quem recebe na ficha nacional de
+#: registro de hospedes. Sem a ficha ninguem entra. ... Pode seguir assim."
+VAGA = "Sua vaga está garantida, mas seu cadastro na casa ainda não. Preencha sua ficha:"
+FICHA_ANTES = ("Pela " + LEI + ", todo meio de hospedagem deve registrar quem recebe na Ficha Nacional de Registro de "
+               "Hóspedes (FNRH). Sem a ficha, ninguém entra.")
+MAPA = "Como chegar: 12 min a pé (800 m) do Metrô Santos-Imigrantes. O mapa está aqui: {link}"
+FALAR = {"chat": "Falar com o anfitrião: responda aqui mesmo, nesta conversa.",
+         "whatsapp": "Falar com o anfitrião: é só responder esta mensagem.",
+         "email": "Falar com o anfitrião: WhatsApp {whatsapp} (https://wa.me/{digitos}) ou responda este e-mail."}
+
+
+#: v1.0.150 (Dom 24/10, a mensageria das figurinhas no Airbnb): cada mensagem da fase abre com o icone da figurinha
+#: dela (o chat do Airbnb so leva texto -- ver `app.figurinhas.EMOJI`)
+ICONE = {"convite": "🍌 Reserva feita!", "volta": "🍌 Que bom que você voltou!", "chegada": "🏠 Chegou, é de casa!", "silencio": "🌙 Silêncio 22h–7h",
+         "saida": "🧳 Saída amanhã"}
+
+
+def host_das_paginas() -> str:
+    """V1.0.177 (Dom 27/10): o endereco das paginas do hospede nas mensagens e o da CASA (painel.dombanana.tech), nunca o
+    tecnico do servidor. Antes vinha de `PMS_PANEL_BASE`, que em producao e "painel.179-198-115-146.sslip.io" -- link com
+    numero de IP no chat do Airbnb (cara de golpe; a plataforma pode cortar). y-c177-4: painel.dombanana.tech abre o
+    link, /armario, /como-chegar, /silencio e as ancoras; www.dombanana.tech so encaminha o codigo sozinho (404 nas
+    paginas). `PMS_PAGINAS_HOSPEDE_HOST` troca sem reinstalar."""
+    import os
+    host = str(os.environ.get("PMS_PAGINAS_HOSPEDE_HOST") or "").strip()
+    if not host:
+        host = os.environ.get("PMS_PANEL_BASE", "painel.dombanana.tech/entrar").split("//")[-1].split("/")[0]
+        if not host.endswith("dombanana.tech"):          # sslip.io, IP ou outro endereco tecnico
+            host = "painel.dombanana.tech"
+    return host.split("//")[-1].split("/")[0]
+
+
+def pagina(link: str, sub: str) -> str:
+    """v1.0.151: o link da estadia direto numa pagina dela (`/armario`, `/como-chegar`, `#saida`, `#barulho`...). As
+    paginas moram no endereco do painel: o www so encaminha o codigo sozinho (www/<codigo>/pagina dava 404)."""
+    host = host_das_paginas()
+    m = re.match(r"(?:https?://)?[^/]+/([^/?#]+)", str(link or "").strip())
+    if not m:
+        return f"{str(link or '').rstrip('/')}{sub}"
+    return f"https://{host}/{m.group(1)}{sub}"
+
+
+def _event_da(store: Any, reservation_id: str) -> Any:
+    return (getattr(store, "events", {}) or {}).get(reservation_id)
+
+
+def tipo(store: Any, event: Any) -> str:
+    if event is None:
+        return PRIVATIVO
+    from app.finance.versao import e_cama
+    try:
+        return COLETIVO if e_cama(store, event) else PRIVATIVO
+    except Exception:  # noqa: BLE001 -- sem inventario: o texto do privativo (o mais comum)
+        return PRIVATIVO
+
+
+def versao(event: Any) -> str:
+    from app.finance.smart import is_smart
+    try:
+        return SMART if is_smart(event) else ECONOMICO
+    except Exception:  # noqa: BLE001
+        return ECONOMICO
+
+
+def perfil(store: Any, event: Any) -> tuple[str, str]:
+    return tipo(store, event), versao(event)
+
+
+def rotulo_espaco(space: str) -> str:
+    """'Q07' -> 'quarto 07'; 'Q12A' -> 'cápsula A do quarto 12' (nunca o id cru no texto ao hospede)."""
+    m = re.fullmatch(r"Q(\d{2})([A-Z])?", str(space or "").strip().upper())
+    if not m:
+        return str(space or "")
+    return f"cápsula {m.group(2)} do quarto {m.group(1)}" if m.group(2) else f"quarto {m.group(1)}"
+
+
+def com_artigo(space: str, prep: str = "") -> str:
+    """v1.0.232 (Dom 12/11: "o seu lugar e o capsula A" -- errado): o lugar com o artigo certo -- capsula e feminino,
+    quarto e masculino. `prep`: "" -> "a capsula A do quarto 12" / "o quarto 07"; "de" -> "da"/"do"; "em" -> "na"/"no"."""
+    rot = rotulo_espaco(space)
+    fem = rot.startswith("cápsula")
+    art = {"": ("a", "o"), "de": ("da", "do"), "em": ("na", "no"), "a": ("à", "ao")}.get(prep, ("a", "o"))
+    return f"{art[0] if fem else art[1]} {rot}" if rot else rot
+
+
+#: v1.0.179 (Dom 31/10): lugar de grupo de iguais -- o numero chega as 13h50 do dia da chegada (`sem_numero`)
+AVISO_NUMERO = "O número do seu lugar chega por mensagem às 13h50 do dia da chegada."
+
+
+def _escondido(store: Any, event: Any) -> bool:
+    """O numero do lugar desta estadia ainda nao pode aparecer para o hospede (agora)?"""
+    try:
+        from datetime import datetime, timezone
+        from app.reservation.sem_numero import revelado
+        return not revelado(store, event, datetime.now(timezone.utc))
+    except Exception:  # noqa: BLE001 -- sem inventario/fuso (textos de teste): como antes, com o numero
+        return False
+
+
+def _categoria(space: str) -> str:
+    from app.reservation.sem_numero import categoria
+    return categoria(space)
+
+
+def _espaco(event: Any) -> str:
+    return str(event.where[0]) if event is not None and getattr(event, "where", None) else ""
+
+
+def tem_armario(event: Any) -> bool:
+    from app.inventory.ipiranga import ARMARIOS
+    return _espaco(event) in ARMARIOS
+
+
+def _quarto_de(space: str) -> str:
+    m = re.fullmatch(r"(Q\d{2})[A-Z]?", space or "")
+    return m.group(1) if m else space
+
+
+def bloco_acomodacao(store: Any, event: Any, *, com_horario: bool = True) -> str:
+    """O lugar da estadia. `com_horario=False` nos modelos de e-mail/WhatsApp, que ja trazem os horarios."""
+    esp = _espaco(event)
+    armario = " Na cozinha, há um armário só seu, que abre com o mesmo código." if tem_armario(event) else ""
+    if tipo(store, event) == COLETIVO:
+        armario = armario.replace("o mesmo código", "a mesma senha")      # o codigo ja aparece na frase da luz
+        genero = GENERO_DO_QUARTO.get(_quarto_de(esp), "")
+        m = re.fullmatch(r"Q(\d{2})([A-Z])", esp or "")
+        onde = (f"Você fica na cápsula {m.group(2)} do quarto {m.group(1)} (compartilhado{', ' + genero if genero else ''})."
+                if m else f"Você fica num quarto compartilhado{' ' + genero if genero else ''}.")
+        if m and _escondido(store, event):
+            onde = f"Você fica numa {_categoria(esp)}. {AVISO_NUMERO}"
+        horario = (" Na chegada, a senha abre a entrada a partir das 6h e o dormitório a partir das 14h; na saída, a "
+                   "cama é sua até as 11h.") if com_horario else ""
+        return (onde + horario + " Ao digitar o código na porta, a luz da cápsula acende: lá dentro, silêncio e "
+                "penumbra." + armario)
+    onde = f"Você fica {com_artigo(esp, 'em')}, privativo." if esp else "Seu quarto é privativo."
+    if esp and _escondido(store, event):
+        onde = f"Você fica num {_categoria(esp)}. {AVISO_NUMERO}"
+    horario = (" Na chegada, a senha abre a entrada a partir das 6h e a porta do seu espaço a partir das 14h; na "
+               "saída, ele fica com você até as 11h.") if com_horario else ""
+    return onde + horario + armario
+
+
+def bloco_versao(event: Any) -> str:
+    """Dom 24/10: "a versao Smart e fogao, coworking e acesso ao quintal com a piscina"."""
+    if versao(event) == SMART:
+        return "Plano Smart: você usa fogão, coworking e quintal com piscina (das 6h às 18h)."
+    return ("Plano Econômico: na cozinha, você usa o micro-ondas. Fogão, coworking e quintal com piscina fazem parte do "
+            "Smart, que dá para contratar na página da sua estadia.")
+
+
+def bloco_perfil(store: Any, event: Any) -> str:
+    """O que muda por perfil, para os modelos de e-mail e WhatsApp (`{perfil}`; os horarios ja estao no modelo)."""
+    if event is None:
+        return ""
+    return bloco_acomodacao(store, event, com_horario=False) + "\n\n" + bloco_versao(event)
+
+
+def convite_chat(store: Any, event: Any, saudacao: str, link: str, *, recorrente: str = "") -> str:
+    """A PRIMEIRA mensagem no chat da plataforma. Dom 24/10: "o link tem que estar no comecinho da mensagem ... a
+    pessoa nao quer ler tanto." So a ficha (obrigatoria por lei), o link logo na 1a linha e falar com o anfitriao.
+    `recorrente`: o texto pronto de quem volta (`recorrente()`), que ja traz o link no comeco."""
+    if recorrente:
+        return recorrente
+    return "\n\n".join([f"{saudacao} {VAGA}\n{link}", FICHA_ANTES, FALAR["chat"]])
+
+
+def versao_anterior(store: Any, event: Any) -> str:
+    """A versao (smart | economico) da ultima estadia da mesma pessoa (ou da conta ligada) antes desta; vazio se nao ha."""
+    if event is None or store is None:
+        return ""
+    from app.reservation.recorrente import pessoas
+    try:
+        quem = pessoas(store, event.who.person)
+    except Exception:  # noqa: BLE001
+        quem = {event.who.person}
+    antes = [e for e in (getattr(store, "events", {}) or {}).values()
+             if e is not event and e.who.person in quem and e.when.end <= event.when.start]
+    return versao(max(antes, key=lambda e: e.when.end)) if antes else ""
+
+
+def recorrente(store: Any, event: Any, saudacao: str, senha: str, link: str, canal: str = "chat") -> str:
+    """Dom 24/10: quem volta nao refaz a ficha. "Que bom que voce voltou, a sua senha e essa, e voce ja sabe as regras
+    da casa, ou ... voce fez o upgrade para Smart, ou ... voce fez o downgrade para Economico." Sem o mapa (ja conhece)."""
+    senha_txt = (f"A sua senha continua a mesma: {senha}# (termine com #)." if senha else
+                 "A sua senha da porta continua a mesma (ela aparece no seu link).")
+    agora, antes = versao(event), versao_anterior(store, event)
+    if antes == ECONOMICO and agora == SMART:
+        plano = ("Desta vez você fez o upgrade para o Smart: fogão, coworking e quintal com piscina (das 6h às 18h) "
+                 "estão na sua reserva.")
+    elif antes == SMART and agora == ECONOMICO:
+        plano = ("Desta vez você escolheu o Econômico: na cozinha, você usa o micro-ondas; fogão, coworking e quintal "
+                 "com piscina voltam quando você quiser o Smart, pela página da estadia.")
+    else:
+        plano = "Você já conhece as regras da casa: é só chegar."
+    return "\n\n".join([f"{ICONE['volta']} Tudo da estadia está aqui:\n{link}",
+                         f"{saudacao} O seu cadastro já está com a gente, então não precisa de ficha nova. {senha_txt}",
+                         plano, FALAR.get(canal, FALAR["chat"])])
+
+
+def _armario_e_pia(event: Any, link: str, store: Any = None) -> str:
+    pia = "É obrigatório manter a pia sempre limpa e organizada: lavou, secou, guardou."
+    if not tem_armario(event):
+        return pia
+    onde = f"\n{pagina(link, '/armario?lugar=' + _espaco(event))}" if link else ""
+    if onde and store is not None and _escondido(store, event):
+        onde = f"\n{pagina(link, '/armario')}"           # v1.0.179: o numero no endereco revelaria o lugar
+    return (f"Na cozinha, há um armário só seu para guardar mantimentos e objetos; ele abre com o mesmo código. A "
+            f"foto mostra onde fica:{onde}\n\n{pia}")
+
+
+def chegada(store: Any, event: Any, link: str) -> str:
+    """Dom 24/10: na chegada, "o numero do quarto ... o acesso ... plano smart ou nao" e os armarios da cozinha, com a
+    pia sempre limpa e organizada. Sai na primeira entrada com a propria senha (chat do Airbnb; no WhatsApp, as
+    boas-vindas levam o mesmo bloco)."""
+    return "\n\n".join([f"{ICONE['chegada']} Tudo da estadia, com o Wi-Fi, está aqui:\n{link}",
+                         bloco_chegada(store, event, link), "Silêncio das 22h às 7h. Boa estadia!"])
+
+
+def bloco_chegada(store: Any, event: Any, link: str = "", *, saudar: bool = True) -> str:
+    if event is None:
+        return ""
+    esp = _espaco(event)
+    ola = "Bem-vindo(a)! " if saudar else ""
+    if tipo(store, event) == COLETIVO:
+        genero = GENERO_DO_QUARTO.get(_quarto_de(esp), "")
+        m = re.fullmatch(r"Q(\d{2})([A-Z])", esp or "")
+        onde = (f"na cápsula {m.group(2)} do quarto {m.group(1)} (compartilhado{', ' + genero if genero else ''})"
+                if m else f"num quarto compartilhado{' ' + genero if genero else ''}")
+        if m and _escondido(store, event):
+            onde = f"numa {_categoria(esp)}"
+        lugar = (f"{ola}Você fica {onde}, liberada das 14h até as 11h do dia da saída. Ao digitar o código na porta, a "
+                 "luz acende: lá dentro, silêncio e penumbra.")
+    else:
+        onde = f"{com_artigo(esp, 'em')}, privativo" if esp else "num quarto privativo"
+        if esp and _escondido(store, event):
+            onde = f"num {_categoria(esp)}"
+        lugar = f"{ola}Você fica {onde}, liberado das 14h até as 11h do dia da saída."
+    if esp and _escondido(store, event):
+        lugar += f" {AVISO_NUMERO}"
+    return "\n\n".join([lugar, bloco_versao(event), _armario_e_pia(event, link, store)])
+
+
+def silencio(store: Any, event: Any, link: str) -> str:
+    extra = ""
+    if tipo(store, event) == COLETIVO:
+        extra += (" No quarto compartilhado, mantenha tudo apagado e o celular sem som; para enxergar, use a "
+                  "iluminação da sua cápsula.")
+    if versao(event) == SMART:
+        extra += " Fogão e quintal voltam às 6h."
+    # Dom 24/10: o link da arte nao explicava para que servia -- saiu; no lugar, o que fazer se alguem fizer barulho
+    # V1.0.177 (Dom 27/10): uma frase so com o horario (o titulo "Silencio 22h-7h" repetia o "ate as 7h" do texto) e
+    # o link no endereco da casa (host_das_paginas), nao no tecnico do servidor
+    # V1.0.178 (Dom 28/10): conversa alta dentro do quarto tambem conta -- o som passa para os outros quartos
+    return (f"🌙 Boa noite! Começou o silêncio, das 22h às 7h: voz baixa e nada de barulho, inclusive nas conversas "
+            f"dentro do quarto.{extra} Bom descanso!\n\n"
+            f"Se alguém estiver fazendo barulho, avise por aqui, sem se identificar:\n{pagina(link, '/barulho')}")
+
+
+def saida(store: Any, event: Any, link: str) -> str:
+    lugar = "a cápsula fica com você" if tipo(store, event) == COLETIVO else "o quarto fica com você"
+    armario = " e do armário da cozinha (ele abre com o seu código até as 18h)" if tem_armario(event) else ""
+    return (f"{ICONE['saida']}. O checkout, com a lista do que conferir antes de sair:\n{pagina(link, '/saida')}\n\nBoa tarde! Amanhã {lugar} até as 11h (ou até 13h30, "
+            f"por R$ 15). Depois, a casa segue aberta até as 18h, com guarda-volumes grátis.\n\nAntes de ir, retire as "
+            f"suas coisas da geladeira{armario} e deixe a cozinha limpinha e organizada. Assim ninguém tem problema. "
+            "Obrigado por ficar com a gente!")
+
+
+def aviso(kind: str, store: Any, event: Any, link: str) -> str:
+    return silencio(store, event, link) if kind == "silencio_dia1" else saida(store, event, link)
+
+
+def boas_vindas(store: Any, event: Any, link: str = "") -> str:
+    """As boas-vindas do WhatsApp (`{perfil}`): o mesmo bloco da chegada."""
+    if event is None:
+        return ""
+    return bloco_chegada(store, event, link, saudar=False) + "\n\n"
+=== is_smart / economico em regras (fora testes)
+main:SISTEMA/api/app/aparelho/intents.py:51:    "hospedagem_saldo_hostelworld": "reserva_pagamento",
+main:SISTEMA/api/app/channel/intents.py:66:    #: anuncio, nao do hospede (Dom 26/09). Anuncios gravados antes com "smart-cama"/"hostel-cama" = por pessoa.
+main:SISTEMA/api/app/channel/intents.py:74:        return self.per_person or self.instance in ("smart-cama", "hostel-cama")
+main:SISTEMA/api/app/clinica/historico.py:11:So os numeros de teste da clinica passam por aqui (o atendimento do hostel nao). `PMS_CLINICA_HISTORICO=off` desliga.
+main:SISTEMA/api/app/clinica/whatsapp.py:6:esta em PMS_CLINICA_NUMEROS cai aqui; o resto continua no atendimento do hostel. Tudo o que vale no WhatsApp oficial:
+main:SISTEMA/api/app/community/intents.py:70:def is_smart(event: Any) -> bool:
+main:SISTEMA/api/app/community/intents.py:75:    return (MSG_FREE_SMART, MSG_PACKS_SMART) if event is not None and is_smart(event) else (MSG_FREE, MSG_PACKS)
+main:SISTEMA/api/app/entrada/airbnb_reservas.py:47:    """A versao do anuncio na instancia da casa: Smart = smart; Economico = hostel (D21)."""
+main:SISTEMA/api/app/entrada/airbnb_reservas.py:48:    return "smart" if versao == "smart" else "hostel"
+main:SISTEMA/api/app/entrada/intents.py:43:    ("hostelworld.com", "Hostelworld"), ("decolar.com", "Decolar"), ("despegar.com", "Decolar"),
+main:SISTEMA/api/app/finance/catalog.py:33:AUDIENCES = ("todos", "smart", "hostel")
+main:SISTEMA/api/app/finance/catalog.py:42:    "cozinha": {"label": "Cozinha completa (armário de panelas)", "audience": "hostel", "needs_when": False,
+main:SISTEMA/api/app/finance/catalog.py:53:    "virar_smart": {"label": "Virar Smart (quarto privativo)", "audience": "hostel", "needs_when": False,
+main:SISTEMA/api/app/finance/catalog.py:57:    "virar_smart_cama": {"label": "Virar Smart (cama em quarto coletivo)", "audience": "hostel", "needs_when": False,
+main:SISTEMA/api/app/finance/catalog.py:93:def _is_smart(event: Any) -> bool:
+main:SISTEMA/api/app/finance/catalog.py:99:    mod = "smart" if _is_smart(event) else "hostel"
+main:SISTEMA/api/app/finance/catalog.py:195:            raise ValueError("Para quem: todos, smart ou hostel.")
+main:SISTEMA/api/app/finance/devedores.py:25:    from app.finance.direct import charges_of, is_hostelworld, payment_state
+main:SISTEMA/api/app/finance/devedores.py:42:                     "canal": r.referral or r.channel, "hostelworld": is_hostelworld(r)})
+main:SISTEMA/api/app/finance/devedores.py:48:            if row["hostelworld"] else "Reserva do site: o hóspede paga pelo painel dele (Pix ou cartão)")
+main:SISTEMA/api/app/finance/direct.py:52:HOSTELWORLD_REFERRALS = frozenset({"hostelworld", "hostelworld.com", "hostel world", "hostelworld group"})
+main:SISTEMA/api/app/finance/direct.py:72:def is_hostelworld(reserva: Any, env: Any = None) -> bool:
+main:SISTEMA/api/app/finance/direct.py:81:    return is_direct(reserva, store) or is_hostelworld(reserva)
+main:SISTEMA/api/app/finance/direct.py:183:    if is_hostelworld(reserva):
+main:SISTEMA/api/app/finance/intents.py:481:def _descricao(reserva: Any, hostelworld: bool) -> str:
+main:SISTEMA/api/app/finance/intents.py:485:    return base + (" (saldo da hospedagem; o deposito foi pago a Hostelworld)" if hostelworld else "")
+main:SISTEMA/api/app/finance/intents.py:554:    from app.finance.direct import is_hostelworld
+main:SISTEMA/api/app/finance/intents.py:589:              "description": _descricao(reserva, is_hostelworld(reserva))},
+main:SISTEMA/api/app/finance/notas.py:30:    ("motor", "Motor de reservas (site)"), ("hostelworld", "Hostelworld"), ("airbnb", "Airbnb"),
+main:SISTEMA/api/app/finance/notas.py:35:CANAIS_ASAAS = frozenset({"motor", "hostelworld"})
+main:SISTEMA/api/app/finance/notas.py:36:_POR_NOME = (("hostelworld", "hostelworld"), ("hostel world", "hostelworld"), ("airbnb", "airbnb"),
+main:SISTEMA/api/app/finance/smart.py:35:def is_smart(event: Any) -> bool:
+main:SISTEMA/api/app/finance/smart.py:43:    return pct(env) if is_smart(event) else 0
+main:SISTEMA/api/app/finance/versao.py:87:    hostel = sorted(rid for rid, m in maps.items() if m.space == space and m.instance == "hostel")
+main:SISTEMA/api/app/finance/versao.py:88:    if not smart or not hostel:
+main:SISTEMA/api/app/finance/versao.py:90:    qs, qh = quote(store, smart[0], night), quote(store, hostel[0], night)
+main:SISTEMA/api/app/inventory/intents.py:48:LEGACY_INSTANCES = {"smart-cama": "smart", "hostel-cama": "hostel", "staff": "hostel"}
+main:SISTEMA/api/app/inventory/ipiranga.py:95:        Instance("hostel", "Hostel", "hospedagem", remote_lock=True, min_stay=1, max_stay=28, liberties=HOSTEL),
+main:SISTEMA/api/app/inventory/ipiranga.py:116:    out += [Proposed(rid, "Q14", "hostel", "quarto 14 (feminino, 4 camas), vendido por pessoa", per_person=True)
+main:SISTEMA/api/app/inventory/ipiranga.py:132:_HOSTEL_TITLE = _re.compile(r"^\s*(\d{2})\s*-?\s*([A-Fa-f])?\b.*\bhostel\b", _re.IGNORECASE)
+main:SISTEMA/api/app/inventory/ipiranga.py:135:def hostel_candidate(title: str) -> str | None:
+main:SISTEMA/api/app/inventory/ipiranga.py:159:    out: dict[str, list[str]] = {"ok": [], "sumiu": [], "sem_dono": [], "a_confirmar": [], "copia": [], "hostel": []}
+main:SISTEMA/api/app/inventory/ipiranga.py:172:        elif hostel_candidate(name):
+main:SISTEMA/api/app/inventory/ipiranga.py:173:            out["hostel"].append(f"{rid} -> {hostel_candidate(name)} hostel: {name}")
+main:SISTEMA/api/app/inventory/nobeds_catalog.py:38:_HOSTEL = re.compile(r"hostel|econ[oô]m", re.IGNORECASE)
+main:SISTEMA/api/app/inventory/nobeds_catalog.py:84:    # 02/11 (v1.0.185): o TITULO que o Dom escreve manda. "Smart" no titulo vale mesmo com "hostel" no endereco de
+main:SISTEMA/api/app/inventory/nobeds_catalog.py:85:    # reserva direta ("14ahostel", antigo): antes, cada subida voltava as camas 12A-F e 14A-D do Airbnb para hostel
+main:SISTEMA/api/app/inventory/nobeds_catalog.py:88:        hostel = False
+main:SISTEMA/api/app/inventory/nobeds_catalog.py:90:        hostel = bool(_HOSTEL.search(title) or _HOSTEL.search(slug))
+main:SISTEMA/api/app/inventory/nobeds_catalog.py:95:        instance = "hostel" if hostel else "smart"
+main:SISTEMA/api/app/inventory/nobeds_catalog.py:99:        space, instance = room, ("hostel" if hostel else "smart")
+main:SISTEMA/api/app/marketing/crm.py:38:    "cashback_cents": {"smart": 500, "hostel": 350},
+main:SISTEMA/api/app/marketing/intents.py:99:                                 for m in ("smart", "hostel")}
+main:SISTEMA/api/app/marketing/intents.py:444:    from app.community.intents import is_smart
+main:SISTEMA/api/app/marketing/intents.py:464:            cents = int(cfg["cashback_cents"].get("smart" if is_smart(event) else "hostel", 0))
+main:SISTEMA/api/app/messaging/adapters.py:135:    "hospedagem_saldo_hostelworld": (
+main:SISTEMA/api/app/messaging/adapters.py:811:PLATFORM_EMAIL_DOMAINS = ("airbnb.com", "booking.com", "expediapartnercentral.com", "expedia.com", "hostelworld.com",
+main:SISTEMA/api/app/messaging/avaliacao.py:83:    ("qual a diferença do smart pro hostel?", "base:quartos-smart-hostel"),
+main:SISTEMA/api/app/messaging/base_casa.json:90:      "id": "reserva-hostelworld",
+main:SISTEMA/api/app/messaging/base_casa.json:93:        "reservei pelo hostelworld",
+main:SISTEMA/api/app/messaging/base_casa.json:94:        "hostelworld cobrou só uma parte",
+main:SISTEMA/api/app/messaging/base_casa.json:95:        "falta pagar o resto hostelworld"
+main:SISTEMA/api/app/messaging/base_casa.json:416:      "id": "quartos-smart-hostel",
+main:SISTEMA/api/app/messaging/base_casa.json:419:        "qual a diferença entre smart e hostel",
+main:SISTEMA/api/app/messaging/base_casa.json:1987:      "resposta": "Que alegria! 🍌💛 Se puder, deixe a sua avaliação na plataforma da reserva e no Google ({mapa:Dom Banana hostel}), e em todo lugar onde der para avaliar. 
+main:SISTEMA/api/app/messaging/concierge.py:66:                 "hostel", "suite", "banheiro", "bathroom")),
+main:SISTEMA/api/app/messaging/concierge.py:273:SYSTEM_PROMPT = """Você é o atendimento por WhatsApp do Dom Banana, um hostel com quartos Smart em São Paulo.
+main:SISTEMA/api/app/messaging/inteligencia.py:303:REGRAS = """Você É o Dom Banana falando no WhatsApp da casa: um hostel com camada Smart (quartos com cozinha e quintal) \
+main:SISTEMA/api/app/messaging/inteligencia.py:612:        # Dom 13/10 ("em nenhum momento eu deixei a versao hostel usar o fogao"): trava na SAIDA -- a IA nunca libera
+main:SISTEMA/api/app/messaging/inteligencia.py:627:#: Dom 13/10/2026: "Em nenhum momento eu deixei a versao hostel usar o fogao, e so a versao smart... nao vai autorizar
+main:SISTEMA/api/app/messaging/knowledge.py:358:    """v1.0.105 (Dom 13/10: "em nenhum momento eu deixei a versao hostel usar o fogao, e so a versao smart... nao vai
+main:SISTEMA/api/app/messaging/routes.py:135:            # atendimento do hostel. 08/11: PMS_CLINICA_WHATSAPP=off (o numero da casa e so da hotelaria)
+main:SISTEMA/api/app/motor/reservar.html:64:.modo-smart{background:#E2F0EC;color:#1F5E43}.modo-hostel{background:#FFF3C8;color:#6B5212}
+main:SISTEMA/api/app/motor/reservar.html:808:      const m=el("span","chip "+(o.modo==="Smart"?"modo-smart":"modo-hostel"),o.modo);left.appendChild(m);
+main:SISTEMA/api/app/motor/reservar.html:838:    const ch=el("div","chips");ch.appendChild(el("span","chip "+(o.modo==="Smart"?"modo-smart":"modo-hostel"),o.modo));
+main:SISTEMA/api/app/network/policy.py:28:SMART, HOSTEL = "smart", "hostel"
+main:SISTEMA/api/app/network/policy.py:33:PROFILES = {SMART: "dom-banana-v1-smart", HOSTEL: "dom-banana-v1-hostel", "plus": "dom-banana-v1-plus"}
+main:SISTEMA/api/app/network/policy.py:63:    """Aparelhos por hospede. Dom 30/09: "ate 2 aparelhos no hostel e ate 3 para cada hospede Smart" --
+main:SISTEMA/api/app/network/routes.py:55:           "p_limite": "Smart: {smart} aparelhos por pessoa. Hostel: {hostel} aparelhos por pessoa. Valida durante a sua estadia. Das 22h as 7h a velocidade e reduzida.",
+main:SISTEMA/api/app/network/routes.py:58:           "p_limite": "Smart: {smart} devices per person. Hostel: {hostel} devices per person. Valid during your stay. From 10 pm to 7 am the speed is reduced.",
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+=== horarios 18h/10h
+main:SISTEMA/api/app/channel/adapters.py:508:#: Disponibilidade sempre; preco so com `PMS_PRECO_CANAIS=on` (28/09: o preco mora na V1.0).
+main:SISTEMA/api/app/clinica/agenda.py:344:PERIODOS = {"manha": (time(0), time(12)), "tarde": (time(12), time(18)), "noite": (time(18), time(23, 59))}
+main:SISTEMA/api/app/finance/adapters.py:59:    """v1.0.116 (18/10, e-mails "Numero de telefone incorreto" da Asaas a cada cobranca): a Asaas so aceita telefone
+main:SISTEMA/api/app/governance/equipe.html:161:      ${i.kind==='foto'?`<img data-mf="${esc(i.id)}" style="max-width:100%;filter:blur(18px)" title="toque para ver">`:`<p>${esc(i.text)}</p>`}</div>`).join('')||'<p class="mudo">Nad
+main:SISTEMA/api/app/governance/equipe.html:163:      if(f.ok){img.src=URL.createObjectURL(await f.blob());img.onclick=()=>img.style.filter=img.style.filter?'':'blur(18px)'}})};
+main:SISTEMA/api/app/motor/reservar.html:742:  if(est==="ocupado"||est==="fechado"){const s=t(est==="ocupado"?"tag_ocupado":"tag_fechado");const fs=Math.min(18,(w-10)/(s.length*.7));
+main:SISTEMA/api/app/motor/routes.py:302:        token, confirm = secrets.token_urlsafe(18), secrets.token_urlsafe(18)
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:9:   "inicio": "2026-10-01T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:39:   "inicio": "2026-10-02T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:84:   "inicio": "2026-10-03T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:159:   "inicio": "2026-10-04T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:189:   "inicio": "2026-10-05T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:204:   "inicio": "2026-10-06T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:219:   "inicio": "2026-10-07T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:249:   "inicio": "2026-10-08T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:279:   "inicio": "2026-10-09T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:339:   "inicio": "2026-10-10T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:429:   "inicio": "2026-10-11T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:504:   "inicio": "2026-10-12T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:519:   "inicio": "2026-10-13T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:549:   "inicio": "2026-10-14T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:579:   "inicio": "2026-10-15T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:594:   "inicio": "2026-10-16T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:624:   "inicio": "2026-10-17T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:699:   "inicio": "2026-10-18T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:744:   "inicio": "2026-10-19T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:759:   "inicio": "2026-10-20T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:774:   "inicio": "2026-10-21T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:804:   "inicio": "2026-10-22T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:834:   "inicio": "2026-10-23T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:879:   "inicio": "2026-10-24T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:939:   "inicio": "2026-10-25T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1014:   "inicio": "2026-10-26T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1029:   "inicio": "2026-10-27T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1059:   "inicio": "2026-10-28T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1104:   "inicio": "2026-10-29T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1119:   "inicio": "2026-10-30T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1194:   "inicio": "2026-10-31T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1299:   "inicio": "2026-11-01T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1359:   "inicio": "2026-11-02T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1374:   "inicio": "2026-11-03T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1389:   "inicio": "2026-11-04T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1419:   "inicio": "2026-11-05T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1434:   "inicio": "2026-11-06T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1494:   "inicio": "2026-11-07T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1584:   "inicio": "2026-11-08T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1644:   "inicio": "2026-11-09T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1659:   "inicio": "2026-11-10T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1674:   "inicio": "2026-11-11T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1704:   "inicio": "2026-11-12T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1719:   "inicio": "2026-11-13T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1764:   "inicio": "2026-11-14T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1824:   "inicio": "2026-11-15T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1884:   "inicio": "2026-11-16T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1899:   "inicio": "2026-11-17T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1929:   "inicio": "2026-11-18T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1974:   "inicio": "2026-11-19T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:1989:   "inicio": "2026-11-20T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:2034:   "inicio": "2026-11-21T10:00:00-03:00",
+main:SISTEMA/api/app/painel_casa/agenda/eventos-casa.json:2094:   "inicio": "2026-11-22T10:00:00-03:00",
+grep: write error: Broken pipe
+=== microondas/quintal/kitchen
+main:SISTEMA/api/app/alerts.py:57:    "adicional_virar_smart": "Virou Smart (pago no cadastro) — cozinha, panelas e quintal entram na senha",
+main:SISTEMA/api/app/casa_viva_convite.py:274:# Dom, 03/10: "o staff da limpeza nao esta na Casa Viva... ele tambem tem que ter a liberdade de... participar dos
+main:SISTEMA/api/app/community/intents.py:71:    return any(getattr(l, "value", l) == "kitchen" for l in event.scope.liberties)
+main:SISTEMA/api/app/core/event.py:55:    """As liberdades que um escopo pode conceder (secao 2)."""
+main:SISTEMA/api/app/core/event.py:58:    KITCHEN = "kitchen"
+main:SISTEMA/api/app/core/event.py:63:    YARD = "yard"                 # quintal (Smart, 23/09)
+main:SISTEMA/api/app/core/event.py:126:    """O que o Evento autoriza: espacos + liberdades + janela (secao 2).
+main:SISTEMA/api/app/espacos/espacos.html:55:const T={pt:{tt:"Espaços da casa",hi:"Reserve a sala, o cinema ou o quintal para você e o seu grupo, ou marque um evento em qualquer espaço da casa. Sem custo, sempre em hora cheia."
+main:SISTEMA/api/app/espacos/intents.py:40:    # Dom 06/10: "o sistema nao esta liberando a reserva de espacos" -- o quintal entra como a sala e o cinema
+main:SISTEMA/api/app/espacos/intents.py:41:    "quintal": {"nome": "Quintal", "mapa": "F01_QUINTAL", "abre": 8, "fecha": 22, "max_horas": 3, "ativo": True,
+main:SISTEMA/api/app/espacos/intents.py:50:#: hall, fumodromo, jardim de inverno, escritorios). Os comodos que ja sao espacos (cinema, quintal, coworking) usam o
+main:SISTEMA/api/app/figurinhas.py:50:                     "Perdeu-se na casa? Me pergunta aqui: cozinha, banheiros, quintal, lavanderia... eu te "
+main:SISTEMA/api/app/figurinhas.py:74:                   "quintal, use uma toalha, por favor 🙂 "
+main:SISTEMA/api/app/figurinhas.py:79:    "17-fumo": ("ocorrencia", "Fumo: quintal ou varandinha",
+main:SISTEMA/api/app/figurinhas.py:80:                "Fumar só no quintal (lá no fundo) ou na varandinha do fumódromo, no andar de cima. Dentro de casa, "
+main:SISTEMA/api/app/finance/catalog.py:55:                    "note": "Fogão e armário de panelas, quintal e experiências da casa. "
+main:SISTEMA/api/app/finance/catalog.py:59:                         "note": "Preço por noite por pessoa. Fogão, quintal e experiências da casa."},
+main:SISTEMA/api/app/finance/catalog.py:94:    return any(getattr(l, "value", l) == "kitchen" for l in event.scope.liberties)
+main:SISTEMA/api/app/finance/smart.py:39:    return any(getattr(l, "value", l) == "kitchen" for l in event.scope.liberties)
+main:SISTEMA/api/app/finance/versao.py:5:  * "Virar Smart" -- fogao (armario de panelas), quintal e experiencias da casa (sem desconto desde a v1.0.147, Dom 24/10).
+main:SISTEMA/api/app/finance/versao.py:14:panelas, quintal) entram na senha que ja saiu.
+main:SISTEMA/api/app/finance/versao.py:141:    """Pago: todas as pessoas da reserva viram Smart (instancia + liberdades) e as portas do Smart que faltam entram
+main:SISTEMA/api/app/finance/versao.py:142:    na senha que ja saiu (cozinha, panelas, quintal). Devolve os eventos mudados."""
+main:SISTEMA/api/app/governance/equipe.html:154:  `<div class="bloco"><label>Evento</label><input id="evtit" placeholder="ex.: noite da pizza"><label>Quando</label><input id="evquando" type="datetime-local"><label>Onde</label><inp
+main:SISTEMA/api/app/inventory/ipiranga.py:57:SMART = ("sleep", "common_area", "kitchen", "yard")   # yard = quintal (Dom, 23/09)
+main:SISTEMA/api/app/inventory/ipiranga.py:67:#: cozinha (varredura de 29/09; Dom: "cozinha e cozinha"), so do Smart. QUINTAL ainda nao tem fechadura.
+main:SISTEMA/api/app/inventory/ipiranga.py:68:COMMON_LOCKS = {"ENTRY": 16190236, "EXIT": 16190206, "COZINHA": 34679130, "KITCHEN": 33999008}
+main:SISTEMA/api/app/inventory/ipiranga_mapa_v1.json:44:   "code": "F01_QUINTAL",
+main:SISTEMA/api/app/inventory/ipiranga_mapa_v1.json:45:   "label": "Quintal",
+main:SISTEMA/api/app/inventory/ipiranga_mapa_v1.json:646:   "F01_QUINTAL",
+main:SISTEMA/api/app/inventory/ipiranga_mapa_v2.json:44:   "code": "F01_QUINTAL",
+main:SISTEMA/api/app/inventory/ipiranga_mapa_v2.json:45:   "label": "Quintal",
+main:SISTEMA/api/app/inventory/ipiranga_mapa_v2.json:646:   "F01_QUINTAL",
+main:SISTEMA/api/app/manual_aparelhos/dados.py:86: {'slug': 'micro-ondas',
+main:SISTEMA/api/app/manual_aparelhos/dados.py:87:  'grupo': 'Micro-ondas e chaleira',
+main:SISTEMA/api/app/manual_aparelhos/dados.py:88:  'nome': 'Micro-ondas · Electrolux (2)',
+main:SISTEMA/api/app/manual_aparelhos/dados.py:89:  'tr': 'Microondas · Microwave',
+main:SISTEMA/api/app/manual_aparelhos/dados.py:99:               'O micro-ondas sem glúten é só para comida sem glúten'),
+main:SISTEMA/api/app/manual_aparelhos/dados.py:102:  'grupo': 'Micro-ondas e chaleira',
+main:SISTEMA/api/app/manual_aparelhos/dados.py:160:           'Freezer: abra pela maçaneta do lado do quintal',
+main:SISTEMA/api/app/messaging/avaliacao.py:122:    ("tem microondas?", "base:cozinha-microondas"),
+main:SISTEMA/api/app/messaging/avaliacao.py:178:    ("como chego na liberdade?", "base:liberdade"),
+main:SISTEMA/api/app/messaging/base_casa.json:423:      "resposta": "Hostel é a opção mais econômica: sua senha abre a entrada, o seu quarto e o armário da cozinha da sua cama; no Hostel não se usa o fogão. Smart inclui tam
+main:SISTEMA/api/app/messaging/base_casa.json:869:      "resposta": "Tem! Todo hóspede tem o armário da cozinha da sua reserva e pode usar os 2 micro-ondas. O fogão e o armário de panelas e utensílios são só do Smart (das 6
+main:SISTEMA/api/app/messaging/base_casa.json:898:      "id": "cozinha-microondas",
+main:SISTEMA/api/app/messaging/base_casa.json:901:        "tem micro-ondas",
+main:SISTEMA/api/app/messaging/base_casa.json:902:        "tem forno micro-ondas",
+main:SISTEMA/api/app/messaging/base_casa.json:905:      "resposta": "Tem! A cozinha tem 2 micro-ondas.",
+main:SISTEMA/api/app/messaging/base_casa.json:923:      "id": "quintal",
+main:SISTEMA/api/app/messaging/base_casa.json:926:        "tem quintal",
+main:SISTEMA/api/app/messaging/base_casa.json:928:        "posso usar o quintal"
+main:SISTEMA/api/app/messaging/base_casa.json:930:      "resposta": "Tem! O quintal faz parte da hospedagem Smart, das 6h às 18h.",
+main:SISTEMA/api/app/messaging/base_casa.json:1215:      "resposta": "A casa tem uma única câmera de segurança, na fachada, em área totalmente aberta, voltada para a calçada e o portão de entrada. Não há câmeras nem dispo
+main:SISTEMA/api/app/messaging/base_casa.json:1305:      "resposta": "Pode fumar no quintal, lá no fundo, depois dos últimos degraus, ou na varandinha do fumódromo, no andar de cima. Dentro de casa, nunca. E um pedido: não fum
+main:SISTEMA/api/app/messaging/base_casa.json:1333:      "resposta": "Aceitamos! Animais de pequeno ou médio porte ficam no quintal ou nos quartos 02 e 04, até 2 por quarto. Na cozinha nunca. Cão barulhento não é permitido.",
+main:SISTEMA/api/app/messaging/base_casa.json:1346:      "resposta": "A casa não é naturista, mas a roupa é opcional: é uma autorização, não uma obrigação. No quintal a roupa é opcional (é o único lugar da casa onde se
+main:SISTEMA/api/app/messaging/base_casa.json:1462:        "posso soltar drone no quintal"
+main:SISTEMA/api/app/messaging/base_casa.json:1617:      "resposta": "Aqui estão os mercados mais perto da casa: {mapa:supermercado} Vale conhecer também o mercado de comida oriental da Chácara Klabin, que não perde nada para 
+main:SISTEMA/api/app/messaging/base_casa.json:1814:      "resposta": "Não temos academia, sauna ou jacuzzi. Temos piscina, quintal, cinema e coworking (o que você usa depende da sua hospedagem).",
+main:SISTEMA/api/app/messaging/base_casa.json:1824:        "posso acampar no quintal"
+main:SISTEMA/api/app/messaging/base_casa.json:1916:      "resposta": "Maconha com receita médica é bem-vinda, tratada como qualquer medicamento; fumada ou vaporizada, vale o lugar do cigarro: quintal (lá no fundo) ou varandinha
+main:SISTEMA/api/app/messaging/base_casa.json:2128:      "id": "liberdade",
+main:SISTEMA/api/app/messaging/base_casa.json:2131:        "como chego na liberdade",
+main:SISTEMA/api/app/messaging/base_casa.json:2132:        "bairro da liberdade",
+main:SISTEMA/api/app/messaging/base_casa.json:2133:        "feira da liberdade"
+main:SISTEMA/api/app/messaging/base_casa.json:2135:      "resposta": "O bairro da Liberdade é ótimo para passear e comer! Metrô Linha 1-Azul, estação Liberdade ou São Joaquim, direto pela linha.",
+main:SISTEMA/api/app/messaging/base_casa.json:2418:      "resposta": "O Museu Histórico da Imigração Japonesa fica na Liberdade (Rua São Joaquim, 381, no prédio do Bunkyo), perto do metrô São Joaquim. Abre de terça a domin
+main:SISTEMA/api/app/messaging/base_casa.py:61:    (r"\bwi[\s-]*fi\b|\bwai[\s-]*fai\b|\bwifi\b", "wifi"), (r"\bmicro[\s-]*ondas?\b", "microondas"),
+main:SISTEMA/api/app/messaging/ingresso.py:87:#: ingresso/passeio ("quero ingresso pro passeio da Liberdade").
+main:SISTEMA/api/app/messaging/ingresso.py:93:    "Um Japão em São Paulo": ("um japao em sao paulo", "japao em sao paulo", "liberdade", "liberdad", "bairro japones"),
+main:SISTEMA/api/app/messaging/ingresso.py:188:    "quintal": ("the backyard", "el patio"),
+main:SISTEMA/api/app/messaging/ingresso.py:190:    "fumodromo do quintal": ("the backyard smoking area", "la zona de fumadores del patio"),
+main:SISTEMA/api/app/messaging/inteligencia.py:303:REGRAS = """Você É o Dom Banana falando no WhatsApp da casa: um hostel com camada Smart (quartos com cozinha e quintal) \
+main:SISTEMA/api/app/messaging/inteligencia.py:318:(piscina, cinema, churrasqueira, quintal, cozinha, lavanderia, bicicleta...) é sobre AQUELE espaço, nunca sobre \
+main:SISTEMA/api/app/messaging/inteligencia.py:630:                  "panela própria. Todo hóspede tem o armário da cozinha da sua reserva e pode usar os micro-ondas 🙂")
+main:SISTEMA/api/app/messaging/knowledge.py:184:    modality = "Smart" if "kitchen" in libs else "Hostel"
+main:SISTEMA/api/app/messaging/knowledge.py:278:                    "cigarro: no quintal, lá no fundo, depois dos últimos degraus, ou na varandinha do fumódromo, "
+main:SISTEMA/api/app/messaging/knowledge.py:284:    return Decision("regra", "Pode fumar no quintal, lá no fundo, depois dos últimos degraus, ou na varandinha do "
+main:SISTEMA/api/app/messaging/knowledge.py:292:    # v1.0.247 (regimento 1.7, Dom 15/11): dress code = autorizacao; roupa opcional so no quintal; dentro de casa roupa ou toalha
+main:SISTEMA/api/app/messaging/knowledge.py:294:                    "No quintal a roupa é opcional (é o único lugar da casa onde se pode ficar sem roupa, na acomodação "
+grep: write error: Broken pipe
+grep: write error: Broken pipe
+[nuvem] fim 2026-11-25 03:33:52 codigo=0 duracao=1s

@@ -1,3 +1,5 @@
+INSTALADO EM 25/11/2026 04h11 SP (z-a289-a/d/e pela esteira do PC; main e v1.0 = abced4f8). Esta pasta fica so como registro.
+
 PACOTE V1.0.289 — REGIMENTO 2.0 DO HOTEL BOUTIQUE NOS 7 IDIOMAS (25/11/2026, tarefa da noite)
 NAO INSTALAR sem "instala 289" do Dom. Esta pasta nao roda sozinha (a VPS so roda pedidos/*-leitura.sh).
 

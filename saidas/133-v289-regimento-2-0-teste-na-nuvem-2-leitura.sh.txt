@@ -1,0 +1,55 @@
+[nuvem] inicio 2026-11-25 03:51:35 133-v289-regimento-2-0-teste-na-nuvem-2-leitura.sh
+main: a76af0e
+copia: 1.0.288
+no ar: 1.0.288
+pacote 289 aplicado
+versao: 1.0.289 regimento: 2.0
+== testes do regimento (novos e ajustados)
+49 passed in 3.29s
+== suite inteira
+2884 passed, 8 warnings in 110.10s (0:01:50)
+== prova (pagina /regimento e aceite pelo app, sem banco, sem rede)
+/regimento?lang=pt: 200 secoes=19 tem_2.0=True texto_antigo=False
+/regimento?lang=en: 200 secoes=19 tem_2.0=True texto_antigo=False
+/regimento?lang=es: 200 secoes=19 tem_2.0=True texto_antigo=False
+/regimento?lang=fr: 200 secoes=19 tem_2.0=True texto_antigo=False
+/regimento?lang=de: 200 secoes=19 tem_2.0=True texto_antigo=False
+/regimento?lang=ja: 200 secoes=19 tem_2.0=True texto_antigo=False
+/regimento?lang=zh: 200 secoes=19 tem_2.0=True texto_antigo=False
+prova regimento: 7/7 ; VERSAO=2.0
+Traceback (most recent call last):
+  File "/tmp/v289.8MUp/repo/SISTEMA/api/app/voz_processo.py", line 63, in main
+    _responder(saida, ok=True, text="")
+  File "/tmp/v289.8MUp/repo/SISTEMA/api/app/voz_processo.py", line 40, in _responder
+    out.flush()
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/tmp/v289.8MUp/repo/SISTEMA/api/app/voz_processo.py", line 71, in <module>
+    main()
+  File "/tmp/v289.8MUp/repo/SISTEMA/api/app/voz_processo.py", line 67, in main
+    _responder(saida, ok=False, erro=type(e).__name__)
+  File "/tmp/v289.8MUp/repo/SISTEMA/api/app/voz_processo.py", line 40, in _responder
+    out.flush()
+BrokenPipeError: [Errno 32] Broken pipe
+Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
+BrokenPipeError: [Errno 32] Broken pipe
+== prova real da instalacao (subir-v1.sh, trecho do passo 7)
+25:DB_PROVA=pms_banana_ai_prova
+104:command -v mysql >/dev/null && command -v python3 >/dev/null && command -v nginx >/dev/null \
+213:if ! mysql -N -e "SHOW DATABASES LIKE '$DB'" | grep -q "$DB"; then NEW_DB=1; fi
+214:if mysql -e "CREATE DATABASE IF NOT EXISTS $DB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+215:             CREATE DATABASE IF NOT EXISTS $DB_PROVA CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+221:             GRANT ALL ON $DB_PROVA.* TO 'pms'@'127.0.0.1'; GRANT ALL ON $DB_PROVA.* TO 'pms'@'localhost';
+223:  ok "4 bancos" "$DB ($([[ $NEW_DB == 1 ]] && echo novo || echo existente)) e $DB_PROVA; usuario proprio 'pms'"
+236:   && .venv/bin/python ops/apply_migration.py --dsn "mysql://pms:$DB_PASSWORD@127.0.0.1:3306/$DB_PROVA" --dir migrations; then
+240:  [[ $NEW_DB == 1 ]] && mysql -e "DROP DATABASE $DB;" && echo "banco novo removido para a proxima tentativa sair limpa"
+241:  mysql -e "DROP DATABASE IF EXISTS $DB_PROVA;"
+257:PROVA=$(cd "$SYS" && env -i PATH="$PATH" HOME=/root LANG=C.UTF-8 .venv/bin/python ops/prova_real.py --dsn "mysql://pms:$DB_PASSWORD@127.0.0.1:3306/$DB_PROVA" 2>&1)
+264:      PROVA_NUCLEO_DSN="mysql://pms:$DB_PASSWORD@127.0.0.1:3306/$DB_PROVA" \
+270:mysql -e "DROP DATABASE IF EXISTS $DB_PROVA;"
+[nuvem] fim 2026-11-25 03:53:36 codigo=0 duracao=121s

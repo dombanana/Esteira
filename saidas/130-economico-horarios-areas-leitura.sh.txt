@@ -1,0 +1,408 @@
+[nuvem] inicio 2026-11-25 03:36:53 130-economico-horarios-areas-leitura.sh
+=== inventory/ipiranga.py (40,130)
+#: Anuncios do quarto 14. Desde 08/10 o Q14 e o quarto da equipe, fechado para venda (PMS_FECHADOS_PARA_VENDA=Q01,Q14);
+#: de 24/09 a 08/10 foi o feminino, 100% a venda (antes, 13/09, ja era so da equipe);
+#: reabrir e decisao da casa (tirar o Q14 de PMS_FECHADOS_PARA_VENDA). Q01 nao tem anuncio conhecido.
+Q14_ANUNCIOS = ("2550336", "2550330", "2550321", "2550328", "2550334", "2551212", "2551299")
+
+#: Ids que a V3.4 ligou a um quarto mas cuja modalidade (Smart, Hostel ou copia
+#: velha) so a leitura ao vivo diz. Nao entram no mapa ate o Dom ver o titulo.
+A_CONFIRMAR = {
+    "2551278": "Q03", "2551285": "Q06", "2551287": "Q07", "2551288": "Q07", "2551289": "Q08",
+    "2551291": "Q10", "2551282": "Q04", "2551283": "Q05", "2551226": "Q12", "2551276": "Q12",
+    "2551300": "Q12", "2551297": "Q13", "2551298": "Q13", "2550322": "Q02", "2550320": "Q03",
+    "2550317": "Q06", "2550316": "Q07", "2550323": "Q08", "2550315": "Q09", "2550326": "Q12",
+    "2550337": "Q13",
+}
+
+
+#: Smart usa a cozinha; Hostel nao (V3.4: `main.py:2338`, "cozinha x armario").
+SMART = ("sleep", "common_area", "kitchen", "yard")   # yard = quintal (Dom, 23/09)
+HOSTEL = ("sleep", "common_area")
+
+#: Fechaduras TTLock do Ipiranga -- ids da V3.4 (migracao 010, `access_resources`).
+#: Nao e segredo: e o numero da fechadura na conta; sem a conta, nao abre nada.
+LOCKS = {"Q02": 15672794, "Q03": 15672838, "Q04": 15673120, "Q05": 15572854, "Q06": 15638346,
+         "Q07": 15572412, "Q08": 16581872, "Q09": 15635192, "Q10": 15635170, "Q11": 15635196,
+         "Q12": 15690636, "Q13": 16581848, "Q14": 16005244}
+#: ENTRY/EXIT = ENTRADA/SAIDA. KITCHEN (33999008, "localizar" na conta) veio da V3.4 como "cozinha" so
+#: do Smart -- e o armario de PANELAS (CONFIRMADO pelo Dom em 26/09). COZINHA (34679130) e a porta da
+#: cozinha (varredura de 29/09; Dom: "cozinha e cozinha"), so do Smart. QUINTAL ainda nao tem fechadura.
+COMMON_LOCKS = {"ENTRY": 16190236, "EXIT": 16190206, "COZINHA": 34679130, "KITCHEN": 33999008}
+#: Armarios e gavetas da cozinha por quarto/cama (varredura TTLock de 29/09; Dom: "armario 3 e do quarto 3,
+#: gaveta 8 e do quarto 8, armario 13A e da cama A do quarto 13"). Quarto sem armario (04, 12, 14): sem porta.
+ARMARIOS: dict[str, int] = {
+    "Q02": 35502154, "Q03": 35502214, "Q05": 35501148, "Q06": 35470816, "Q07": 35470912, "Q08": 33415241,
+    "Q09": 34960342, "Q10": 34959798, "Q11": 34960586, "Q13A": 34483410, "Q13B": 34485052, "Q13C": 34485540,
+}
+
+
+def spaces() -> list[Space]:
+    out = [Space(CASA, "Casa Ipiranga", SpaceKind.BUILDING)]
+    for n in range(1, 15):
+        out.append(Space(f"Q{n:02d}", f"Quarto {n:02d}", SpaceKind.ROOM, CASA))
+    for bed in CAMAS:
+        out.append(Space(bed, f"Quarto {bed[1:3]} cama {bed[3]}", SpaceKind.BED, bed[:3]))
+    for letter in "ABCD":
+        out.append(Space(f"Q14{letter}", f"Quarto 14 cama {letter}", SpaceKind.BED, "Q14"))
+    # v1.0.45 (Dom 05/10: "uma das camas do quarto 1"): o Q01 tem 2 camas. Nao tem anuncio nem fechadura e nao e vendido: as
+    # camas existem para o plano de camas de quem mora (o Q01 e o quarto de reserva do morador da equipe sem cama).
+    for letter in "AB":
+        out.append(Space(f"Q01{letter}", f"Quarto 01 cama {letter}", SpaceKind.BED, "Q01"))
+    return out
+
+
+def instances() -> list[Instance]:
+    return [
+        Instance("smart", "Smart", "hospedagem", remote_lock=True, min_stay=2, max_stay=90, liberties=SMART),
+        Instance("hostel", "Hostel", "hospedagem", remote_lock=True, min_stay=1, max_stay=28, liberties=HOSTEL),
+        # Dom, 26/09: so estas duas. "Por cama" e o espaco da reserva (a cama 12A); voluntario/equipe e uma
+        # Conquista da pessoa, que dorme numa cama normal, com FNRH, como qualquer hospede.
+    ]
+
+
+@dataclass(frozen=True)
+class Proposed:
+    room_id: str
+    space: str
+    instance: str
+    note: str = ""
+    per_person: bool = False       # o anuncio vende pessoas num quarto com camas (o sistema escolhe a cama)
+
+
+def mappings() -> list[Proposed]:
+    out = [Proposed(rid, room, "smart", f"{pessoas} pessoa(s)" + (" + rede" if rede else ""))
+           for room, (rid, pessoas, rede) in PRIVATIVOS.items()]
+    out += [Proposed(rid, bed, "smart", "cama individual") for bed, rid in CAMAS.items()]
+    out += [Proposed(rid, room, "smart", "quarto coletivo de 6 camas, vendido por pessoa (o sistema escolhe a cama)",
+                     per_person=True) for room, rid in POOLS.items()]
+    out += [Proposed(rid, "Q14", "hostel", "quarto 14 (feminino, 4 camas), vendido por pessoa", per_person=True)
+            for rid in Q14_ANUNCIOS]
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Conferencia com o que o Nobeds tem de verdade (leitura, nunca escrita)
+# ---------------------------------------------------------------------------
+
+LODGING = {"private-room", "bed", "shared-room"}
+
+import re as _re  # noqa: E402
+
+#: Anuncio Hostel criado pelo Dom (23/09: "duplicando os anuncios para Smart
+#: e Hostel"). A modalidade sai do TITULO que o Dom escreveu -- nunca do canal
+=== Instance (core)
+main:SISTEMA/api/app/core/reservation.py:13:(`checkin`, `checkout`), o estado no canal (`status`) e o hash da versao
+main:SISTEMA/api/app/core/reservation.py:53:    checkin: date | None = None
+main:SISTEMA/api/app/core/reservation.py:54:    checkout: date | None = None
+main:SISTEMA/api/app/core/reservation.py:75:        if (self.checkin is None) != (self.checkout is None):
+main:SISTEMA/api/app/core/reservation.py:76:            raise ValueError("Reserva com uma data so: checkin e checkout andam juntos.")
+main:SISTEMA/api/app/core/reservation.py:77:        if self.checkin is not None and self.checkout <= self.checkin:
+main:SISTEMA/api/app/core/reservation.py:78:            raise ValueError("Checkout precisa ser depois do checkin.")
+main:SISTEMA/api/app/core/reservation.py:93:                    "checkin": self.checkin.isoformat() if self.checkin else None,
+main:SISTEMA/api/app/core/reservation.py:94:                    "checkout": self.checkout.isoformat() if self.checkout else None,
+main:SISTEMA/api/app/core/reservation.py:120:            checkin=_d(payload.get("checkin")),
+main:SISTEMA/api/app/core/reservation.py:121:            checkout=_d(payload.get("checkout")),
+main:SISTEMA/api/app/core/reservation.py:159:    checkin: date,
+main:SISTEMA/api/app/core/reservation.py:160:    checkout: date,
+main:SISTEMA/api/app/core/reservation.py:177:        checkin=checkin,
+main:SISTEMA/api/app/core/reservation.py:178:        checkout=checkout,
+main:SISTEMA/api/app/inventory/intents.py:77:class Instance:
+main:SISTEMA/api/app/inventory/intents.py:265:def allocate_beds(store: Any, room: str, checkin: date, checkout: date, guests: int) -> list[str]:
+main:SISTEMA/api/app/inventory/intents.py:271:    nights = [checkin + timedelta(days=i) for i in range((checkout - checkin).days)]
+main:SISTEMA/api/app/inventory/intents.py:277:    with_residents = guests_busy + _resident_busy(store, checkin, len(nights), guests_busy)
+=== 18h/10h por instancia
+main:SISTEMA/api/app/clinica/agenda.py:344:PERIODOS = {"manha": (time(0), time(12)), "tarde": (time(12), time(18)), "noite": (time(18), time(23, 59))}
+=== reservation/perfil_mensagem.py (150,240)
+    m = re.fullmatch(r"(Q\d{2})[A-Z]?", space or "")
+    return m.group(1) if m else space
+
+
+def bloco_acomodacao(store: Any, event: Any, *, com_horario: bool = True) -> str:
+    """O lugar da estadia. `com_horario=False` nos modelos de e-mail/WhatsApp, que ja trazem os horarios."""
+    esp = _espaco(event)
+    armario = " Na cozinha, há um armário só seu, que abre com o mesmo código." if tem_armario(event) else ""
+    if tipo(store, event) == COLETIVO:
+        armario = armario.replace("o mesmo código", "a mesma senha")      # o codigo ja aparece na frase da luz
+        genero = GENERO_DO_QUARTO.get(_quarto_de(esp), "")
+        m = re.fullmatch(r"Q(\d{2})([A-Z])", esp or "")
+        onde = (f"Você fica na cápsula {m.group(2)} do quarto {m.group(1)} (compartilhado{', ' + genero if genero else ''})."
+                if m else f"Você fica num quarto compartilhado{' ' + genero if genero else ''}.")
+        if m and _escondido(store, event):
+            onde = f"Você fica numa {_categoria(esp)}. {AVISO_NUMERO}"
+        horario = (" Na chegada, a senha abre a entrada a partir das 6h e o dormitório a partir das 14h; na saída, a "
+                   "cama é sua até as 11h.") if com_horario else ""
+        return (onde + horario + " Ao digitar o código na porta, a luz da cápsula acende: lá dentro, silêncio e "
+                "penumbra." + armario)
+    onde = f"Você fica {com_artigo(esp, 'em')}, privativo." if esp else "Seu quarto é privativo."
+    if esp and _escondido(store, event):
+        onde = f"Você fica num {_categoria(esp)}. {AVISO_NUMERO}"
+    horario = (" Na chegada, a senha abre a entrada a partir das 6h e a porta do seu espaço a partir das 14h; na "
+               "saída, ele fica com você até as 11h.") if com_horario else ""
+    return onde + horario + armario
+
+
+def bloco_versao(event: Any) -> str:
+    """Dom 24/10: "a versao Smart e fogao, coworking e acesso ao quintal com a piscina"."""
+    if versao(event) == SMART:
+        return "Plano Smart: você usa fogão, coworking e quintal com piscina (das 6h às 18h)."
+    return ("Plano Econômico: na cozinha, você usa o micro-ondas. Fogão, coworking e quintal com piscina fazem parte do "
+            "Smart, que dá para contratar na página da sua estadia.")
+
+
+def bloco_perfil(store: Any, event: Any) -> str:
+    """O que muda por perfil, para os modelos de e-mail e WhatsApp (`{perfil}`; os horarios ja estao no modelo)."""
+    if event is None:
+        return ""
+    return bloco_acomodacao(store, event, com_horario=False) + "\n\n" + bloco_versao(event)
+
+
+def convite_chat(store: Any, event: Any, saudacao: str, link: str, *, recorrente: str = "") -> str:
+    """A PRIMEIRA mensagem no chat da plataforma. Dom 24/10: "o link tem que estar no comecinho da mensagem ... a
+    pessoa nao quer ler tanto." So a ficha (obrigatoria por lei), o link logo na 1a linha e falar com o anfitriao.
+    `recorrente`: o texto pronto de quem volta (`recorrente()`), que ja traz o link no comeco."""
+    if recorrente:
+        return recorrente
+    return "\n\n".join([f"{saudacao} {VAGA}\n{link}", FICHA_ANTES, FALAR["chat"]])
+
+
+def versao_anterior(store: Any, event: Any) -> str:
+    """A versao (smart | economico) da ultima estadia da mesma pessoa (ou da conta ligada) antes desta; vazio se nao ha."""
+    if event is None or store is None:
+        return ""
+    from app.reservation.recorrente import pessoas
+    try:
+        quem = pessoas(store, event.who.person)
+    except Exception:  # noqa: BLE001
+        quem = {event.who.person}
+    antes = [e for e in (getattr(store, "events", {}) or {}).values()
+             if e is not event and e.who.person in quem and e.when.end <= event.when.start]
+    return versao(max(antes, key=lambda e: e.when.end)) if antes else ""
+
+
+def recorrente(store: Any, event: Any, saudacao: str, senha: str, link: str, canal: str = "chat") -> str:
+    """Dom 24/10: quem volta nao refaz a ficha. "Que bom que voce voltou, a sua senha e essa, e voce ja sabe as regras
+    da casa, ou ... voce fez o upgrade para Smart, ou ... voce fez o downgrade para Economico." Sem o mapa (ja conhece)."""
+    senha_txt = (f"A sua senha continua a mesma: {senha}# (termine com #)." if senha else
+                 "A sua senha da porta continua a mesma (ela aparece no seu link).")
+    agora, antes = versao(event), versao_anterior(store, event)
+    if antes == ECONOMICO and agora == SMART:
+        plano = ("Desta vez você fez o upgrade para o Smart: fogão, coworking e quintal com piscina (das 6h às 18h) "
+                 "estão na sua reserva.")
+    elif antes == SMART and agora == ECONOMICO:
+        plano = ("Desta vez você escolheu o Econômico: na cozinha, você usa o micro-ondas; fogão, coworking e quintal "
+                 "com piscina voltam quando você quiser o Smart, pela página da estadia.")
+    else:
+        plano = "Você já conhece as regras da casa: é só chegar."
+    return "\n\n".join([f"{ICONE['volta']} Tudo da estadia está aqui:\n{link}",
+                         f"{saudacao} O seu cadastro já está com a gente, então não precisa de ficha nova. {senha_txt}",
+                         plano, FALAR.get(canal, FALAR["chat"])])
+
+
+def _armario_e_pia(event: Any, link: str, store: Any = None) -> str:
+    pia = "É obrigatório manter a pia sempre limpa e organizada: lavou, secou, guardou."
+    if not tem_armario(event):
+        return pia
+    onde = f"\n{pagina(link, '/armario?lugar=' + _espaco(event))}" if link else ""
+    if onde and store is not None and _escondido(store, event):
+=== finance/catalog.py (36,100)
+    "kit_smart_cafe": {"label": "Amenities Smart com café da manhã", "audience": "smart", "needs_when": False,
+                       "price_cents": None, "per_day_limit": None, "note": ""},
+    "kit_smart": {"label": "Amenities Smart", "audience": "smart", "needs_when": False,
+                  "price_cents": None, "per_day_limit": None, "note": ""},
+    "bike": {"label": "Bicicleta", "audience": "todos", "needs_when": True, "price_cents": None,
+             "per_day_limit": None, "note": "Escolha o dia e a hora de retirada."},
+    "cozinha": {"label": "Cozinha completa (armário de panelas)", "audience": "hostel", "needs_when": False,
+                "price_cents": None, "per_day_limit": None,
+                "note": "A casa foi pensada para viajantes e não tem local para estocar comida. Que tal a lojinha?"},
+    "late_checkout": {"label": "Late checkout até 13h30", "audience": "todos", "needs_when": False,
+                      "price_cents": 1500, "per_day_limit": 3, "note": "Saída até 13h30 no dia do checkout."},
+    # Wi-Fi (Dom, 24/09): voucher de mais aparelhos ou mais velocidade -- aplica sozinho quando pago
+    "wifi_aparelho": {"label": "Wi-Fi: +1 aparelho", "audience": "todos", "needs_when": False, "price_cents": None,
+                      "per_day_limit": None, "note": "Vale até o fim da sua estadia."},
+    "wifi_velocidade": {"label": "Wi-Fi: velocidade maior", "audience": "todos", "needs_when": False,
+                        "price_cents": None, "per_day_limit": None, "note": "Para todos os seus aparelhos, até a saída."},
+    # Dom 08/10: a VERSAO da estadia se escolhe no fim do cadastro (as OTAs vendem so o quarto). Ver finance/versao.py.
+    "virar_smart": {"label": "Virar Smart (quarto privativo)", "audience": "hostel", "needs_when": False,
+                    "price_cents": None, "per_day_limit": None,
+                    "note": "Fogão e armário de panelas, quintal e experiências da casa. "
+                            "Preço por noite; sem preço, vale a diferença Smart da tabela da casa."},
+    "virar_smart_cama": {"label": "Virar Smart (cama em quarto coletivo)", "audience": "hostel", "needs_when": False,
+                         "price_cents": None, "per_day_limit": None,
+                         "note": "Preço por noite por pessoa. Fogão, quintal e experiências da casa."},
+    "cafe_dia": {"label": "Café da manhã", "audience": "todos", "needs_when": False, "price_cents": None,
+                 "per_day_limit": None,
+                 "note": "Preço por pessoa por dia. Só aparece com o Café da manhã da casa ligado."},
+    # v1.0.132 (Dom 21/10): hospede a mais no quarto privativo, pago no app -- tem tela propria ("Chegou mais
+    # alguem?"), nao aparece na lista de adicionais. Sem preco, nao aparece em lugar nenhum.
+    "hospede_extra": {"label": "Hóspede a mais (quarto privativo)", "audience": "todos", "needs_when": False,
+                      "price_cents": None, "per_day_limit": None,
+                      "note": "Preço por pessoa por noite. Cada pessoa a mais faz a própria ficha."},
+    # v1.0.143 (Dom 23/10): trocar a senha pelo app -- a 1a troca da estadia e gratis, depois R$ 2 por troca. Tela
+    # propria ("Trocar minha senha"), nao aparece na lista de adicionais.
+    "troca_senha": {"label": "Troca de senha", "audience": "todos", "needs_when": False, "price_cents": 200,
+                    "per_day_limit": None, "note": "A 1ª troca de cada estadia é grátis; da 2ª em diante, este valor."},
+    # v1.0.179 (Dom 31/10): oferta das 6h a quem chega numa unidade ja vaga -- 30% da diaria, preco por reserva
+    # (`reservation.distribuicao`); nao aparece na lista de adicionais.
+    "checkin_antecipado": {"label": "Check-in antecipado", "audience": "todos", "needs_when": False,
+                           "price_cents": None, "per_day_limit": None,
+                           "note": "Oferecido às 6h quando o seu lugar já está vago: entra antes das 14h."},
+    "carteira": {"label": "Crédito na carteira", "audience": "todos", "needs_when": False, "price_cents": None,
+                 "per_day_limit": None, "note": "Em breve.", "soon": True},
+}
+
+
+# Itens que sairam do catalogo: nao aparecem no painel nem para o hospede; o que ja foi vendido continua no historico.
+RETIRADOS = frozenset({"kit_smart_cafe"})
+
+
+def catalog(store: Any) -> dict:
+    out = {k: dict(v) for k, v in DEFAULT_CATALOG.items()}
+    for k, v in store.catalog.items():
+        out[k] = {**out.get(k, {}), **v}
+    return out
+
+
+def _is_smart(event: Any) -> bool:
+    return any(getattr(l, "value", l) == "kitchen" for l in event.scope.liberties)
+
+
+def offer(store: Any, event: Any) -> list[dict]:
+    """O que ESTE hospede ve: item ativo, com preco, para a modalidade dele."""
+    mod = "smart" if _is_smart(event) else "hostel"
+    items = []
+=== messaging/inteligencia.py (600,640)
+        body["messages"] = body["messages"] + [{"role": "assistant", "content": content},
+                                               {"role": "user", "content": results}]
+    if not final and not state["escalate"]:
+        return None
+    if final.strip("[] ").lower() in ("silêncio", "silencio"):
+        final = ""
+    if resposta_proibida(final):
+        # Dom 08/10: trava de seguranca na SAIDA -- a IA nunca entrega indicacao de biqueira/venda de droga
+        from app.messaging.knowledge import DROGA_RESPOSTA
+        return Resposta(DROGA_RESPOSTA, escalate=True, motivo="resposta da IA bloqueada: indicava venda de droga",
+                        paga=usou_ia)
+    if libera_fogao(final):
+        # Dom 13/10 ("em nenhum momento eu deixei a versao hostel usar o fogao"): trava na SAIDA -- a IA nunca libera
+        # o fogao (nem "com panela propria"); vai a regra escrita, sem deducao
+        return Resposta(FOGAO_RESPOSTA, escalate=False, motivo="resposta da IA trocada: liberava o fogao",
+                        paga=usou_ia)
+    return Resposta(final[:1500], escalate=state["escalate"], urgent=state["urgent"], motivo=state["motivo"],
+                    aceite=state["aceite"], paga=usou_ia)
+
+
+#: Dom 08/10/2026: o que a casa NUNCA escreve para hospede, venha de onde vier (IA ou catalogo).
+_PROIBIDO = re.compile(r"biqueir|boca de fumo|\bbocada\b|ponto de (venda de )?drogas?|traficante|\bdealer\b|"
+                       r"(compra[r]?|arruma[r]?|consegue|vende[mr]?)\s+(de\s+)?(maconha|erva|beck|drogas?|cocaina|crack|"
+                       r"lsd|ecstasy|mdma|lanca|ketamina|skank|haxixe)\b.{0,40}\b(ali|aqui perto|na rua|na esquina|perto|"
+                       r"no bairro|na praca|no parque)")
+
+
+#: Dom 13/10/2026: "Em nenhum momento eu deixei a versao hostel usar o fogao, e so a versao smart... nao vai autorizar
+#: usar o fogao, trazendo, principalmente trazendo panela de casa". A regra escrita, para quando a IA tentar liberar.
+FOGAO_RESPOSTA = ("O fogão é só para quem está no Smart, das 6h às 18h. Quem está no Hostel não usa o fogão, nem com "
+                  "panela própria. Todo hóspede tem o armário da cozinha da sua reserva e pode usar os micro-ondas 🙂")
+_FOGAO = r"(fog[aã]o|fogareiro|cooktop|stove|estufa|cocina[r]?\b)"
+_LIBERA = (r"(panela[s]? (pr[oó]pria|de casa|sua|que (voc[eê]|vc) trouxer)|trazer (a |sua )?panela|"
+           r"\bpode[m]?\b|liberad[oa]|sem problema|[aà] vontade|tranquilo|fica livre|livre para|you can|puedes|pod[eé]s)")
+_LIBERA_FOGAO = re.compile(_FOGAO + r".{0,80}" + _LIBERA + "|" + _LIBERA + r".{0,80}" + _FOGAO, re.I | re.S)
+_SO_SMART = re.compile(r"(s[oó]|somente|apenas|exclusiv\w*)\s+(para\s+|pra\s+|de\s+|do\s+|da\s+)?(quem\s+(est[aá]|fica)\s+no\s+)?"
+                       r"(smart|vers[aã]o smart|hospedagem smart)|n[aã]o\s+(usa|pode|tem|inclui)[^.]{0,40}fog[aã]o", re.I)
+
+
+def libera_fogao(texto: str) -> bool:
+    """A resposta libera o fogao (ou cita panela propria/de casa) sem ser a regra "so Smart"? Entao nao sai."""
+=== messaging/knowledge.py (175,190)
+        if best is None or e.when.start < best[1].when.start:
+            best = (rid, e)
+    person = store.persons.get(person_id)
+    first = person.name.split()[0] if person and person.name else ""
+    if best is None:
+        return Guest(person_id=person_id, first_name=first)
+    rid, e = best
+    code = store.precheck_links.get(rid)
+    libs = frozenset(getattr(l, "value", l) for l in e.scope.liberties)
+    modality = "Smart" if "kitchen" in libs else "Hostel"
+    rooms = tuple(e.where)
+    return Guest(person_id=person_id, first_name=first, event_id=rid, rooms=rooms, modality=modality,
+                 liberties=libs, in_stay=e.when.start <= at < e.when.end,
+                 link=f"https://{GUEST_BASE}/{code}" if code else "")
+
+
+=== messaging/knowledge.py (352,372)
+        return Decision("regra", body + " O seu quarto não aceita animais: já chamei o anfitrião para ver uma "
+                        "troca.", "animal", "aprovada", "Dom 24/09", escalate=True, alert="animal", urgent=False)
+    return Decision("regra", body, "animal", "aprovada", "Dom 24/09")
+
+
+def _panelas(f, g, text, store) -> Decision:
+    """v1.0.105 (Dom 13/10: "em nenhum momento eu deixei a versao hostel usar o fogao, e so a versao smart... nao vai
+    autorizar usar o fogao, trazendo, principalmente trazendo panela de casa"). So a regra escrita, sem deducao."""
+    aviso = ("A casa foi pensada para viajantes e não tem local para estocar comida: na geladeira, só a divisão da "
+             "sua reserva. Para lanches e bebidas tem a nossa lojinha 🛒")
+    regra = ("O fogão e o armário de panelas e utensílios são só do Smart (das 6h às 18h). Quem está no Hostel não "
+             "usa o fogão, nem com panela própria.")
+    if g is None or not g.event_id:
+        return Decision("regra", regra + " " + aviso + f" Reservas: {_reservar()}", "cozinha", "sistema",
+                        "Dom 13/10: fogão só Smart")
+    if "kitchen" not in g.liberties:
+        return Decision("vivo", "Na hospedagem Hostel a sua senha abre a entrada, o seu quarto e o armário da cozinha "
+                        "da sua cama, e você pode usar os micro-ondas. " + regra + "\n\n" + aviso,
+                        "cozinha", "aprovada", "Dom 13/10: fogão só Smart")
+    return Decision("vivo", "Sua hospedagem Smart inclui o fogão e o armário de panelas, das 6h às 18h. Se a sua senha "
+                    "não abriu nesse horário, já avisei a equipe para conferir a fechadura.",
+=== network/policy.py (55,80)
+    if mode not in PER_PERSON:
+        raise ValueError("network_mode_invalid")
+    if isinstance(guests, bool) or int(guests) < 1:
+        raise ValueError("network_guest_count_invalid")
+    return por_pessoa(mode) * int(guests) + max(0, int(extra_devices or 0))
+
+
+def por_pessoa(mode: str, env: Mapping[str, str] = os.environ) -> int:
+    """Aparelhos por hospede. Dom 30/09: "ate 2 aparelhos no hostel e ate 3 para cada hospede Smart" --
+    `PMS_WIFI_HOSTEL` / `PMS_WIFI_SMART` (cada casa da rede escolhe; sem valor, o padrao do codigo)."""
+    try:
+        v = int(str(env.get("PMS_WIFI_" + mode.upper()) or 0))
+    except ValueError:
+        v = 0
+    return v if 1 <= v <= 10 else PER_PERSON[mode]
+
+
+def profile_for(mode: str, speed_upgrade: bool = False) -> str:
+    return PROFILES["plus"] if speed_upgrade else PROFILES[mode]
+
+
+def rates(env: Mapping[str, str] = os.environ) -> dict[str, str]:
+    """perfil -> rate-limit. Valor invalido no ambiente nao passa (fica o padrao)."""
+    out = {}
+    for key, default in DEFAULT_RATES.items():
+        value = str(env.get(f"PMS_WIFI_RATE_{key.upper()}", default) or "").strip()
+=== base_casa quintal/cozinha/hostel
+      "id": "quartos-smart-hostel",
+      "tema": "Quartos e camas",
+      "perguntas": [
+        "qual a diferença entre smart e hostel",
+        "o que é smart",
+        "o que o smart inclui"
+      ],
+      "resposta": "Hostel é a opção mais econômica: sua senha abre a entrada, o seu quarto e o armário da cozinha da sua cama; no Hostel não se usa o fogão. Smart inclui também o fogão, o armário de panelas e o quintal (das 6h às 18h) e 2 aparelhos no Wi-Fi com o dobro da velocidade.",
+      "status": "aprovada",
+      "fonte": "Regimento 2.4 + Dom 08/10 e 13/10: fogão só Smart"
+        "posso cozinhar",
+        "posso usar a cozinha",
+        "tem fogão pra cozinhar"
+      ],
+      "resposta": "Tem! Todo hóspede tem o armário da cozinha da sua reserva e pode usar os 2 micro-ondas. O fogão e o armário de panelas e utensílios são só do Smart (das 6h às 18h). Quem está no Hostel não usa o fogão, nem com panela própria.",
+      "status": "aprovada",
+      "id": "quintal",
+      "tema": "Estrutura da casa",
+      "perguntas": [
+        "tem quintal",
+        "tem área externa",
+        "posso usar o quintal"
+      ],
+      "resposta": "Tem! O quintal faz parte da hospedagem Smart, das 6h às 18h.",
+      "status": "aprovada",
+[nuvem] fim 2026-11-25 03:36:54 codigo=0 duracao=1s

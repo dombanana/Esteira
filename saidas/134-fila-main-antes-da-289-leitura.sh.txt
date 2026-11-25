@@ -1,0 +1,8 @@
+[nuvem] inicio 2026-11-25 05:05:25 134-fila-main-antes-da-289-leitura.sh
+no ar: 1.0.288
+a76af0e 2026-11-23 09:54:17 +0000 v1.0.288 (em teste): lembrar aparelho pela reserva e registro de conexao de 1 ano (Marco Civil art. 13)
+2d3fa5f 2026-11-23 08:57:19 +0000 v1.0.287 (em teste): portal do Wi-Fi com trava geral de tentativas, sem senha da equipe e lembrar aparelho
+alta288 a76af0e 2026-11-23 09:54:17 +0000
+main a76af0e 2026-11-23 09:54:17 +0000
+alta287 2d3fa5f 2026-11-23 08:57:19 +0000
+[nuvem] fim 2026-11-25 05:05:25 codigo=0 duracao=0s

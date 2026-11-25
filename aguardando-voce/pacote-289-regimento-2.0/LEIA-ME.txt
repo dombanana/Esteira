@@ -1,0 +1,23 @@
+PACOTE V1.0.289 — REGIMENTO 2.0 DO HOTEL BOUTIQUE NOS 7 IDIOMAS (25/11/2026, tarefa da noite)
+NAO INSTALAR sem "instala 289" do Dom. Esta pasta nao roda sozinha (a VPS so roda pedidos/*-leitura.sh).
+
+Base: main da fila = a76af0e (v1.0.288), que e o que esta no ar. Nenhuma versao "(em teste)" mais nova na fila em 25/11 03h32.
+
+O que muda (14 arquivos, so texto e testes):
+- api/app/reservation/regimento.py: TEXTO = regimento 2.0 (aba principal do Claude Doc "Regimento 2.0"), VERSAO = "2.0", docstring.
+- api/app/reservation/regimento_textos.py: en, es, fr, de, ja, zh (cortesia; vale o portugues), mesma numeracao (secoes 0 a 18).
+- api/app/versao.py: 1.0.289 + linha no HISTORICO.
+- testes: test_v1289_regimento_20.py (novo) e 10 testes que conferiam o texto 1.9 ajustados para o 2.0.
+
+Provas ja feitas (esteira da nuvem, copia do main, nada instalado):
+- 132: suite 2883 passed, 1 failed (erro de maiuscula no meu teste novo do dress code) -> corrigido.
+- 133: 2a rodada com o teste corrigido: 49 testes do regimento ok; suite inteira 2884 passed, 0 failed.
+- /regimento nos 7 idiomas: 200, 19 secoes, versao 2.0, sem texto antigo (7/7).
+- Falta: a prova real no banco descartavel (a nuvem e so leitura) -> e o 000-z-rg2-a desta pasta.
+
+Passos na esteira do PC (sessao com o Dom):
+1. Copiar 000-z-rg2-a-vps-teste-sem-instalar.sh para esteira\entrada (so teste: copia em /tmp, suite inteira e prova real no banco de prova).
+2. Com suite 0 falhas e prova real completa: aplicar v1.0.289-regimento-2.0.patch no D: sobre a 1.0.288 (git apply), commit "v1.0.289 (em teste): regimento 2.0 do hotel boutique em 7 idiomas".
+3. Montar os scripts de envio e reinstalacao no padrao de sempre (d = git-enviar, e = vps-reinstalar) e deixar em aguardando-voce.
+4. Instalar so com "instala 289".
+Se o main da fila andar antes (outra conversa), o patch nao aplica: refazer por cima da versao nova, sem brigar pelo numero.

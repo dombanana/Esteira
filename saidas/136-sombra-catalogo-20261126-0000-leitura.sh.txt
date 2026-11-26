@@ -1,0 +1,67 @@
+[nuvem] inicio 2026-11-26 03:01:28 136-sombra-catalogo-20261126-0000-leitura.sh
+versao: 1.0.291
+caixas lidas: 2
+LEITOR;2026-11-24 18:56;mensagem;mensagem;-;ignora
+LEITOR;2026-11-25 00:28;outro;outro;-;ignora
+LEITOR;2026-11-25 07:01;outro;outro;-;ignora
+LEITOR;2026-11-25 07:02;mensagem;mensagem;-;ignora
+LEITOR;2026-11-25 07:36;mensagem;mensagem;-;ignora
+LEITOR;2026-11-25 07:58;mensagem;mensagem;-;ignora
+LEITOR;2026-11-25 08:27;outro;outro;-;ignora
+LEITOR;2026-11-25 11:51;outro;outro;-;ignora
+LEITOR;2026-11-25 11:52;outro;outro;-;ignora
+LEITOR;2026-11-25 11:53;outro;outro;-;ignora
+LEITOR;2026-11-25 11:54;outro;outro;-;ignora
+LEITOR;2026-11-25 11:54;outro;outro;-;ignora
+LEITOR;2026-11-25 11:55;outro;outro;-;ignora
+LEITOR;2026-11-25 11:55;outro;outro;-;ignora
+LEITOR;2026-11-25 11:56;outro;outro;-;ignora
+LEITOR;2026-11-25 11:56;outro;outro;-;ignora
+LEITOR;2026-11-25 11:57;outro;outro;-;ignora
+LEITOR;2026-11-25 11:57;outro;outro;-;ignora
+LEITOR;2026-11-25 11:58;outro;outro;-;ignora
+LEITOR;2026-11-25 11:58;outro;outro;-;ignora
+LEITOR;2026-11-25 11:59;outro;outro;-;ignora
+LEITOR;2026-11-25 11:59;outro;outro;-;ignora
+LEITOR;2026-11-25 12:00;outro;outro;-;ignora
+LEITOR;2026-11-25 12:00;outro;outro;-;ignora
+LEITOR;2026-11-25 12:01;outro;outro;-;ignora
+LEITOR;2026-11-25 12:02;outro;outro;-;ignora
+LEITOR;2026-11-25 12:02;outro;outro;-;ignora
+LEITOR;2026-11-25 12:03;outro;outro;-;ignora
+LEITOR;2026-11-25 12:04;outro;outro;-;ignora
+LEITOR;2026-11-25 12:05;outro;outro;-;ignora
+LEITOR;2026-11-25 12:05;outro;outro;-;ignora
+LEITOR;2026-11-25 12:06;outro;outro;-;ignora
+LEITOR;2026-11-25 14:18;outro;outro;-;ignora
+LEITOR;2026-11-25 14:22;outro;outro;-;ignora
+LEITOR;2026-11-25 14:22;outro;outro;-;ignora
+LEITOR;2026-11-25 14:22;outro;outro;-;ignora
+LEITOR;2026-11-25 14:22;outro;outro;-;ignora
+LEITOR;2026-11-25 14:23;outro;outro;-;ignora
+LEITOR;2026-11-25 14:23;outro;outro;-;ignora
+LEITOR;2026-11-25 14:23;outro;outro;-;ignora
+LEITOR;2026-11-25 14:24;outro;outro;-;ignora
+LEITOR;2026-11-25 14:24;outro;outro;-;ignora
+LEITOR;2026-11-25 14:24;outro;outro;-;ignora
+LEITOR;2026-11-25 14:25;outro;outro;-;ignora
+LEITOR;2026-11-25 14:25;outro;outro;-;ignora
+LEITOR;2026-11-25 14:25;outro;outro;-;ignora
+LEITOR;2026-11-25 14:25;outro;outro;-;ignora
+LEITOR;2026-11-25 14:26;outro;outro;-;ignora
+LEITOR;2026-11-25 14:26;outro;outro;-;ignora
+LEITOR;2026-11-25 14:26;outro;outro;-;ignora
+LEITOR;2026-11-25 14:26;outro;outro;-;ignora
+LEITOR;2026-11-25 14:27;outro;outro;-;ignora
+LEITOR;2026-11-25 14:27;outro;outro;-;ignora
+LEITOR;2026-11-25 14:27;outro;outro;-;ignora
+LEITOR;2026-11-25 15:10;mensagem;mensagem;-;ignora
+LEITOR;2026-11-25 15:53;outro;outro;-;ignora
+LEITOR;2026-11-25 15:54;outro;outro;-;ignora
+LEITOR;2026-11-25 15:54;outro;outro;-;ignora
+LEITOR;2026-11-25 15:55;outro;outro;-;ignora
+LEITOR;2026-11-25 16:26;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-25 16:26;outro;outro;-;ignora
+emails do Airbnb na janela: 61
+fim
+[nuvem] fim 2026-11-26 03:02:11 codigo=0 duracao=43s

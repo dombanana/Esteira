@@ -1,0 +1,18 @@
+[nuvem] inicio 2026-11-27 09:02:45 090-homologacao-nobeds-desligada-leitura.sh
+== versao no ar
+Regra de cada subida para producao: sobe o ultimo numero de VERSAO e poe a entrada nova NO TOPO de HISTORICO, no
+VERSAO = "1.0.292"
+    return f"v{VERSAO}"
+== diario do worker desde 26/11 23:50 SP (max 30 linhas)
+== sistema
+PMS_NOBEDS: off
+NF.ligada(): False
+SAUDE;nobeds;estado=ok;quando=None;dados={"desligada": "desligada (fim do contrato em 26/11/2026; o Airbnb chega pelo e-mail e pelo calendario)"}
+SAUDE;nobeds_mcp;estado=ok;quando=None;dados={"desligada": "desligada (fim do contrato em 26/11/2026; o Airbnb chega pelo e-mail e pelo calendario)"}
+SAUDE;nobeds_dia;estado=ok;quando=None;dados={"desligada": "desligada (fim do contrato em 26/11/2026; o Airbnb chega pelo e-mail e pelo calendario)"}
+SAUDE;nobeds_erros;estado=ok;quando=None;dados={"desligada": "desligada (fim do contrato em 26/11/2026; o Airbnb chega pelo e-mail e pelo calendario)"}
+hoje: 2026-11-27
+reservas com checkout >= hoje por status: {'confirmed': 24, 'cancelled': 5}
+por status/origem: {'cancelled/?': 5, 'confirmed/?': 24}
+== fim
+[nuvem] fim 2026-11-27 09:02:48 codigo=0 duracao=3s

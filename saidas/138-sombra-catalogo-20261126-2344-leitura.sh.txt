@@ -1,0 +1,10 @@
+[nuvem] inicio 2026-11-27 02:44:22 138-sombra-catalogo-20261126-2344-leitura.sh
+versao: 1.0.292
+caixas lidas: 2
+LEITOR;2026-11-26 09:03;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-26 10:37;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-26 13:45;mensagem;mensagem;-;ignora
+LEITOR;2026-11-26 14:06;mensagem;mensagem;-;ignora
+emails do Airbnb na janela: 4
+fim
+[nuvem] fim 2026-11-27 02:44:43 codigo=0 duracao=21s

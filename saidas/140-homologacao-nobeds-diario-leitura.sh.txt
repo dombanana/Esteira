@@ -1,0 +1,28 @@
+[nuvem] inicio 2026-11-27 09:03:55 140-homologacao-nobeds-diario-leitura.sh
+== teste do --since com fuso (primeiras 3 linhas, sem filtro)
+Failed to parse timestamp: 2026-11-26 23:50:00 America/Sao_P
+== diario desde 27/11 02:50 UTC (= 26/11 23:50 SP), filtrado, max 30
+Nov 27 02:56:09 srv1886750 python[66799]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 03:26:27 srv1886750 python[66799]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 03:56:46 srv1886750 python[66799]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 04:27:09 srv1886750 python[66799]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 04:57:34 srv1886750 python[66799]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 05:27:50 srv1886750 python[66799]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 05:58:28 srv1886750 python[66799]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 06:26:13 srv1886750 systemd[1]: Stopping pms-banana-ai-worker.service - PMS Banana AI - worker (outbox + reconciliacao)...
+Nov 27 06:26:13 srv1886750 systemd[1]: Stopped pms-banana-ai-worker.service - PMS Banana AI - worker (outbox + reconciliacao).
+Nov 27 06:26:23 srv1886750 systemd[1]: Started pms-banana-ai-worker.service - PMS Banana AI - worker (outbox + reconciliacao).
+Nov 27 06:26:29 srv1886750 python[209090]: WARNING pms.worker Nobeds desligada (desligada (fim do contrato em 26/11/2026; o Airbnb chega pelo e-mail e pelo calendario)); saudes marcadas: 0
+Nov 27 06:28:04 srv1886750 python[209090]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 06:58:06 srv1886750 python[209090]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 07:28:32 srv1886750 python[209090]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 07:58:46 srv1886750 python[209090]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 08:29:23 srv1886750 python[209090]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+Nov 27 08:31:10 srv1886750 python[209090]: INFO pms.worker luz (despertador): ['13F:event-reserva-nobeds-HM******-person-7ce9370af3b7c789']
+Nov 27 08:59:32 srv1886750 python[209090]: INFO pms.worker calendário do Airbnb: 59/59 lidos, 0 data(s) acompanhada(s), 0 aviso(s)
+== quantas linhas o worker escreveu desde entao
+1341
+== quando o worker subiu pela ultima vez
+ActiveEnterTimestamp=Fri 2026-11-27 06:26:23 UTC
+== fim
+[nuvem] fim 2026-11-27 09:03:56 codigo=0 duracao=1s

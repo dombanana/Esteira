@@ -1,0 +1,6 @@
+[nuvem] inicio 2026-11-27 22:45:35 141-portal-wifi-estado-20261127-1945-leitura.sh
+servidor hs-wif-gdfz2doct desligado=true
+logados agora: 0
+hosts vistos: 0
+PC da casa (10.10.10.5): status=bound visto ha 4m39s
+[nuvem] fim 2026-11-27 22:45:36 codigo=0 duracao=1s

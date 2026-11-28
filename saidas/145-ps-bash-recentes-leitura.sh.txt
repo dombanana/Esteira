@@ -1,0 +1,17 @@
+[nuvem] inicio 2026-11-28 10:07:19 145-ps-bash-recentes-leitura.sh
+ 517133  516968       0 esteira  timeout 900 bash /var/lib/esteira-nuvem/repo/pedidos/145-ps-bash-recentes-leitura.sh
+ 517134  517133       0 esteira  bash /var/lib/esteira-nuvem/repo/pedidos/145-ps-bash-recentes-leitura.sh
+ 517139  517134       0 esteira  head -30
+ 516968       1       1 esteira  bash /opt/esteira-nuvem/rodar.sh
+ 516952       2      50 root     [kworker/u4:3]
+ 516540 2865431      71 www-data nginx: worker process
+ 516541 2865431      71 www-data nginx: worker process
+ 516539       2      71 root     [kworker/1:0]
+ 516078       2     195 root     [kworker/0:3-cgroup_release]
+ 516079       2     195 root     [kworker/0:4-events]
+ 516054    1867     242 70       postgres: evolution evolution 172.16.1.4(36452) idle
+ 515916       2     255 root     [kworker/0:0-cgroup_free]
+ 514954       2     505 root     [kworker/1:2-cgroup_release]
+ 514567       2     625 root     [kworker/u4:4-writeback]
+ 514212       2     704 root     [kworker/0:1-cgroup_release]
+[nuvem] fim 2026-11-28 10:07:19 codigo=0 duracao=0s

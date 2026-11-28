@@ -1,0 +1,25 @@
+[nuvem] inicio 2026-11-28 10:35:25 149-v10-caixas-airbnb-por-pasta-leitura.sh
+pastas configuradas na V1.0: INBOX.03_Reservas,INBOX | None
+PMS_RESERVAS_IMAP pastas: ['INBOX', 'INBOX.05_Sistemas_e_Logs', 'INBOX.04_Seguranca', 'INBOX.03_Reservas', 'INBOX.02_Pagamentos', 'INBOX.01_Fiscal', 'INBOX.Trash', 'INBOX.Sent', 'INBOX.Junk', 'INBOX.Drafts']
+   INBOX | 3 dias: 0 | do Airbnb: 0
+   INBOX.05_Sistemas_e_Logs | 3 dias: 45 | do Airbnb: 0
+   INBOX.04_Seguranca | 3 dias: 0 | do Airbnb: 0
+   INBOX.03_Reservas | 3 dias: 11 | do Airbnb: 0
+   INBOX.02_Pagamentos | 3 dias: 0 | do Airbnb: 0
+   INBOX.01_Fiscal | 3 dias: 0 | do Airbnb: 0
+   INBOX.Trash | 3 dias: 0 | do Airbnb: 0
+   INBOX.Sent | 3 dias: 0 | do Airbnb: 0
+   INBOX.Junk | 3 dias: 0 | do Airbnb: 0
+   INBOX.Drafts | 3 dias: 0 | do Airbnb: 0
+PMS_RESERVAS_IMAP2 pastas: ['INBOX', 'INBOX.Compras', 'INBOX.Sistemas', 'INBOX.Financeiro', 'INBOX.Booking', 'INBOX.Airbnb', 'INBOX.Trash', 'INBOX.Sent', 'INBOX.Junk', 'INBOX.Drafts']
+   INBOX | 3 dias: 86 | do Airbnb: 86
+   INBOX.Compras | 3 dias: 7 | do Airbnb: 0
+   INBOX.Sistemas | 3 dias: 0 | do Airbnb: 0
+   INBOX.Financeiro | 3 dias: 2 | do Airbnb: 1
+   INBOX.Booking | 3 dias: 0 | do Airbnb: 0
+   INBOX.Airbnb | 3 dias: 86 | do Airbnb: 86
+   INBOX.Trash | 3 dias: 0 | do Airbnb: 0
+   INBOX.Sent | 3 dias: 0 | do Airbnb: 0
+   INBOX.Junk | 3 dias: 4 | do Airbnb: 0
+   INBOX.Drafts | 3 dias: 0 | do Airbnb: 0
+[nuvem] fim 2026-11-28 10:36:07 codigo=0 duracao=42s

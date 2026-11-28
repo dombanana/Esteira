@@ -1,0 +1,5 @@
+[nuvem] inicio 2026-11-28 10:34:15 148-v10-caixa-reservas-saude-leitura.sh
+== teste de login (so o resultado, sem usuario)
+PMS_RESERVAS_IMAP login ok | imap.hostinger.com | pastas: 10
+PMS_RESERVAS_IMAP2 login ok | imap.hostinger.com | pastas: 10
+[nuvem] fim 2026-11-28 10:34:18 codigo=0 duracao=3s

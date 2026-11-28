@@ -1,0 +1,12 @@
+[nuvem] inicio 2026-11-28 10:05:12 144-ps-esteira-pc-leitura.sh
+ 208944   99539 dbv11    python3         /usr/bin/python3 -m automacao --dados /opt/dombanana-v11/dados-automacao --porta 8790 --endereco 127.0.0.1
+ 208945   99539 dbv11    python3         /usr/bin/python3 -m carteira servir --porta 8797
+ 208946   99539 dbv11    python3         /usr/bin/python3 -m conectores servir --porta 8798
+ 208959   99539 dbv11    python3         /usr/bin/python3 -m equipe --dados /opt/dombanana-v11/dados-equipe --porta 8791 --endereco 127.0.0.1
+ 208960   99539 dbv11    python3         /usr/bin/python3 -m registro servir --porta 8801
+ 208961   99539 dbv11    python3         /usr/bin/python3 -m integracao --dados /opt/dombanana-v11/dados --porta 8792 --endereco 127.0.0.1
+ 208962   99539 dbv11    python3         /usr/bin/python3 -m mensagens servir --porta 8803
+ 208969   99539 dbv11    python3         /usr/bin/python3 -m pegai --dados /opt/dombanana-v11/dados-pegai --porta 8796 --endereco 127.0.0.1
+ 208970   99539 dbv11    python3         /usr/bin/python3 -m suporte_airbnb servir --porta 8804
+ 209132   99522 pms      python3         /opt/PMS-Banana-AI/SISTEMA/.venv/bin/python3 -m app.voz_processo
+[nuvem] fim 2026-11-28 10:05:12 codigo=0 duracao=0s

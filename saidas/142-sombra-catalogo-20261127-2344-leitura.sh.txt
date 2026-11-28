@@ -1,0 +1,28 @@
+[nuvem] inicio 2026-11-28 02:44:56 142-sombra-catalogo-20261127-2344-leitura.sh
+versao: 1.0.292
+caixas lidas: 2
+LEITOR;2026-11-27 06:39;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:44;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:44;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:48;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:49;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:51;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:54;alteracao;alteracao;-;alarme
+LEITOR;2026-11-27 06:54;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:57;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:57;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 06:58;outro;outro;-;ignora
+LEITOR;2026-11-27 06:58;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 07:21;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 07:34;pagamento;pagamento;-;ignora
+LEITOR;2026-11-27 09:30;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 12:24;alteracao;alteracao;-;alarme
+LEITOR;2026-11-27 12:28;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 12:32;outro;outro;-;ignora
+LEITOR;2026-11-27 16:34;avaliacao;avaliacao;-;ignora
+LEITOR;2026-11-27 21:44;reserva_nova;reserva_nova;-;reserva
+LEITOR;2026-11-27 21:47;outro;outro;-;ignora
+emails do Airbnb na janela: 21
+ENCAIXE;2026-11-28T00:45;1191384954764858073;Q09;Q09;IGUAL;IPI-CRD-3-S-V3
+fim
+[nuvem] fim 2026-11-28 02:45:21 codigo=0 duracao=25s
